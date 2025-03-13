@@ -325,26 +325,6 @@ class OntologyNetwork:
             return triple_list
         
         return path
-    
-    def get_path_from_sample(self, target):
-        """
-        Get the shortest path from the 'cmso:ComputationalSample' node to the target node.
-
-        Parameters
-        ----------
-        target : OntoTerm
-            The target node to find the shortest path to.
-
-        Returns
-        -------
-        list
-            A list of triples representing the shortest path from 'cmso:ComputationalSample' to the target node.
-        """
-        #get the path
-        path = self.get_shortest_path(
-            source=self.terms.cmso.AtomicScaleSample, target=target, triples=True
-        )
-        return path
 
     def create_query(self, source, destinations, enforce_types=True):
         """
@@ -467,13 +447,16 @@ class OntologyNetwork:
             
         return "\n".join(query)
     
-    def results_to_df(self, query_string, res):
+    def query(self, kg, source, destinations, enforce_types=True, return_df=True):
+        query_string = self.create_query(source, destinations, enforce_types=enforce_types)
+        res = kg.query(query_string)
         if res is not None:
-            for line in query_string.split("\n"):
-                if "SELECT DISTINCT" in line:
-                    break
-            labels = [x[1:] for x in line.split()[2:]]
-            return pd.DataFrame(res, columns=labels)
-        else:
-            return res
+            if return_df:
+                for line in query_string.split("\n"):
+                    if "SELECT DISTINCT" in line:
+                        break
+                labels = [x[1:] for x in line.split()[2:]]
+                return pd.DataFrame(res, columns=labels)
+
+        return res
 
