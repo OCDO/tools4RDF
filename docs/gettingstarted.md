@@ -1,14 +1,14 @@
  # Installation
 
-`atomrdf` can be installed on Linux and Mac OS based systems. On Windows systems, it is recommended to use  [Windows subsystem for Linux](https://docs.microsoft.com/en-us/windows/wsl/install). The following instructions will help install `atomrdf`:
+`tools4rdf` can be installed on Linux and Mac OS based systems. On Windows systems, it is recommended to use  [Windows subsystem for Linux](https://docs.microsoft.com/en-us/windows/wsl/install). The following instructions will help install `tools4rdf`:
 
 ````{tab-set}
 ```{tab-item} pip
-`pip install atomrdf`
+`pip install tools4rdf`
 ```
 
 ```{tab-item} conda
-`conda install -c conda-forge atomrdf`
+`conda install -c conda-forge tools4rdf`
 ```
 
 ```{tab-item} from source
@@ -16,18 +16,18 @@ We strongly recommend creating a conda environment for the installation. To see 
 
 Once a conda distribution is available, the following steps will help set up an environment to use `atomrdf`. First step is to clone the repository.
 
-`git clone https://github.com/pyscal/atomrdf.git`
+`git clone https://github.com/ocdo/tools4rdf.git`
 
 After cloning, an environment can be created from the included file-
 
-`cd atomrdf`  
+`cd tools4rdf`  
 `conda env create -f environment.yml`
 
 This will install the necessary packages and create an environment called rdf. It can be activated by,
 
-`conda activate rdf`
+`conda activate tools4rdf`
 
-then, install `atomrdf` using,
+then, install `tools4rdf` using,
 
 `pip install .`
 ```
