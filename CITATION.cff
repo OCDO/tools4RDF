@@ -1,5 +1,5 @@
 cff-version: 1.2.0
-title: atomRDF, python tool for ontology-based creation, manipulation, and quering of atomic structures.
+title: tools4RDF, python tool for working with ontologies and data models
 message: >-
   If you use this software, please cite it using the
   metadata from this file. Funded by the Deutsche Forschungsgemeinschaft (DFG, German Research Foundation) 
@@ -13,10 +13,10 @@ authors:
   family-names: Azocar Guzman
   affiliation: Institute for Advanced Simulations – Materials Data Science and Informatics (IAS-9), Forschungszentrum Jülich GmbH
   orcid: 'https://orcid.org/0000-0001-7564-7990'
-date-released: '2024-02-15'
-doi: 10.5281/zenodo.8146527
-url: 'https://atomrdf.pyscal.org'
+#date-released: '2024-02-15'
+#doi: 10.5281/zenodo.8146527
+#url: 'https://atomrdf.pyscal.org'
 license: "MIT"
-repository-code: https://github.com/pyscal/atomRDF
+repository-code: https://github.com/codo/tools4RDF
 type: software
-version: 0.10.1
+version: 0.0.1

@@ -1,24 +1,12 @@
-name: rdf
+name: tools4rdf
 channels:
   - conda-forge
 dependencies:
   - python >3.8, <3.12
-  - pyscal3 >=3.1.12
   - rdflib
   - pyyaml
   - jupyterlab
   - graphviz
   - python-graphviz
-  - ase =3.23.0
   - networkx
   - pandas
-  - plotly
-  - ipywidgets
-  #- atomman
-  - mp-api
-  - sqlalchemy
-  - aimsgb
-  - pymatgen
-  - mendeleev
-  - pip:
-    - "git+https://github.com/RDFLib/rdflib-sqlalchemy.git@develop"

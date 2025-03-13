@@ -7,10 +7,7 @@ chapters:
   - file: docs/gettingstarted.md
   - file: docs/examples.md
     sections:
-    - file: examples/01_getting_started
-    - file: examples/02_grain_boundaries
+    - file: examples/01_sparql_queries
   - file: docs/extending.md
   - file: docs/license.md
   - file: docs/acknowledgements.md
-  - file: docs/api.rst
-

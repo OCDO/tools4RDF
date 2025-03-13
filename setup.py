@@ -5,21 +5,20 @@ with open('README.md') as readme_file:
     readme = readme_file.read()
 
 setup(
-    name='atomrdf',
-    version='0.10.1',
+    name='tools4rdf',
+    version='0.0.1',
     author='Abril Azocar Guzman, Sarath Menon',
     author_email='sarath.menon@pyscal.org',
-    description='Ontology based structural manipulation and quering',
+    description='python tool for working with ontologies and data models',
     long_description=readme,
     long_description_content_type='text/markdown',
-    packages=find_packages(include=['atomrdf', 'atomrdf.*']),
+    packages=find_packages(include=['tools4rdf', 'tools4rdf.*']),
     zip_safe=False,
-    download_url = 'https://github.com/pyscal/atomrdf',
+    download_url = 'https://github.com/ocdo/tools4rdf',
     url = 'https://pyscal.org',
-    install_requires=['numpy', 'ase', 'rdflib', 
+    install_requires=['numpy', 'rdflib', 
     'pyyaml', 'graphviz', 'networkx', 
-    'pyscal3', 'spglib', 'pandas',
-    'atomman', 'mp-api', 'aimsgb', 'pymatgen', 'mendeleev'],
+    'pandas'],
     classifiers=[
         'Programming Language :: Python :: 3'
     ],
