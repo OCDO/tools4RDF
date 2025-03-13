@@ -7,6 +7,7 @@ import numpy as np
 import os
 import warnings
 import copy
+import pandas as pd
 
 from tools4rdf.network.attrsetter import AttrSetter
 from tools4rdf.network.parser import OntoParser
@@ -465,3 +466,14 @@ class OntologyNetwork:
             destination.refresh()
             
         return "\n".join(query)
+    
+    def results_to_df(self, query_string, res):
+        if res is not None:
+            for line in query_string.split("\n"):
+                if "SELECT DISTINCT" in line:
+                    break
+            labels = [x[1:] for x in line.split()[2:]]
+            return pd.DataFrame(res, columns=labels)
+        else:
+            return res
+
