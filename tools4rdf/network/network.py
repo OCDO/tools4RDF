@@ -6,15 +6,12 @@ import matplotlib.pyplot as plt
 import numpy as np
 import os
 import warnings
-from pyscal3.atoms import AttrSetter
 import copy
 
-from atomrdf.network.parser import OntoParser
-from atomrdf.network.term import OntoTerm, strip_name
+from tools4rdf.network.attrsetter import AttrSetter
+from tools4rdf.network.parser import OntoParser
+from tools4rdf.network.term import OntoTerm, strip_name
 from functools import partial
-
-owlfile = os.path.join(os.path.dirname(__file__), "../data/cmso.owl")
-
 
 def _replace_name(name):
     return ".".join(name.split(":"))
@@ -25,13 +22,11 @@ class OntologyNetwork:
     """
 
     def __init__(self, infile=None):
-        if infile is None:
-            infile = owlfile
-
-        self.g = nx.DiGraph()
-        self.onto = OntoParser(infile)
-        self.terms = AttrSetter()
-        self._parse_all()
+        if infile is not None:
+            self.g = nx.DiGraph()
+            self.onto = OntoParser(infile)
+            self.terms = AttrSetter()
+            self._parse_all()
 
     
     def _assign_attributes(self):

@@ -1,26 +1,5 @@
-"""
-Documentation for the ontology module.
-
-Updates needed
---------------
-ASMO module
-
-- Add math operations, see sample.py for the complete list of items - at the moment, 4 cardinal operations,
-but maybe more will be needed.
-
-- StructureOperation: 
-    - RotationOperation and associated vectors, see structure.py
-    - TranslationOperation - no triples yet, see structure.py
-    - ADD SHEAR OPERATION
-- PointDefectCreation
-    - DeleteAtom - to create vacancy - Now Just added as label to PROV activities
-    - AddAtom - to create impurity
-    - SubstituteAtom - to create impurity
-"""
-
 import os
-from atomrdf.network.network import OntologyNetwork
-
+from tools4rdf.network.network import OntologyNetwork
 
 def read_ontology():
     """

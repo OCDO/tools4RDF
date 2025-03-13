@@ -3,8 +3,8 @@ import copy
 import numpy as np
 import itertools
 
-from atomrdf.network.term import OntoTerm, strip_name
-from atomrdf.network.patch import patch_terms
+from tools4rdf.network.term import OntoTerm, strip_name
+from tools4rdf.network.patch import patch_terms
 from rdflib import Graph, RDF, RDFS, OWL, BNode, URIRef
 
 class OntoParser:
