@@ -187,6 +187,8 @@ class OntoParser:
             return [self.attributes['class'][term].name]
         elif term in self.mappings:
             return self.mappings[term]['items']
+        else:
+            return []
 
     def get_domain(self, cls):
         domain = []
@@ -222,17 +224,17 @@ class OntoParser:
 
     def parse_subclasses(self):
         for key, cls in self.attributes['class'].items():
-            for triple in self.graph.triples((cls._object, RDFS.subClassOf, None)):
-                superclasses = self.lookup_class(triple[2])
+            for obj in self.graph.objects(cls._object, RDFS.subClassOf):
+                superclasses = self.lookup_class(obj)
                 for superclass in superclasses:
                     self.attributes['class'][superclass].subclasses.append(cls.name)
     
     def parse_equivalents(self):
         for key, cls in self.attributes['class'].items():
-            for triple in self.graph.triples((cls._object, OWL.equivalentClass, None)):
-                equivalent = triple[2]
-                self.attributes['class'][strip_name(equivalent)].equivalent_classes.append(cls.name)
-                cls.equivalent_classes.append(strip_name(equivalent))
+            for equivalent in self.graph.objects(cls._object, OWL.equivalentClass):
+                if strip_name(equivalent) in self.attributes['class']:
+                    self.attributes['class'][strip_name(equivalent)].equivalent_classes.append(cls.name)
+                    cls.equivalent_classes.append(strip_name(equivalent))
     
     def parse_named_individuals(self):
         named_individuals = list(self.graph.subjects(RDF.type, OWL.NamedIndividual))

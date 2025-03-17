@@ -32,10 +32,10 @@ def _get_namespace_with_prefix(uri):
         uri_split = uri.split('/')
         if len(uri_split) > 1:
             namespace = "/".join(uri_split[:-1])
+            if namespace[-1] != "#":
+                namespace += "/"
         else:
             namespace = ""
-        if namespace[-1] != "#":
-            namespace += "/"
     return namespace
 
 def strip_name(uri, get_what="name", namespace=None):
