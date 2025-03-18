@@ -2,7 +2,7 @@
 https://docs.python.org/3/library/operator.html
 """
 
-from rdflib import Namespace, URIRef
+from rdflib import URIRef
 import numbers
 import copy
 
@@ -390,7 +390,6 @@ class OntoTerm:
         # print(f'lhs {self} rhs {val}')
         self._is_number(val)
         self._is_data_node()
-        item = copy.deepcopy(self)
         self._condition = self._create_condition_string(">", val)
         return self
 
