@@ -217,12 +217,12 @@ class OntoParser:
         if unravel_list is None:
             unravel_list = []
         if term == RDF.nil:
-            return
+            return unravel_list
         first_term = self.graph.value(term, RDF.first)
         if first_term not in unravel_list:
             unravel_list.append(first_term)
         second_term = self.graph.value(term, RDF.rest)
-        self.unravel_relation(second_term, unravel_list)
+        unravel_list = self.unravel_relation(second_term, unravel_list)
         return unravel_list
 
     def parse_subclasses(self):
