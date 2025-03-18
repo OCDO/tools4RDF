@@ -24,8 +24,6 @@ class OntoParser:
         self.extra_namespaces = {}
 
         self.extract_classes()
-        self.extract_relations(relation_type="union")
-        self.extract_relations(relation_type="intersection")
         self.add_classes_to_attributes()
         self.parse_subclasses()
         self.parse_equivalents()
@@ -116,28 +114,21 @@ class OntoParser:
     def extract_classes(self):
         self.classes = []
         for term in self.graph.subjects(RDF.type, OWL.Class):
-            self.classes.append(term)
-
-    def extract_relations(self, relation_type):
-        if relation_type == "union":
-            owl_term = OWL.unionOf
-        elif relation_type == "intersection":
-            owl_term = OWL.intersectionOf
-
-        to_delete = []
-        for term in self.classes:
             if isinstance(term, BNode):
-                union_term = self.extract_values(term, owl_term)
-                if union_term is not None:
-                    unravel_list = []
-                    self.unravel_relation(union_term, unravel_list)
-                    self.mappings[term.toPython()] = {
-                        "type": relation_type,
-                        "items": [strip_name(item.toPython()) for item in unravel_list],
-                    }
-                    to_delete.append(term)
-        for term in to_delete:
-            self.classes.remove(term)
+                for relation_type, owl_term in [
+                    ("union", OWL.unionOf),
+                    ("intersection", OWL.intersectionOf),
+                ]:
+                    union_term = self.extract_values(term, owl_term)
+                    if union_term is not None:
+                        unravel_list = []
+                        self.unravel_relation(union_term, unravel_list)
+                        self.mappings[term.toPython()] = {
+                            "type": relation_type,
+                            "items": [strip_name(item.toPython()) for item in unravel_list],
+                        }
+            else:
+                self.classes.append(term)
 
     def add_classes_to_attributes(self):
         for cls in self.classes:
