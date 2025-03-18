@@ -95,34 +95,6 @@ class OntologyNetwork:
         node_id=None,
         delimiter="/",
     ):
-        """
-        Add a node.
-
-        Parameters
-        ----------
-        uri : str
-            The URI of the node.
-        node_type : str
-            The type of the node.
-        namespace : str, optional
-            The namespace of the node.
-        dm : list, optional
-            The domain metadata of the node.
-        rn : list, optional
-            The range metadata of the node.
-        data_type : str, optional
-            The data type of the node.
-        node_id : str, optional
-            The ID of the node.
-        delimiter : str, optional
-            The delimiter used for parsing the URI.
-
-        Raises
-        ------
-        ValueError
-            If the namespace is not found.
-
-        """
         self.onto.add_term(
             uri=uri,
             node_type=node_type,
@@ -134,6 +106,8 @@ class OntologyNetwork:
             delimiter=delimiter,
         )
         self._assign_attributes()
+
+    add_term.__doc__ = OntoParser.add_term.__doc__
 
     def add_path(self, triple):
         """
