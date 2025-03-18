@@ -222,8 +222,7 @@ class OntoParser:
         if first_term not in unravel_list:
             unravel_list.append(first_term)
         second_term = self.graph.value(term, RDF.rest)
-        unravel_list = self.unravel_relation(second_term, unravel_list)
-        return unravel_list
+        return self.unravel_relation(second_term, unravel_list)
 
     def parse_subclasses(self):
         for key, cls in self.attributes["class"].items():
