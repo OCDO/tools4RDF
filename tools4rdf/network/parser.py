@@ -121,8 +121,7 @@ class OntoParser:
                 ]:
                     union_term = self.extract_values(term, owl_term)
                     if union_term is not None:
-                        unravel_list = []
-                        self.unravel_relation(union_term, unravel_list)
+                        unravel_list = self.unravel_relation(union_term)
                         self.mappings[term.toPython()] = {
                             "type": relation_type,
                             "items": [strip_name(item.toPython()) for item in unravel_list],
@@ -214,7 +213,9 @@ class OntoParser:
         term._object = cls
         return term
 
-    def unravel_relation(self, term, unravel_list):
+    def unravel_relation(self, term, unravel_list=None):
+        if unravel_list is None:
+            unravel_list = []
         if term == RDF.nil:
             return
         first_term = self.graph.value(term, RDF.first)
@@ -222,6 +223,7 @@ class OntoParser:
             unravel_list.append(first_term)
         second_term = self.graph.value(term, RDF.rest)
         self.unravel_relation(second_term, unravel_list)
+        return unravel_list
 
     def parse_subclasses(self):
         for key, cls in self.attributes["class"].items():
