@@ -120,7 +120,7 @@ class OntoParser:
                     ("intersection", OWL.intersectionOf),
                 ]:
                     union_term = self.extract_values(term, owl_term)
-                    if union_term is not None:
+                    if union_term is None:
                         unravel_list = self.unravel_relation(union_term)
                         self.mappings[term.toPython()] = {
                             "type": relation_type,
@@ -189,24 +189,18 @@ class OntoParser:
             return []
 
     def get_domain(self, cls):
+        return self._get_domain_range(cls, RDFS.domain)
+
+    def get_range(self, cls):
+        return self._get_domain_range(cls, RDFS.range)
+
+    def _get_domain_range(self, cls, predicate):
         domain = []
-        for triple in self.graph.triples(
-            (cls, URIRef("http://www.w3.org/2000/01/rdf-schema#domain"), None)
-        ):
-            domain_term = self.lookup_node(triple[2])
+        for obj in self.graph.objects(cls, predicate):
+            domain_term = self.lookup_node(obj)
             for term in domain_term:
                 domain.append(term)
         return domain
-
-    def get_range(self, cls):
-        rrange = []
-        for triple in self.graph.triples(
-            (cls, URIRef("http://www.w3.org/2000/01/rdf-schema#range"), None)
-        ):
-            range_term = self.lookup_node(triple[2])
-            for term in range_term:
-                rrange.append(term)
-        return rrange
 
     def create_term(self, cls):
         iri = cls.toPython()
