@@ -4,10 +4,6 @@ import pandas as pd
 
 from tools4rdf.network.attrsetter import AttrSetter
 from tools4rdf.network.parser import OntoParser
-<<<<<<< HEAD
-=======
-from tools4rdf.network.term import OntoTerm
->>>>>>> flake8
 
 
 def _replace_name(name):
