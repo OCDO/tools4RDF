@@ -65,24 +65,9 @@ class OntologyNetwork:
             self.g.add_node(val.name, node_type="literal", data_type=val.data_type)
 
     def add_namespace(self, namespace_name, namespace_iri):
-        """
-        Add a new namespace.
+        self.onto.add_namespace(namespace_name, namespace_iri)
 
-        Parameters
-        ----------
-        namespace_name : str
-            The name of the namespace to add.
-        namespace_iri : str
-            The IRI of the namespace.
-
-        Raises
-        ------
-        KeyError
-            If the namespace already exists.
-
-        """
-        if namespace_name not in self.onto.namespaces.keys():
-            self.onto.namespaces[namespace_name] = namespace_iri
+    add_namespace.__doc__ = OntoParser.add_namespace.__doc__
 
     def add_term(
         self,

@@ -346,3 +346,23 @@ class OntoParser:
         if not term.namespace in self.namespaces.keys():
             raise ValueError("Namespace not found, first add namespace")
         self.attributes[node_type][term.name] = term
+
+    def add_namespace(self, namespace_name, namespace_iri):
+        """
+        Add a new namespace.
+
+        Parameters
+        ----------
+        namespace_name : str
+            The name of the namespace to add.
+        namespace_iri : str
+            The IRI of the namespace.
+
+        Raises
+        ------
+        KeyError
+            If the namespace already exists.
+
+        """
+        if namespace_name not in self.namespaces.keys():
+            self.namespaces[namespace_name] = namespace_iri
