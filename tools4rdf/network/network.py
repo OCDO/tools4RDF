@@ -1,5 +1,3 @@
-
-
 import networkx as nx
 import graphviz
 import matplotlib.pyplot as plt
@@ -14,8 +12,10 @@ from tools4rdf.network.parser import OntoParser
 from tools4rdf.network.term import OntoTerm, strip_name
 from functools import partial
 
+
 def _replace_name(name):
     return ".".join(name.split(":"))
+
 
 class OntologyNetwork:
     """
@@ -29,7 +29,6 @@ class OntologyNetwork:
             self.terms = AttrSetter()
             self._parse_all()
 
-    
     def _assign_attributes(self):
         mapdict = {}
         # add first level - namespaces
@@ -81,7 +80,7 @@ class OntologyNetwork:
     def _add_class_nodes(self):
         for key, val in self.onto.attributes["class"].items():
             self.g.add_node(val.name, node_type="class")
-    
+
     def _add_data_nodes(self):
         for key, val in self.onto.attributes["data_node"].items():
             self.g.add_node(val.name, node_type="literal", data_type=val.data_type)
@@ -90,7 +89,7 @@ class OntologyNetwork:
         for key, val in self.onto.attributes["object_property"].items():
             self.g.add_node(val.name, node_type="object_property")
 
-            #add edges between them
+            # add edges between them
             for d in val.domain:
                 self.g.add_edge(d, val.name)
 
@@ -209,16 +208,16 @@ class OntologyNetwork:
 
         # now add
         self.g.add_edge(sub, pred)
-        for subclass in self.onto.attributes['class'][sub].subclasses:
+        for subclass in self.onto.attributes["class"][sub].subclasses:
             self.g.add_edge(subclass, pred)
 
         # now add pred
         if pred in self.onto.attributes["object_property"].keys():
             if obj not in self.onto.attributes["class"].keys():
                 raise ValueError(f"{obj} not found in self.attributes")
-            #subclasses = self.onto._get_subclasses(obj)
+            # subclasses = self.onto._get_subclasses(obj)
             self.g.add_edge(pred, obj)
-            for subclass in self.onto.attributes['class'][obj].subclasses:
+            for subclass in self.onto.attributes["class"][obj].subclasses:
                 self.g.add_edge(pred, subclass)
 
         # another possibility it is data property
@@ -230,13 +229,15 @@ class OntologyNetwork:
         else:
             raise ValueError(f"{pred} not found in self.attributes")
 
-    def draw(self, 
+    def draw(
+        self,
         styledict={
             "class": {"shape": "box"},
             "object_property": {"shape": "ellipse"},
             "data_property": {"shape": "ellipse"},
             "literal": {"shape": "parallelogram"},
-        },):
+        },
+    ):
         """
         Draw the network graph using graphviz.
 
@@ -275,9 +276,11 @@ class OntologyNetwork:
         return dot
 
     def _get_shortest_path(self, source, target):
-        #this function will be modified to take OntoTerms direcl as input; and use their names. 
-        path = nx.shortest_path(self.g, source=source.query_name, target=target.query_name)
-        #replace the start and end with thier corresponding variable names
+        # this function will be modified to take OntoTerms direcl as input; and use their names.
+        path = nx.shortest_path(
+            self.g, source=source.query_name, target=target.query_name
+        )
+        # replace the start and end with thier corresponding variable names
         path[0] = source.variable_name
         path[-1] = target.variable_name
         return path
@@ -303,18 +306,18 @@ class OntologyNetwork:
             If `triples` is False, the path is returned as a list of nodes.
 
         """
-        #this function should also check for stepped queries
+        # this function should also check for stepped queries
         path = []
         if len(target._parents) > 0:
-            #this needs a stepped query
+            # this needs a stepped query
             complete_list = [source, *target._parents, target]
-            #get path for first two terms
+            # get path for first two terms
             path = self._get_shortest_path(complete_list[0], complete_list[1])
             for x in range(2, len(complete_list)):
-                temp_source = complete_list[x-1]
+                temp_source = complete_list[x - 1]
                 temp_dest = complete_list[x]
                 temp_path = self._get_shortest_path(temp_source, temp_dest)
-                path.extend(temp_path[1:])                
+                path.extend(temp_path[1:])
         else:
             path = self._get_shortest_path(source, target)
 
@@ -323,7 +326,7 @@ class OntologyNetwork:
             for x in range(len(path) // 2):
                 triple_list.append(path[2 * x : 2 * x + 3])
             return triple_list
-        
+
         return path
 
     def create_query(self, source, destinations, enforce_types=True):
@@ -345,7 +348,7 @@ class OntologyNetwork:
             The generated SPARQL query string.
 
         """
-        #if not list, convert to list
+        # if not list, convert to list
         if not isinstance(destinations, list):
             destinations = [destinations]
 
@@ -356,14 +359,14 @@ class OntologyNetwork:
                 no_of_conditions += 1
         if no_of_conditions > 1:
             raise ValueError("Only one condition is allowed")
-        
-        #iterate through the list, if they have condition parents, add them explicitely
+
+        # iterate through the list, if they have condition parents, add them explicitely
         for destination in destinations:
             for parent in destination._condition_parents:
                 if parent.variable_name not in [d.variable_name for d in destinations]:
                     destinations.append(parent)
 
-        #all names are now collected, in a list of lists
+        # all names are now collected, in a list of lists
         # start prefix of query
         query = []
         for key, val in self.namespaces.items():
@@ -371,18 +374,18 @@ class OntologyNetwork:
         for key, val in self.extra_namespaces.items():
             query.append(f"PREFIX {key}: <{val}>")
 
-        #construct the select distinct command:
-        #add source `variable_name`
-        #iterate over destinations, add their `variable_name`
+        # construct the select distinct command:
+        # add source `variable_name`
+        # iterate over destinations, add their `variable_name`
         select_destinations = [
-            "?"+destination.variable_name for destination in destinations
+            "?" + destination.variable_name for destination in destinations
         ]
-        select_destinations = ["?"+source.variable_name] + select_destinations
+        select_destinations = ["?" + source.variable_name] + select_destinations
         query.append(f'SELECT DISTINCT {" ".join(select_destinations)}')
         query.append("WHERE {")
-        
-        #constructing the spaql query path triples, by iterating over destinations
-        #for each destination:
+
+        # constructing the spaql query path triples, by iterating over destinations
+        # for each destination:
         #    - check if it has  parent by looking at `._parents`
         #    - if it has `_parents`, called step path method
         #    - else just get the path
@@ -390,18 +393,18 @@ class OntologyNetwork:
         #    - if it deosnt exist in the collection of lines, add the lines
         all_triplets = {}
         for count, destination in enumerate(destinations):
-            #print(source, destination)
+            # print(source, destination)
             triplets = self.get_shortest_path(source, destination, triples=True)
-            #print(triplets)
+            # print(triplets)
             for triple in triplets:
-                #print(triple)
-                line_text =  "    ?%s %s ?%s ."% ( triple[0].replace(":", "_"),
-                        triple[1],
-                        triple[2].replace(":", "_"),
-                    )
+                # print(triple)
+                line_text = "    ?%s %s ?%s ." % (
+                    triple[0].replace(":", "_"),
+                    triple[1],
+                    triple[2].replace(":", "_"),
+                )
                 if line_text not in query:
-                    query.append(line_text)                
-
+                    query.append(line_text)
 
         # we enforce types of the source and destination
         if enforce_types:
@@ -410,7 +413,7 @@ class OntologyNetwork:
                     "    ?%s rdf:type %s ."
                     % (self.strip_name(source.variable_name), source.query_name)
                 )
-            
+
             for destination in destinations:
                 if destination.node_type == "class":
                     query.append(
@@ -420,7 +423,7 @@ class OntologyNetwork:
                             destination.query_name,
                         )
                     )
-        #- formulate the condition, given by the `FILTER` command:
+        # - formulate the condition, given by the `FILTER` command:
         #    - extract the filter text from the term
         #    - loop over destinations:
         #        - call `replace(destination.query_name, destination.variable_name)`
@@ -431,8 +434,8 @@ class OntologyNetwork:
             if destination._condition is not None:
                 filter_text = destination._condition
                 break
-        
-        #replace the query_name with variable_name
+
+        # replace the query_name with variable_name
         if filter_text != "":
             for destination in destinations:
                 filter_text = filter_text.replace(
@@ -441,14 +444,16 @@ class OntologyNetwork:
             query.append(f"FILTER {filter_text}")
         query.append("}")
 
-        #finished, clean up the terms; 
+        # finished, clean up the terms;
         for destination in destinations:
             destination.refresh()
-            
+
         return "\n".join(query)
-    
+
     def query(self, kg, source, destinations, enforce_types=True, return_df=True):
-        query_string = self.create_query(source, destinations, enforce_types=enforce_types)
+        query_string = self.create_query(
+            source, destinations, enforce_types=enforce_types
+        )
         res = kg.query(query_string)
         if res is not None:
             if return_df:
@@ -459,4 +464,3 @@ class OntologyNetwork:
                 return pd.DataFrame(res, columns=labels)
 
         return res
-

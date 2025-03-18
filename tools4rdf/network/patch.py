@@ -12,5 +12,5 @@ def patch_terms(iri, rn):
     """
     Remove functions as patching is done
     """
-    #do stuff here if you want to patch manually
+    # do stuff here if you want to patch manually
     return rn

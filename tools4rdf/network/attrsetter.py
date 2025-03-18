@@ -4,13 +4,15 @@ import numpy as np
 
 doc_fields = ["doc", "url"]
 
+
 def read_yaml(filename):
-    with open(filename, 'r') as fin:
+    with open(filename, "r") as fin:
         data = yaml.safe_load(fin)
         return data
 
+
 def _get_doc_from_key(keydict):
-    url =  keydict["url"] if "url" in keydict.keys() else None
+    url = keydict["url"] if "url" in keydict.keys() else None
 
     doc = f"""
     {keydict["doc"]}
@@ -18,14 +20,17 @@ def _get_doc_from_key(keydict):
     """
     return doc
 
+
 class MyList(list):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+
 class AttrSetter:
     """
     Class which enables tab completed, contextual attributes
-    """    
+    """
+
     def __init__(self):
         self._map_dict = {}
         self.head = None
