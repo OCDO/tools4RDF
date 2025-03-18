@@ -35,7 +35,8 @@ class OntologyNetwork:
         # add onto network
         self.onto = self.onto + ontonetwork.onto
         # now parse again
-        self._parse_all()
+        self.g = self.onto.get_networkx_graph()
+        self._assign_attributes()
         return self
 
     def strip_name(self, name):
