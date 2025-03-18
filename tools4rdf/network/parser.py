@@ -120,7 +120,7 @@ class OntoParser:
                     ("intersection", OWL.intersectionOf),
                 ]:
                     union_term = self.extract_values(term, owl_term)
-                    if union_term is None:
+                    if union_term is not None:
                         unravel_list = self.unravel_relation(union_term)
                         self.mappings[term.toPython()] = {
                             "type": relation_type,
