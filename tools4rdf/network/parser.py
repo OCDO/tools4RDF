@@ -124,7 +124,9 @@ class OntoParser:
                         unravel_list = self.unravel_relation(union_term)
                         self.mappings[term.toPython()] = {
                             "type": relation_type,
-                            "items": [strip_name(item.toPython()) for item in unravel_list],
+                            "items": [
+                                strip_name(item.toPython()) for item in unravel_list
+                            ],
                         }
             else:
                 self.classes.append(term)
