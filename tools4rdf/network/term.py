@@ -6,15 +6,16 @@ from rdflib import Namespace, URIRef
 import numbers
 import copy
 
+
 def _get_namespace_and_name(uri):
-    uri_split = uri.split('#')
+    uri_split = uri.split("#")
     if len(uri_split) > 1:
-        #possible that delimiter is #
+        # possible that delimiter is #
         name = uri_split[-1]
-        namespace_split = uri_split[0].split('/')
+        namespace_split = uri_split[0].split("/")
         namespace = namespace_split[-1]
     else:
-        uri_split = uri.split('/')
+        uri_split = uri.split("/")
         if len(uri_split) > 1:
             name = uri_split[-1]
             namespace = uri_split[-2]
@@ -23,13 +24,14 @@ def _get_namespace_and_name(uri):
             namespace = ""
     return namespace, name
 
+
 def _get_namespace_with_prefix(uri):
-    uri_split = uri.split('#')
+    uri_split = uri.split("#")
     if len(uri_split) > 1:
-        #possible that delimiter is #
+        # possible that delimiter is #
         namespace = uri_split[0]
     else:
-        uri_split = uri.split('/')
+        uri_split = uri.split("/")
         if len(uri_split) > 1:
             namespace = "/".join(uri_split[:-1])
             if namespace[-1] != "#":
@@ -37,6 +39,7 @@ def _get_namespace_with_prefix(uri):
         else:
             namespace = ""
     return namespace
+
 
 def strip_name(uri, get_what="name", namespace=None):
     if namespace is None:
@@ -53,7 +56,7 @@ def strip_name(uri, get_what="name", namespace=None):
 class OntoTerm:
     def __init__(
         self,
-        uri = None,
+        uri=None,
         namespace=None,
         node_type=None,
         dm=[],
@@ -91,14 +94,14 @@ class OntoTerm:
         self._namespace = namespace
         # name of the class
         self._name = None
-        #parents for the class; these are accumulated
-        #when using the >> operator
+        # parents for the class; these are accumulated
+        # when using the >> operator
         self._parents = []
-        #condition parents are the parents that have conditions
-        #these are accumulated when using the & or || operators
+        # condition parents are the parents that have conditions
+        # these are accumulated when using the & or || operators
         self._condition_parents = []
         self._object = None
-    
+
     @property
     def URIRef(self):
         return URIRef(self._uri)
@@ -130,12 +133,12 @@ class OntoTerm:
             The description of the term.
         """
         return self._description
-    
+
     @description.setter
     def description(self, val):
         if isinstance(val, list):
             if len(val) == 0:
-                val = ''
+                val = ""
             elif len(val) > 1:
                 val = ". ".join(val)
             else:
@@ -158,7 +161,7 @@ class OntoTerm:
     def label(self, val):
         if isinstance(val, list):
             if len(val) == 0:
-                val = ''
+                val = ""
             elif len(val) > 1:
                 val = ". ".join(val)
             else:
@@ -178,9 +181,11 @@ class OntoTerm:
         if self._name is not None:
             return self._name
         return strip_name(
-            self.uri, get_what="name",namespace=self.namespace,
+            self.uri,
+            get_what="name",
+            namespace=self.namespace,
         )
-    
+
     @name.setter
     def name(self, val):
         self._name = val
@@ -198,7 +203,7 @@ class OntoTerm:
         name = self.name
         name = name.replace("–", "")
         name = name.replace("-", "")
-        name = name.split(':')[-1]
+        name = name.split(":")[-1]
         return name
 
     @property
@@ -220,7 +225,7 @@ class OntoTerm:
     def namespace_with_prefix(self):
         """
         Get the namespace of the term with the prefix.
-    
+
         Returns
         -------
         str
@@ -260,7 +265,7 @@ class OntoTerm:
             return self.name + "value"
         elif self.node_type == "object_property":
             if len(self.range) > 0:
-                #this has a domain
+                # this has a domain
                 return self.range[0]
         return self.name
 
@@ -277,11 +282,11 @@ class OntoTerm:
         """
         name_list = [x.name_without_prefix for x in self._parents]
         name_list.append(self.name_without_prefix)
-        name =  "_".join(name_list) 
-        
+        name = "_".join(name_list)
+
         if self.node_type == "data_property":
             return name + "value"
-        
+
         return name
 
     @property
@@ -307,7 +312,7 @@ class OntoTerm:
 
     def __repr__(self):
         if self.description is not None:
-            return str(self.name + '\n' + self.description)
+            return str(self.name + "\n" + self.description)
         else:
             return str(self.name)
 
@@ -336,8 +341,6 @@ class OntoTerm:
             raise TypeError(
                 "This operation can only be performed with a data property!"
             )
-    
-
 
     def _create_condition_string(self, condition, val):
         return f'(?{self.variable_name}{condition}"{val}"^^xsd:{self._clean_datatype(self.range[0])})'
@@ -347,8 +350,8 @@ class OntoTerm:
         """
         =
         """
-        #print("eq")
-        #print(f'lhs {self} rhs {val}')
+        # print("eq")
+        # print(f'lhs {self} rhs {val}')
         self._is_data_node()
         item = copy.deepcopy(self)
         item._condition = item._create_condition_string("=", val)
@@ -383,8 +386,8 @@ class OntoTerm:
         return item
 
     def __gt__(self, val):
-        #print("gt")
-        #print(f'lhs {self} rhs {val}')
+        # print("gt")
+        # print(f'lhs {self} rhs {val}')
         self._is_number(val)
         self._is_data_node()
         item = copy.deepcopy(self)
@@ -401,7 +404,7 @@ class OntoTerm:
         item._condition = "&&".join([item._condition, term._condition])
         item._condition = f"({item._condition})"
         item._condition_parents.append(copy.deepcopy(term))
-        #and clean up the inbound term
+        # and clean up the inbound term
         if item.name != term.name:
             term.refresh_condition()
         return item
@@ -419,7 +422,7 @@ class OntoTerm:
         item._condition = "||".join([item._condition, term._condition])
         item._condition = f"({item._condition})"
         item._condition_parents.append(copy.deepcopy(term))
-        #and clean up the inbound term
+        # and clean up the inbound term
         if item.name != term.name:
             term.refresh_condition()
         return item
@@ -428,12 +431,12 @@ class OntoTerm:
         self.__or__(term)
 
     def __matmul__(self, term):
-        #print("matmul")
-        #print(f'lhs {self} rhs {term}')
+        # print("matmul")
+        # print(f'lhs {self} rhs {term}')
         item = copy.deepcopy(self)
         item._parents.append(copy.deepcopy(term))
         return item
-    
+
     def refresh_condition(self):
         self._condition = None
         self._condition_parents = []
@@ -442,4 +445,3 @@ class OntoTerm:
         self._condition = None
         self._parents = []
         self._condition_parents = []
-
