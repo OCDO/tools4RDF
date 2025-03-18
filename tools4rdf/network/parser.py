@@ -262,3 +262,14 @@ class OntoParser:
                     self.attributes["class"][
                         strip_name(parent.toPython())
                     ].named_individuals.append(term.name)
+
+    def get_attributes(self):
+        # add first level - namespaces
+        mapdict = {key: {} for key in self.namespaces.keys()}
+
+        # now iterate over all attributes
+        for k1 in ["class", "object_property", "data_property"]:
+            for k2, val in self.attributes[k1].items():
+                mapdict[val.namespace][val.name_without_prefix] = val
+        return mapdict
+

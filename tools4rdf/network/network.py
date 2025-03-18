@@ -30,17 +30,7 @@ class OntologyNetwork:
             self._parse_all()
 
     def _assign_attributes(self):
-        mapdict = {}
-        # add first level - namespaces
-        for key in self.namespaces.keys():
-            mapdict[key] = {}
-
-        # now iterate over all attributes
-        for k1 in ["class", "object_property", "data_property"]:
-            for k2, val in self.onto.attributes[k1].items():
-                mapdict[val.namespace][val.name_without_prefix] = val
-
-        self.terms._add_attribute(mapdict)
+        self.terms._add_attribute(self.onto.get_attributes())
 
     def _parse_all(self):
         # call methods
