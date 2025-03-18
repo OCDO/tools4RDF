@@ -123,19 +123,16 @@ class OntologyNetwork:
             If the namespace is not found.
 
         """
-        term = OntoTerm(
-            uri,
-            namespace=namespace,
+        self.onto.add_term(
+            uri=uri,
             node_type=node_type,
+            namespace=namespace,
             dm=dm,
             rn=rn,
             data_type=data_type,
             node_id=node_id,
             delimiter=delimiter,
         )
-        if not term.namespace in self.onto.namespaces.keys():
-            raise ValueError("Namespace not found, first add namespace")
-        self.onto.attributes[node_type][term.name] = term
         self._assign_attributes()
 
     def add_path(self, triple):

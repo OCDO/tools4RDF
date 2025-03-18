@@ -293,3 +293,56 @@ class OntoParser:
                     else:
                         g.add_edge(val.name, val.associated_data_node)
         return g
+
+    def add_term(
+        self,
+        uri,
+        node_type,
+        namespace=None,
+        dm=(),
+        rn=(),
+        data_type=None,
+        node_id=None,
+        delimiter="/",
+    ):
+        """
+        Add a node.
+
+        Parameters
+        ----------
+        uri : str
+            The URI of the node.
+        node_type : str
+            The type of the node.
+        namespace : str, optional
+            The namespace of the node.
+        dm : list, optional
+            The domain metadata of the node.
+        rn : list, optional
+            The range metadata of the node.
+        data_type : str, optional
+            The data type of the node.
+        node_id : str, optional
+            The ID of the node.
+        delimiter : str, optional
+            The delimiter used for parsing the URI.
+
+        Raises
+        ------
+        ValueError
+            If the namespace is not found.
+
+        """
+        term = OntoTerm(
+            uri,
+            namespace=namespace,
+            node_type=node_type,
+            dm=dm,
+            rn=rn,
+            data_type=data_type,
+            node_id=node_id,
+            delimiter=delimiter,
+        )
+        if not term.namespace in self.namespaces.keys():
+            raise ValueError("Namespace not found, first add namespace")
+        self.attributes[node_type][term.name] = term
