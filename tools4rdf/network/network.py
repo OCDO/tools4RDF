@@ -22,12 +22,11 @@ class OntologyNetwork:
     Network representation of Onto
     """
 
-    def __init__(self, infile=None):
-        if infile is not None:
-            self.g = nx.DiGraph()
-            self.onto = OntoParser(infile)
-            self.terms = AttrSetter()
-            self._parse_all()
+    def __init__(self, infile):
+        self.g = nx.DiGraph()
+        self.onto = OntoParser(infile)
+        self.terms = AttrSetter()
+        self._parse_all()
 
     
     def _assign_attributes(self):
