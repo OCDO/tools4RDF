@@ -1,7 +1,4 @@
 import os
-import copy
-import numpy as np
-import itertools
 import networkx as nx
 
 from tools4rdf.network.term import OntoTerm, strip_name
@@ -343,7 +340,7 @@ class OntoParser:
             node_id=node_id,
             delimiter=delimiter,
         )
-        if not term.namespace in self.namespaces.keys():
+        if term.namespace not in self.namespaces.keys():
             raise ValueError("Namespace not found, first add namespace")
         self.attributes[node_type][term.name] = term
 

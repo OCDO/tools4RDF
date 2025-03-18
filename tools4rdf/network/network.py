@@ -1,16 +1,9 @@
 import networkx as nx
 import graphviz
-import matplotlib.pyplot as plt
-import numpy as np
-import os
-import warnings
-import copy
 import pandas as pd
 
 from tools4rdf.network.attrsetter import AttrSetter
 from tools4rdf.network.parser import OntoParser
-from tools4rdf.network.term import OntoTerm, strip_name
-from functools import partial
 
 
 def _replace_name(name):
@@ -211,14 +204,16 @@ class OntologyNetwork:
         target : node
             The target node for the path.
         triples : bool, optional
-            If True, returns the path as a list of triples. Each triple consists of three consecutive nodes in the path.
-            If False, returns the path as a list of nodes.
+            If True, returns the path as a list of triples. Each triple consists
+            of three consecutive nodes in the path. If False, returns the path
+            as a list of nodes.
 
         Returns:
         --------
         path : list
-            The shortest path between the source and target nodes. If `triples` is True, the path is returned as a list of triples.
-            If `triples` is False, the path is returned as a list of nodes.
+            The shortest path between the source and target nodes. If `triples`
+            is True, the path is returned as a list of triples. If `triples` is
+            False, the path is returned as a list of nodes.
 
         """
         # this function should also check for stepped queries
@@ -239,7 +234,7 @@ class OntologyNetwork:
         if triples:
             triple_list = []
             for x in range(len(path) // 2):
-                triple_list.append(path[2 * x : 2 * x + 3])
+                triple_list.append(path[2 * x: 2 * x + 3])
             return triple_list
 
         return path
@@ -253,7 +248,8 @@ class OntologyNetwork:
         source : Node
             The source node from which the query starts.
         destinations : list or Node
-            The destination node(s) to which the query should reach. If a single node is provided, it will be converted to a list.
+            The destination node(s) to which the query should reach. If a single
+            node is provided, it will be converted to a list.
         enforce_types : bool, optional
             Whether to enforce the types of the source and destination nodes in the query. Defaults to True.
 
@@ -306,7 +302,6 @@ class OntologyNetwork:
         #    - else just get the path
         #    - replace the ends of the path with `variable_name`
         #    - if it deosnt exist in the collection of lines, add the lines
-        all_triplets = {}
         for count, destination in enumerate(destinations):
             # print(source, destination)
             triplets = self.get_shortest_path(source, destination, triples=True)
