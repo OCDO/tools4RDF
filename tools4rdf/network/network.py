@@ -83,12 +83,6 @@ class OntologyNetwork:
             node_id=node_id,
             delimiter=delimiter,
         )
-<<<<<<< HEAD
-=======
-        if term.namespace not in self.onto.namespaces.keys():
-            raise ValueError("Namespace not found, first add namespace")
-        self.onto.attributes[node_type][term.name] = term
->>>>>>> flake8
         self._assign_attributes()
 
     add_term.__doc__ = OntoParser.add_term.__doc__
