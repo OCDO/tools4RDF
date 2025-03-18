@@ -77,9 +77,6 @@ class OntoParser:
                         key
                     ].namespace_with_prefix
 
-    def extract_classes(self):
-        self.classes = list(self.graph.subjects(RDF.type, OWL.Class))
-
     def extract_object_properties(self):
         object_properties = list(self.graph.subjects(RDF.type, OWL.ObjectProperty))
         for cls in object_properties:
@@ -112,11 +109,14 @@ class OntoParser:
             self.attributes["data_nodes"][data_term.name] = data_term
 
     def extract_values(self, subject, predicate):
-        vallist = list([x[2] for x in self.graph.triples((subject, predicate, None))])
-        if len(vallist) > 0:
-            return vallist[0]
-        else:
-            return None
+        for val in self.graph.objects(subject, predicate):
+            return val
+        return None
+
+    def extract_classes(self):
+        self.classes = []
+        for term in self.graph.subjects(RDF.type, OWL.Class):
+            self.classes.append(term)
 
     def extract_relations(self, relation_type):
         if relation_type == "union":
