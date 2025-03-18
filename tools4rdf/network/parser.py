@@ -215,9 +215,7 @@ class OntoParser:
         term._object = cls
         return term
 
-    def unravel_relation(self, term, unravel_list=None):
-        if unravel_list is None:
-            unravel_list = []
+    def unravel_relation(self, term, unravel_list=[]):
         if term == RDF.nil:
             return unravel_list
         first_term = self.graph.value(term, RDF.first)
