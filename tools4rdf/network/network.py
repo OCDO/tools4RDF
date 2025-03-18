@@ -24,20 +24,13 @@ class OntologyNetwork:
 
     def __init__(self, infile=None):
         if infile is not None:
-            self.g = nx.DiGraph()
             self.onto = OntoParser(infile)
             self.terms = AttrSetter()
-            self._parse_all()
+            self.g = self.onto.get_networkx_graph()
+            self._assign_attributes()
 
     def _assign_attributes(self):
         self.terms._add_attribute(self.onto.get_attributes())
-
-    def _parse_all(self):
-        # call methods
-        self._add_class_nodes()
-        self._add_object_properties()
-        self._add_data_properties()
-        self._assign_attributes()
 
     def __add__(self, ontonetwork):
         # add onto network
@@ -67,33 +60,9 @@ class OntologyNetwork:
     def __radd__(self, ontonetwork):
         return self.__add__(ontonetwork)
 
-    def _add_class_nodes(self):
-        for key, val in self.onto.attributes["class"].items():
-            self.g.add_node(val.name, node_type="class")
-
     def _add_data_nodes(self):
         for key, val in self.onto.attributes["data_node"].items():
             self.g.add_node(val.name, node_type="literal", data_type=val.data_type)
-
-    def _add_object_properties(self):
-        for key, val in self.onto.attributes["object_property"].items():
-            self.g.add_node(val.name, node_type="object_property")
-
-            # add edges between them
-            for d in val.domain:
-                self.g.add_edge(d, val.name)
-
-            for r in val.range:
-                self.g.add_edge(val.name, r)
-
-    def _add_data_properties(self):
-        for key, val in self.onto.attributes["data_property"].items():
-            self.g.add_node(val.name, node_type="data_property")
-            for d in val.domain:
-                self.g.add_edge(d, val.name)
-
-            for r in val.range:
-                self.g.add_edge(val.name, val.associated_data_node)
 
     def add_namespace(self, namespace_name, namespace_iri):
         """

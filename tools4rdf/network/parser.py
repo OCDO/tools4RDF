@@ -2,6 +2,7 @@ import os
 import copy
 import numpy as np
 import itertools
+import networkx as nx
 
 from tools4rdf.network.term import OntoTerm, strip_name
 from tools4rdf.network.patch import patch_terms
@@ -273,3 +274,22 @@ class OntoParser:
                 mapdict[val.namespace][val.name_without_prefix] = val
         return mapdict
 
+    def get_networkx_graph(self):
+        g = nx.DiGraph()
+        for key, val in self.attributes["class"].items():
+            g.add_node(val.name, node_type="class")
+
+        for property_key in ["object_property", "data_property"]:
+            for key, val in self.attributes[property_key].items():
+                g.add_node(val.name, node_type=property_key)
+
+                # add edges between them
+                for d in val.domain:
+                    g.add_edge(d, val.name)
+
+                for r in val.range:
+                    if property_key == "object_property":
+                        g.add_edge(val.name, r)
+                    else:
+                        g.add_edge(val.name, val.associated_data_node)
+        return g
