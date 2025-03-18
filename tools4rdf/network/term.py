@@ -48,9 +48,10 @@ def strip_name(uri, get_what="name", namespace=None):
         _, name = _get_namespace_and_name(uri)
     if get_what == "namespace":
         return namespace
-
     elif get_what == "name":
         return ":".join([namespace, name])
+    else:
+        raise ValueError("get_what must be either namespace or name")
 
 
 class OntoTerm:
