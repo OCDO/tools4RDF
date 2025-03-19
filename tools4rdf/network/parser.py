@@ -13,16 +13,21 @@ class OntoParser:
 
         self.graph = Graph()
         self.graph.parse(infile, format=format)
-        self.classes = []
-        self.attributes = {}
-        self.attributes["class"] = {}
-        self.attributes["object_property"] = {}
-        self.attributes["data_property"] = {}
-        self.attributes["data_nodes"] = {}
-        self.mappings = {}
-        self.namespaces = {}
-        self.extra_namespaces = {}
+        self._data_dict = None
 
+    def _initialize(self):
+        self._data_dict = {
+            "class": [],
+            "attributes": {
+                "class": {},
+                "object_property": {},
+                "data_property": {},
+                "data_nodes": {},
+            },
+            "mappings": {},
+            "namespaces": {},
+            "extra_namespaces": {},
+        }
         self.extract_classes()
         self.add_classes_to_attributes()
         self.parse_subclasses()
@@ -32,28 +37,40 @@ class OntoParser:
         self.extract_data_properties()
         self.recheck_namespaces()
 
+    @property
+    def classes(self):
+        return self.data_dict["class"]
+
+    @property
+    def mappings(self):
+        return self.data_dict["mappings"]
+
+    @property
+    def namespaces(self):
+        return self.data_dict["namespaces"]
+
+    @property
+    def extra_namespaces(self):
+        return self.data_dict["extra_namespaces"]
+
+    @property
+    def attributes(self):
+        return self.data_dict["attributes"]
+
+    @property
+    def data_dict(self):
+        if self._data_dict is None:
+            self._initialize()
+        return self._data_dict
+
     def __add__(self, ontoparser):
         """
         Add method; in principle it should add-
         - classes
         - attributes dict
         """
-        for mainkey in ["class", "object_property", "data_property"]:
-            if mainkey in ontoparser.attributes.keys():
-                for key, val in ontoparser.attributes[mainkey].items():
-                    self.attributes[mainkey][key] = val
-
-        # now change classes
-        if ontoparser.classes is not None:
-            for clx in ontoparser.classes:
-                self.classes.append(clx)
-
-        for key, val in ontoparser.namespaces.items():
-            self.namespaces[key] = val
-
-        for key, val in ontoparser.extra_namespaces.items():
-            self.extra_namespaces[key] = val
-
+        self.graph += ontoparser.graph
+        self._data_dict = None
         return self
 
     def __radd__(self, ontoparser):
@@ -112,7 +129,6 @@ class OntoParser:
         return None
 
     def extract_classes(self):
-        self.classes = []
         for term in self.graph.subjects(RDF.type, OWL.Class):
             if isinstance(term, BNode):
                 for relation_type, owl_term in [
@@ -129,7 +145,7 @@ class OntoParser:
                             ],
                         }
             else:
-                self.classes.append(term)
+                self._data_dict["class"].append(term)
 
     def add_classes_to_attributes(self):
         for cls in self.classes:
