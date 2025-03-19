@@ -17,7 +17,7 @@ class OntoParser:
 
     def _initialize(self):
         self._data_dict = {
-            "class": [],
+            "classes": [],
             "attributes": {
                 "class": {},
                 "object_property": {},
@@ -41,7 +41,7 @@ class OntoParser:
 
     @property
     def classes(self):
-        return self.data_dict["class"]
+        return self.data_dict["classes"]
 
     @property
     def mappings(self):
@@ -95,7 +95,7 @@ class OntoParser:
                     ].namespace_with_prefix
 
     def extract_classes(self):
-        self._data_dict["class"] = list(self.graph.subjects(RDF.type, OWL.Class))
+        self._data_dict["classes"] = list(self.graph.subjects(RDF.type, OWL.Class))
 
     def extract_object_properties(self):
         object_properties = list(self.graph.subjects(RDF.type, OWL.ObjectProperty))
