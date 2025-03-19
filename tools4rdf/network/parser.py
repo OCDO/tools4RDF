@@ -17,7 +17,7 @@ class OntoParser:
 
     def _initialize(self):
         self._data_dict = {
-            "class": [],
+            "classes": [],
             "attributes": {
                 "class": {},
                 "object_property": {},
@@ -39,7 +39,7 @@ class OntoParser:
 
     @property
     def classes(self):
-        return self.data_dict["class"]
+        return self.data_dict["classes"]
 
     @property
     def mappings(self):
@@ -145,7 +145,7 @@ class OntoParser:
                             ],
                         }
             else:
-                self._data_dict["class"].append(term)
+                self.classes.append(term)
 
     def add_classes_to_attributes(self):
         for cls in self.classes:
