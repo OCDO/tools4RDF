@@ -72,7 +72,7 @@ class OntoParser:
         - attributes dict
         """
         self.graph += ontoparser.graph
-        self._initialize()
+        self._data_dict = None
         return self
 
     def __radd__(self, ontoparser):
