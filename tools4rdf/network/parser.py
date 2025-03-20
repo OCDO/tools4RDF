@@ -6,13 +6,17 @@ from tools4rdf.network.patch import patch_terms
 from rdflib import Graph, RDF, RDFS, OWL, BNode, URIRef
 
 
-class OntoParser:
-    def __init__(self, infile, format="xml"):
-        if not os.path.exists(infile):
-            raise FileNotFoundError(f"file {infile} not found!")
+def read_ontology(infile, format="xml"):
+    if not os.path.exists(infile):
+        raise FileNotFoundError(f"file {infile} not found!")
+    graph = Graph()
+    graph.parse(infile, format=format)
+    return OntoParser(graph)
 
-        self.graph = Graph()
-        self.graph.parse(infile, format=format)
+
+class OntoParser:
+    def __init__(self, graph):
+        self.graph = graph
         self._data_dict = None
 
     def _initialize(self):
@@ -69,9 +73,8 @@ class OntoParser:
         - classes
         - attributes dict
         """
-        self.graph += ontoparser.graph
-        self._data_dict = None
-        return self
+        graph = self.graph + ontoparser.graph
+        return OntoParser(graph)
 
     def __radd__(self, ontoparser):
         return self.__add__(ontoparser)

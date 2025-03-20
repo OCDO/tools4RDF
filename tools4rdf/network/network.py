@@ -3,7 +3,8 @@ import graphviz
 import pandas as pd
 
 from tools4rdf.network.attrsetter import AttrSetter
-from tools4rdf.network.parser import OntoParser
+from tools4rdf.network.parser import read_ontology, OntoParser
+from tools4rdf.network.term import OntoTerm
 
 
 def _replace_name(name):
@@ -16,7 +17,7 @@ class OntologyNetwork:
     """
 
     def __init__(self, infile):
-        self.onto = OntoParser(infile)
+        self.onto = read_ontology(infile)
         self.terms = AttrSetter()
         self.g = self.onto.get_networkx_graph()
         self._assign_attributes()
@@ -52,10 +53,6 @@ class OntologyNetwork:
 
     def __radd__(self, ontonetwork):
         return self.__add__(ontonetwork)
-
-    def _add_data_nodes(self):
-        for key, val in self.onto.attributes["data_node"].items():
-            self.g.add_node(val.name, node_type="literal", data_type=val.data_type)
 
     def add_namespace(self, namespace_name, namespace_iri):
         self.onto.add_namespace(namespace_name, namespace_iri)
