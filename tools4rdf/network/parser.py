@@ -1,7 +1,4 @@
 import os
-import copy
-import numpy as np
-import itertools
 
 from tools4rdf.network.term import OntoTerm, strip_name
 from tools4rdf.network.patch import patch_terms

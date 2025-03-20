@@ -5,8 +5,6 @@ These may or may not be implemented in the ontology. As it is implemented; it ca
 from the patches
 """
 
-import os
-
 
 def patch_terms(iri, rn):
     """
