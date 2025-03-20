@@ -53,10 +53,6 @@ class OntologyNetwork:
     def __radd__(self, ontonetwork):
         return self.__add__(ontonetwork)
 
-    def _add_data_nodes(self):
-        for key, val in self.onto.attributes["data_node"].items():
-            self.g.add_node(val.name, node_type="literal", data_type=val.data_type)
-
     def add_namespace(self, namespace_name, namespace_iri):
         self.onto.add_namespace(namespace_name, namespace_iri)
 
