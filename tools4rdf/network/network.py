@@ -74,10 +74,6 @@ class OntologyNetwork:
         for key, val in self.onto.attributes["class"].items():
             self.g.add_node(val.name, node_type="class")
 
-    def _add_data_nodes(self):
-        for key, val in self.onto.attributes["data_node"].items():
-            self.g.add_node(val.name, node_type="literal", data_type=val.data_type)
-
     def _add_object_properties(self):
         for key, val in self.onto.attributes["object_property"].items():
             self.g.add_node(val.name, node_type="object_property")
