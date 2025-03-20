@@ -3,7 +3,7 @@ import graphviz
 import pandas as pd
 
 from tools4rdf.network.attrsetter import AttrSetter
-from tools4rdf.network.parser import OntoParser
+from tools4rdf.network.parser import read_ontology
 from tools4rdf.network.term import OntoTerm
 
 
@@ -18,7 +18,7 @@ class OntologyNetwork:
 
     def __init__(self, infile):
         self.g = nx.DiGraph()
-        self.onto = OntoParser(infile)
+        self.onto = read_ontology(infile)
         self.terms = AttrSetter()
         self._parse_all()
 

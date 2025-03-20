@@ -5,13 +5,17 @@ from tools4rdf.network.patch import patch_terms
 from rdflib import Graph, RDF, RDFS, OWL, BNode, URIRef
 
 
-class OntoParser:
-    def __init__(self, infile, format="xml"):
-        if not os.path.exists(infile):
-            raise FileNotFoundError(f"file {infile} not found!")
+def read_ontology(infile, format="xml"):
+    if not os.path.exists(infile):
+        raise FileNotFoundError(f"file {infile} not found!")
+    graph = Graph()
+    graph.parse(infile, format=format)
+    return OntoParser(graph)
 
-        self.graph = Graph()
-        self.graph.parse(infile, format=format)
+
+class OntoParser:
+    def __init__(self, graph):
+        self.graph = graph
         self.classes = []
         self.attributes = {}
         self.attributes["class"] = {}
@@ -39,23 +43,8 @@ class OntoParser:
         - classes
         - attributes dict
         """
-        for mainkey in ["class", "object_property", "data_property"]:
-            if mainkey in ontoparser.attributes.keys():
-                for key, val in ontoparser.attributes[mainkey].items():
-                    self.attributes[mainkey][key] = val
-
-        # now change classes
-        if ontoparser.classes is not None:
-            for clx in ontoparser.classes:
-                self.classes.append(clx)
-
-        for key, val in ontoparser.namespaces.items():
-            self.namespaces[key] = val
-
-        for key, val in ontoparser.extra_namespaces.items():
-            self.extra_namespaces[key] = val
-
-        return self
+        graph = self.graph + ontoparser.graph
+        return OntoParser(graph)
 
     def __radd__(self, ontoparser):
         return self.__add__(ontoparser)
