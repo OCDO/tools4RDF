@@ -17,16 +17,21 @@ def read_ontology(infile, format="xml"):
 class OntoParser:
     def __init__(self, graph):
         self.graph = graph
-        self.classes = []
-        self.attributes = {}
-        self.attributes["class"] = {}
-        self.attributes["object_property"] = {}
-        self.attributes["data_property"] = {}
-        self.attributes["data_nodes"] = {}
-        self.mappings = {}
-        self.namespaces = {}
-        self.extra_namespaces = {}
+        self._data_dict = None
 
+    def _initialize(self):
+        self._data_dict = {
+            "classes": [],
+            "attributes": {
+                "class": {},
+                "object_property": {},
+                "data_property": {},
+                "data_nodes": {},
+            },
+            "mappings": {},
+            "namespaces": {},
+            "extra_namespaces": {},
+        }
         self.extract_classes()
         self.extract_relations(relation_type="union")
         self.extract_relations(relation_type="intersection")
@@ -37,6 +42,32 @@ class OntoParser:
         self.extract_object_properties()
         self.extract_data_properties()
         self.recheck_namespaces()
+
+    @property
+    def classes(self):
+        return self.data_dict["classes"]
+
+    @property
+    def mappings(self):
+        return self.data_dict["mappings"]
+
+    @property
+    def namespaces(self):
+        return self.data_dict["namespaces"]
+
+    @property
+    def extra_namespaces(self):
+        return self.data_dict["extra_namespaces"]
+
+    @property
+    def attributes(self):
+        return self.data_dict["attributes"]
+
+    @property
+    def data_dict(self):
+        if self._data_dict is None:
+            self._initialize()
+        return self._data_dict
 
     def __add__(self, ontoparser):
         """
@@ -67,7 +98,7 @@ class OntoParser:
                     ].namespace_with_prefix
 
     def extract_classes(self):
-        self.classes = list(self.graph.subjects(RDF.type, OWL.Class))
+        self._data_dict["classes"] = list(self.graph.subjects(RDF.type, OWL.Class))
 
     def extract_object_properties(self):
         object_properties = list(self.graph.subjects(RDF.type, OWL.ObjectProperty))
