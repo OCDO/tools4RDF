@@ -289,11 +289,11 @@ class OntoParser:
                 for d in val.domain:
                     g.add_edge(d, val.name)
 
-                for r in val.range:
-                    if property_key == "object_property":
+                if property_key == "object_property":
+                    for r in val.range:
                         g.add_edge(val.name, r)
-                    else:
-                        g.add_edge(val.name, val.associated_data_node)
+                else:
+                    g.add_edge(val.name, val.associated_data_node)
         return g
 
     def add_term(
