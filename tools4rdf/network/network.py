@@ -3,7 +3,7 @@ import graphviz
 import pandas as pd
 
 from tools4rdf.network.attrsetter import AttrSetter
-from tools4rdf.network.parser import read_ontology
+from tools4rdf.network.parser import read_ontology, OntoParser
 from tools4rdf.network.term import OntoTerm
 
 
@@ -17,36 +17,20 @@ class OntologyNetwork:
     """
 
     def __init__(self, infile):
-        self.g = nx.DiGraph()
         self.onto = read_ontology(infile)
         self.terms = AttrSetter()
-        self._parse_all()
+        self.g = self.onto.get_networkx_graph()
+        self._assign_attributes()
 
     def _assign_attributes(self):
-        mapdict = {}
-        # add first level - namespaces
-        for key in self.namespaces.keys():
-            mapdict[key] = {}
-
-        # now iterate over all attributes
-        for k1 in ["class", "object_property", "data_property"]:
-            for k2, val in self.onto.attributes[k1].items():
-                mapdict[val.namespace][val.name_without_prefix] = val
-
-        self.terms._add_attribute(mapdict)
-
-    def _parse_all(self):
-        # call methods
-        self._add_class_nodes()
-        self._add_object_properties()
-        self._add_data_properties()
-        self._assign_attributes()
+        self.terms._add_attribute(self.onto.get_attributes())
 
     def __add__(self, ontonetwork):
         # add onto network
         self.onto = self.onto + ontonetwork.onto
         # now parse again
-        self._parse_all()
+        self.g = self.onto.get_networkx_graph()
+        self._assign_attributes()
         return self
 
     def strip_name(self, name):
@@ -70,49 +54,10 @@ class OntologyNetwork:
     def __radd__(self, ontonetwork):
         return self.__add__(ontonetwork)
 
-    def _add_class_nodes(self):
-        for key, val in self.onto.attributes["class"].items():
-            self.g.add_node(val.name, node_type="class")
-
-    def _add_object_properties(self):
-        for key, val in self.onto.attributes["object_property"].items():
-            self.g.add_node(val.name, node_type="object_property")
-
-            # add edges between them
-            for d in val.domain:
-                self.g.add_edge(d, val.name)
-
-            for r in val.range:
-                self.g.add_edge(val.name, r)
-
-    def _add_data_properties(self):
-        for key, val in self.onto.attributes["data_property"].items():
-            self.g.add_node(val.name, node_type="data_property")
-            for d in val.domain:
-                self.g.add_edge(d, val.name)
-
-            for r in val.range:
-                self.g.add_edge(val.name, val.associated_data_node)
-
     def add_namespace(self, namespace_name, namespace_iri):
-        """
-        Add a new namespace.
+        self.onto.add_namespace(namespace_name, namespace_iri)
 
-        Parameters
-        ----------
-        namespace_name : str
-            The name of the namespace to add.
-        namespace_iri : str
-            The IRI of the namespace.
-
-        Raises
-        ------
-        KeyError
-            If the namespace already exists.
-
-        """
-        if namespace_name not in self.onto.namespaces.keys():
-            self.onto.namespaces[namespace_name] = namespace_iri
+    add_namespace.__doc__ = OntoParser.add_namespace.__doc__
 
     def add_term(
         self,
@@ -125,48 +70,19 @@ class OntologyNetwork:
         node_id=None,
         delimiter="/",
     ):
-        """
-        Add a node.
-
-        Parameters
-        ----------
-        uri : str
-            The URI of the node.
-        node_type : str
-            The type of the node.
-        namespace : str, optional
-            The namespace of the node.
-        dm : list, optional
-            The domain metadata of the node.
-        rn : list, optional
-            The range metadata of the node.
-        data_type : str, optional
-            The data type of the node.
-        node_id : str, optional
-            The ID of the node.
-        delimiter : str, optional
-            The delimiter used for parsing the URI.
-
-        Raises
-        ------
-        ValueError
-            If the namespace is not found.
-
-        """
-        term = OntoTerm(
-            uri,
-            namespace=namespace,
+        self.onto.add_term(
+            uri=uri,
             node_type=node_type,
+            namespace=namespace,
             dm=dm,
             rn=rn,
             data_type=data_type,
             node_id=node_id,
             delimiter=delimiter,
         )
-        if term.namespace not in self.onto.namespaces.keys():
-            raise ValueError("Namespace not found, first add namespace")
-        self.onto.attributes[node_type][term.name] = term
         self._assign_attributes()
+
+    add_term.__doc__ = OntoParser.add_term.__doc__
 
     def add_path(self, triple):
         """
@@ -285,8 +201,9 @@ class OntologyNetwork:
         target : node
             The target node for the path.
         triples : bool, optional
-            If True, returns the path as a list of triples. Each triple consists of three consecutive nodes in the path.
-            If False, returns the path as a list of nodes.
+            If True, returns the path as a list of triples. Each triple consists
+            of three consecutive nodes in the path. If False, returns the path
+            as a list of nodes.
 
         Returns:
         --------
