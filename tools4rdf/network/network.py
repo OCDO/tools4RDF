@@ -374,3 +374,4 @@ class OntologyNetwork:
 
     def add(self, triple):
         self.onto.add(triple)
+        self.g = self.onto.get_networkx_graph()
