@@ -383,3 +383,16 @@ class OntoParser:
         """
         if namespace_name not in self.namespaces.keys():
             self.namespaces[namespace_name] = namespace_iri
+
+    def add(self, triple):
+        """
+        Add a triple.
+
+        Parameters
+        ----------
+        triple : tuple
+            The triple to add.
+
+        """
+        self.graph.add(triple)
+        self._data_dict = None

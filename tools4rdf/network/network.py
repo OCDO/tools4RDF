@@ -371,3 +371,6 @@ class OntologyNetwork:
                 return pd.DataFrame(res, columns=labels)
 
         return res
+
+    def add(self, triple):
+        self.onto.add(triple)
