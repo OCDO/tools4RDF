@@ -18,8 +18,8 @@ class OntologyNetwork:
 
     def __init__(self, infile):
         self._onto = None
-        self.terms = None
-        self.g = None
+        self._terms = None
+        self._g = None
         self.onto = read_ontology(infile)
 
     @property
@@ -29,12 +29,26 @@ class OntologyNetwork:
     @onto.setter
     def onto(self, onto):
         self._onto = onto
-        self.terms = AttrSetter()
-        self.g = self.onto.get_networkx_graph()
+        self._terms = None
+        self._g = None
+
+    def g(self):
+        if self._g is None:
+            self._initialize()
+        return self._g
+
+    def terms(self):
+        if self._terms is None:
+            self._initialize()
+        return self._terms
+
+    def _initialize(self):
+        self._terms = AttrSetter()
+        self._g = self.onto.get_networkx_graph()
         self._assign_attributes()
 
     def _assign_attributes(self):
-        self.terms._add_attribute(self.onto.get_attributes())
+        self._terms._add_attribute(self.onto.get_attributes())
 
     def __add__(self, ontonetwork):
         self.onto = self.onto + ontonetwork.onto
@@ -381,4 +395,5 @@ class OntologyNetwork:
 
     def add(self, triple):
         self.onto.add(triple)
-        self.g = self.onto.get_networkx_graph()
+        self._g = None
+        self._terms = None
