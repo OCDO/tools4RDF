@@ -244,7 +244,7 @@ class OntoParser:
 
     def create_term(self, cls):
         iri = cls.toPython()
-        term = OntoTerm(iri)
+        term = OntoTerm(iri, namespace_dict=self.namespaces)
         term.description = self.get_description(cls)
         term._object = cls
         return term
