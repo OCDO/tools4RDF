@@ -1,10 +1,10 @@
 import networkx as nx
 import graphviz
 import pandas as pd
+from rdflib import URIRef, Literal, RDF, OWL
 
 from tools4rdf.network.attrsetter import AttrSetter
 from tools4rdf.network.parser import read_ontology, OntoParser
-from tools4rdf.network.term import OntoTerm
 
 
 def _replace_name(name):
@@ -111,35 +111,26 @@ class OntologyNetwork:
         If the subject or object of the triple is not found in the attributes of the ontology.
 
         """
-        sub = triple[0]
-        pred = triple[1]
-        obj = triple[2]
 
-        if sub not in self.onto.attributes["class"].keys():
-            raise ValueError(f"{sub} not found in self.attributes")
+        def to_uri(tag, namespaces):
+            if ":" in tag:
+                prefix, term = tag.split(":")
+                return URIRef(namespaces[prefix] + term)
+            else:
+                return Literal(tag)
 
-        # now add
-        self.g.add_edge(sub, pred)
-        for subclass in self.onto.attributes["class"][sub].subclasses:
-            self.g.add_edge(subclass, pred)
+        sub, pred, obj = [to_uri(t, self.namespaces) for t in triple]
 
-        # now add pred
-        if pred in self.onto.attributes["object_property"].keys():
-            if obj not in self.onto.attributes["class"].keys():
-                raise ValueError(f"{obj} not found in self.attributes")
-            # subclasses = self.onto._get_subclasses(obj)
-            self.g.add_edge(pred, obj)
-            for subclass in self.onto.attributes["class"][obj].subclasses:
-                self.g.add_edge(pred, subclass)
+        if (sub, RDF.type, OWL.Class) not in self.g:
+            raise ValueError(f"{sub} not found in the knowledge graph")
 
-        # another possibility it is data property
-        elif pred in self.onto.attributes["data_property"].keys():
-            data_node = f"{pred}value"
-            self.g.add_node(data_node, node_type="literal", data_type=obj)
-            self.g.add_edge(pred, data_node)
+        if isinstance(obj, URIRef) and (obj, RDF.type, OWL.Class) not in self.g:
+            raise ValueError(f"{obj} not found in the knowledge graph")
 
-        else:
-            raise ValueError(f"{pred} not found in self.attributes")
+        self.onto.graph.add((sub, pred, obj))
+        self.terms = AttrSetter()
+        self.g = self.onto.get_networkx_graph()
+        self._assign_attributes()
 
     def draw(
         self,

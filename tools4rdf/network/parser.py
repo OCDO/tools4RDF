@@ -91,7 +91,7 @@ class OntoParser:
     def _extract_default_namespaces(self):
         for prefix, namespace in self.graph.namespaces():
             if len(prefix) > 0 and "default" not in prefix:
-                self.namespaces[prefix] = namespace
+                self.namespaces[prefix] = namespace.toPython()
 
     def recheck_namespaces(self):
         for mainkey in ["class", "object_property", "data_property"]:
@@ -356,19 +356,15 @@ class OntoParser:
             If the namespace is not found.
 
         """
-        term = OntoTerm(
-            uri,
-            namespace=namespace,
-            node_type=node_type,
-            dm=dm,
-            rn=rn,
-            data_type=data_type,
-            node_id=node_id,
-            delimiter=delimiter,
-        )
-        if term.namespace not in self.namespaces.keys():
-            raise ValueError("Namespace not found, first add namespace")
-        self.attributes[node_type][term.name] = term
+        if node_type == "class":
+            self.graph.add((URIRef(uri), RDF.type, OWL.Class))
+        elif node_type == "object_property":
+            self.graph.add((URIRef(uri), RDF.type, OWL.ObjectProperty))
+        elif node_type == "data_property":
+            self.graph.add((URIRef(uri), RDF.type, OWL.DatatypeProperty))
+        else:
+            raise ValueError("Node type not found")
+        self._data_dict = None
 
     def add_namespace(self, namespace_name, namespace_iri):
         """
