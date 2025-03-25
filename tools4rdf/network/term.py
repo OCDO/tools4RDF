@@ -66,6 +66,7 @@ class OntoTerm:
         delimiter="/",
         description=None,
         label=None,
+        target=None,
     ):
 
         self.uri = uri
@@ -102,7 +103,7 @@ class OntoTerm:
         # condition parents are the parents that have conditions
         # these are accumulated when using the & or || operators
         self._condition_parents = []
-        self._object = None
+        self.target = target
 
     @property
     def URIRef(self):
