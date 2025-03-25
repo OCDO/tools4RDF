@@ -244,8 +244,11 @@ class OntoParser:
 
     def create_term(self, cls):
         iri = cls.toPython()
-        term = OntoTerm(iri, namespace=self._lookup_namespace(iri))
-        term.description = self.get_description(cls)
+        term = OntoTerm(
+            uri=iri,
+            namespace=self._lookup_namespace(iri),
+            description=self.get_description(cls),
+        )
         term._object = cls
         return term
 
