@@ -244,10 +244,16 @@ class OntoParser:
 
     def create_term(self, cls):
         iri = cls.toPython()
-        term = OntoTerm(iri, namespace_dict=self.namespaces)
+        term = OntoTerm(iri, namespace=self._lookup_namespace(iri))
         term.description = self.get_description(cls)
         term._object = cls
         return term
+
+    def _lookup_namespace(self, uri):
+        for key, value in self.namespaces.items():
+            if uri.startswith(value):
+                return key
+        return None
 
     def unravel_relation(self, term, unravel_list):
         if term == RDF.nil:

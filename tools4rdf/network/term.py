@@ -7,18 +7,6 @@ import numbers
 import copy
 
 
-def _lookup_namespace(uri=None, namespace=None, namespace_dict=None):
-    if uri is None:
-        return None
-    elif namespace is not None:
-        return namespace
-    elif namespace_dict is not None:
-        for key, value in namespace_dict.items():
-            if uri.startswith(value):
-                return key
-    return strip_name(uri, get_what="namespace")
-
-
 def _get_namespace_and_name(uri):
     uri_split = uri.split("#")
     if len(uri_split) > 1:
@@ -78,7 +66,6 @@ class OntoTerm:
         delimiter="/",
         description=None,
         label=None,
-        namespace_dict=None,
     ):
 
         self.uri = uri
@@ -104,7 +91,9 @@ class OntoTerm:
         self.is_domain_of = []
         self.is_range_of = []
         self._condition = None
-        self.namespace = _lookup_namespace(uri, namespace, namespace_dict)
+        if uri is not None and namespace is None:
+            namespace = strip_name(uri, get_what="namespace")
+        self.namespace = namespace
         # name of the class
         self._name = None
         # parents for the class; these are accumulated
