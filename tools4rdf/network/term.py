@@ -16,8 +16,7 @@ def _lookup_namespace(uri=None, namespace=None, namespace_dict=None):
         for key, value in namespace_dict.items():
             if uri.startswith(value):
                 return key
-    else:
-        return strip_name(uri, get_what="namespace")
+    return strip_name(uri, get_what="namespace")
 
 
 def _get_namespace_and_name(uri):
