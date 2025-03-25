@@ -4,7 +4,6 @@ import pandas as pd
 
 from tools4rdf.network.attrsetter import AttrSetter
 from tools4rdf.network.parser import read_ontology, OntoParser
-from tools4rdf.network.term import OntoTerm
 
 
 def _replace_name(name):
