@@ -67,8 +67,11 @@ class OntoTerm:
         description=None,
         label=None,
         target=None,
+        name=None,
     ):
 
+        if uri is None and name is None:
+            raise ValueError("Either uri or name must be provided!")
         self.uri = uri
         # type: can be object property, data property, or class
         self.node_type = node_type
@@ -96,7 +99,7 @@ class OntoTerm:
             namespace = strip_name(uri, get_what="namespace")
         self.namespace = namespace
         # name of the class
-        self._name = None
+        self._name = name
         # parents for the class; these are accumulated
         # when using the >> operator
         self._parents = []

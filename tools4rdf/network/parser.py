@@ -129,9 +129,7 @@ class OntoParser:
             self.attributes["data_property"][term.name] = term
 
             # now create data nodes
-            data_term = OntoTerm()
-            data_term.name = term.name + "value"
-            data_term.node_type = "data_node"
+            data_term = OntoTerm(name=term.name + "value", node_type="data_node")
             self.attributes["data_property"][
                 term.name
             ].associated_data_node = data_term.name
