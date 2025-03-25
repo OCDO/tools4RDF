@@ -99,7 +99,8 @@ class OntoTerm:
             namespace = strip_name(uri, get_what="namespace")
         self.namespace = namespace
         # name of the class
-        self._name = name
+        self._name = None
+        self.name = name
         # parents for the class; these are accumulated
         # when using the >> operator
         self._parents = []
@@ -184,16 +185,16 @@ class OntoTerm:
         str
             The name of the term.
         """
-        if self._name is not None:
-            return self._name
-        return strip_name(
-            self.uri,
-            get_what="name",
-            namespace=self.namespace,
-        )
+        return self._name
 
     @name.setter
     def name(self, val):
+        if val is None:
+            val = strip_name(
+                self.uri,
+                get_what="name",
+                namespace=self.namespace,
+            )
         self._name = val
 
     @property
