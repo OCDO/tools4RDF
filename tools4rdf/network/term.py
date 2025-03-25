@@ -85,9 +85,9 @@ class OntoTerm:
         self.equivalent_classes = []
         self.subproperties = []
         self.delimiter = delimiter
+        self._description = None
         self.description = description
         self.label = label
-        self._description = None
         self._label = None
         self.is_domain_of = []
         self.is_range_of = []
