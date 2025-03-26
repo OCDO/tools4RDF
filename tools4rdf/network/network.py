@@ -10,13 +10,13 @@ def _replace_name(name):
     return ".".join(name.split(":"))
 
 
-class OntologyNetwork:
+class OntologyNetworkBase:
     """
     Network representation of Onto
     """
 
-    def __init__(self, infile):
-        self.onto = parse_ontology(infile)
+    def __init__(self, onto):
+        self.onto = onto
         self.terms = AttrSetter()
         self.g = self.onto.get_networkx_graph()
         self._assign_attributes()
@@ -370,3 +370,12 @@ class OntologyNetwork:
                 return pd.DataFrame(res, columns=labels)
 
         return res
+
+
+class OntologyNetwork(OntologyNetworkBase):
+    """
+    Network representation of Onto
+    """
+
+    def __init__(self, infile):
+        super().__init__(parse_ontology(infile))
