@@ -26,8 +26,7 @@ class OntologyNetworkBase:
 
     def __add__(self, ontonetwork):
         onto = self.onto + ontonetwork.onto
-        return OntologyNetworkBase(onto)
-
+        return self.__class__(onto)
     def strip_name(self, name):
         raw = name.split(":")
         if len(raw) > 1:
