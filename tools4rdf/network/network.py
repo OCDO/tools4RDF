@@ -25,7 +25,6 @@ class OntologyNetworkBase:
         self.terms._add_attribute(self.onto.get_attributes())
 
     def __add__(self, ontonetwork):
-        # add onto network
         onto = self.onto + ontonetwork.onto
         return OntologyNetworkBase(onto)
 
