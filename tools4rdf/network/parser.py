@@ -88,6 +88,11 @@ class OntoParser:
             base_iri = str(s)
         return base_iri
 
+    def _extract_default_namespaces(self):
+        for prefix, namespace in self.graph.namespaces():
+            if len(prefix) > 0 and "default" not in prefix:
+                self.namespaces[prefix] = namespace
+
     def recheck_namespaces(self):
         for mainkey in ["class", "object_property", "data_property"]:
             for key, val in self.attributes[mainkey].items():
@@ -96,6 +101,7 @@ class OntoParser:
                     self.namespaces[namespace] = self.attributes[mainkey][
                         key
                     ].namespace_with_prefix
+        self._extract_default_namespaces()
 
     def extract_classes(self):
         self._data_dict["classes"] = list(self.graph.subjects(RDF.type, OWL.Class))
