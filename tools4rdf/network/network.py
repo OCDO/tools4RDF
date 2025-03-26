@@ -26,11 +26,8 @@ class OntologyNetworkBase:
 
     def __add__(self, ontonetwork):
         # add onto network
-        self.onto = self.onto + ontonetwork.onto
-        # now parse again
-        self.g = self.onto.get_networkx_graph()
-        self._assign_attributes()
-        return self
+        onto = self.onto + ontonetwork.onto
+        return OntologyNetworkBase(onto)
 
     def strip_name(self, name):
         raw = name.split(":")
