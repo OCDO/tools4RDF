@@ -4,7 +4,7 @@ import pandas as pd
 from rdflib import URIRef, Literal, RDF, OWL
 
 from tools4rdf.network.attrsetter import AttrSetter
-from tools4rdf.network.parser import read_ontology, OntoParser
+from tools4rdf.network.parser import parse_ontology, OntoParser
 
 
 def _replace_name(name):
@@ -20,7 +20,7 @@ class OntologyNetwork:
         self._onto = None
         self.terms = None
         self.g = None
-        self.onto = read_ontology(infile)
+        self.onto = parse_ontology(infile)
 
     @property
     def onto(self):
