@@ -91,7 +91,7 @@ class OntoParser:
     def _extract_default_namespaces(self):
         for prefix, namespace in self.graph.namespaces():
             if len(prefix) > 0 and "default" not in prefix:
-                self.namespaces[prefix] = namespace
+                self.namespaces[prefix] = namespace.toPython()
 
     def recheck_namespaces(self):
         for mainkey in ["class", "object_property", "data_property"]:
