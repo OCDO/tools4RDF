@@ -11,7 +11,60 @@ def _replace_name(name):
     return ".".join(name.split(":"))
 
 
-class OntologyNetworkBase:
+class Network:
+    def __init__(self, onto):
+        self.terms = AttrSetter()
+        self.terms._add_attribute(onto.get_attributes())
+        self.g = onto.get_networkx_graph()
+
+    def draw(
+        self,
+        styledict={
+            "class": {"shape": "box"},
+            "object_property": {"shape": "ellipse"},
+            "data_property": {"shape": "ellipse"},
+            "literal": {"shape": "parallelogram"},
+        },
+    ):
+        """
+        Draw the network graph using graphviz.
+
+        Parameters
+        ----------
+        styledict : dict, optional
+            A dictionary specifying the styles for different node types.
+            The keys of the dictionary are the node types, and the values are dictionaries
+            specifying the shape for each node type. Defaults to None.
+
+        Returns
+        -------
+        graphviz.Digraph
+            The graph object representing the network graph.
+
+        Example
+        -------
+        styledict = {
+            "class": {"shape": "box"},
+            "object_property": {"shape": "ellipse"},
+            "data_property": {"shape": "ellipse"},
+            "literal": {"shape": "parallelogram"},
+        }
+        network.draw(styledict)
+        """
+        dot = graphviz.Digraph()
+        node_list = list(self.g.nodes(data="node_type"))
+        edge_list = list(self.g.edges)
+        for node in node_list:
+            name = _replace_name(node[0])
+            if node[1] is not None:
+                t = node[1]
+                dot.node(name, shape=styledict[t]["shape"], fontsize="6")
+        for edge in edge_list:
+            dot.edge(_replace_name(edge[0]), _replace_name(edge[1]))
+        return dot
+
+
+class OntologyNetworkBase(Network):
     """
     Network representation of Onto
     """
@@ -133,52 +186,6 @@ class OntologyNetworkBase:
         self.onto.graph.add((sub, pred, obj))
         self._terms = None
         self._g = None
-
-    def draw(
-        self,
-        styledict={
-            "class": {"shape": "box"},
-            "object_property": {"shape": "ellipse"},
-            "data_property": {"shape": "ellipse"},
-            "literal": {"shape": "parallelogram"},
-        },
-    ):
-        """
-        Draw the network graph using graphviz.
-
-        Parameters
-        ----------
-        styledict : dict, optional
-            A dictionary specifying the styles for different node types.
-            The keys of the dictionary are the node types, and the values are dictionaries
-            specifying the shape for each node type. Defaults to None.
-
-        Returns
-        -------
-        graphviz.Digraph
-            The graph object representing the network graph.
-
-        Example
-        -------
-        styledict = {
-            "class": {"shape": "box"},
-            "object_property": {"shape": "ellipse"},
-            "data_property": {"shape": "ellipse"},
-            "literal": {"shape": "parallelogram"},
-        }
-        network.draw(styledict)
-        """
-        dot = graphviz.Digraph()
-        node_list = list(self.g.nodes(data="node_type"))
-        edge_list = list(self.g.edges)
-        for node in node_list:
-            name = _replace_name(node[0])
-            if node[1] is not None:
-                t = node[1]
-                dot.node(name, shape=styledict[t]["shape"], fontsize="6")
-        for edge in edge_list:
-            dot.edge(_replace_name(edge[0]), _replace_name(edge[1]))
-        return dot
 
     def _get_shortest_path(self, source, target):
         # this function will be modified to take OntoTerms direcl as input; and use their names.
