@@ -32,6 +32,7 @@ class OntoParser:
             "namespaces": {},
             "extra_namespaces": {},
         }
+        self._extract_default_namespaces()
         self.extract_classes()
         self.extract_relations(relation_type="union")
         self.extract_relations(relation_type="intersection")
@@ -101,7 +102,6 @@ class OntoParser:
                     self.namespaces[namespace] = self.attributes[mainkey][
                         key
                     ].namespace_with_prefix
-        self._extract_default_namespaces()
 
     def extract_classes(self):
         self._data_dict["classes"] = list(self.graph.subjects(RDF.type, OWL.Class))
@@ -362,19 +362,19 @@ class OntoParser:
             If the namespace is not found.
 
         """
-        term = OntoTerm(
-            uri,
-            namespace=namespace,
-            node_type=node_type,
-            dm=dm,
-            rn=rn,
-            data_type=data_type,
-            node_id=node_id,
-            delimiter=delimiter,
-        )
-        if term.namespace not in self.namespaces.keys():
-            raise ValueError("Namespace not found, first add namespace")
-        self.attributes[node_type][term.name] = term
+        if node_type == "class":
+            self.graph.add((URIRef(uri), RDF.type, OWL.Class))
+        elif node_type == "object_property":
+            self.graph.add((URIRef(uri), RDF.type, OWL.ObjectProperty))
+        elif node_type == "data_property":
+            self.graph.add((URIRef(uri), RDF.type, OWL.DatatypeProperty))
+        else:
+            raise ValueError("Node type not found")
+        for r in rn:
+            self.graph.add((URIRef(uri), RDFS.range, URIRef(r)))
+        for d in dm:
+            self.graph.add((URIRef(uri), RDFS.domain, URIRef(d)))
+        self._data_dict = None
 
     def add_namespace(self, namespace_name, namespace_iri):
         """
@@ -394,4 +394,5 @@ class OntoParser:
 
         """
         if namespace_name not in self.namespaces.keys():
-            self.namespaces[namespace_name] = namespace_iri
+            self.graph.bind(namespace_name, namespace_iri)
+        self._data_dict = None

@@ -1,6 +1,7 @@
 import networkx as nx
 import graphviz
 import pandas as pd
+from rdflib import URIRef, Literal, RDF, OWL
 
 from tools4rdf.network.attrsetter import AttrSetter
 from tools4rdf.network.parser import parse_ontology, OntoParser
@@ -36,6 +37,7 @@ class OntologyNetworkBase:
     def __add__(self, ontonetwork):
         onto = self.onto + ontonetwork.onto
         return OntologyNetworkBase(onto)
+
     def strip_name(self, name):
         raw = name.split(":")
         if len(raw) > 1:
@@ -107,35 +109,29 @@ class OntologyNetworkBase:
         If the subject or object of the triple is not found in the attributes of the ontology.
 
         """
-        sub = triple[0]
-        pred = triple[1]
-        obj = triple[2]
 
-        if sub not in self.onto.attributes["class"].keys():
-            raise ValueError(f"{sub} not found in self.attributes")
+        def to_uri(tag, namespaces):
+            if ":" in tag:
+                prefix, term = tag.split(":")
+                return URIRef(namespaces[prefix] + term)
+            else:
+                return Literal(tag)
 
-        # now add
-        self.g.add_edge(sub, pred)
-        for subclass in self.onto.attributes["class"][sub].subclasses:
-            self.g.add_edge(subclass, pred)
+        sub, pred, obj = [to_uri(t, self.namespaces) for t in triple]
 
-        # now add pred
-        if pred in self.onto.attributes["object_property"].keys():
-            if obj not in self.onto.attributes["class"].keys():
-                raise ValueError(f"{obj} not found in self.attributes")
-            # subclasses = self.onto._get_subclasses(obj)
-            self.g.add_edge(pred, obj)
-            for subclass in self.onto.attributes["class"][obj].subclasses:
-                self.g.add_edge(pred, subclass)
+        if (sub, RDF.type, OWL.Class) not in self.onto.graph:
+            raise ValueError(
+                f"{sub} not found in {list(self.onto.graph.subjects(RDF.type, OWL.Class))}"
+            )
 
-        # another possibility it is data property
-        elif pred in self.onto.attributes["data_property"].keys():
-            data_node = f"{pred}value"
-            self.g.add_node(data_node, node_type="literal", data_type=obj)
-            self.g.add_edge(pred, data_node)
+        if isinstance(obj, URIRef) and (obj, RDF.type, OWL.Class) not in self.onto.graph:
+            raise ValueError(
+                f"{obj} not found in {list(self.onto.graph.subjects(RDF.type, OWL.Class))}"
+            )
 
-        else:
-            raise ValueError(f"{pred} not found in self.attributes")
+        self.onto.graph.add((sub, pred, obj))
+        self._terms = None
+        self._g = None
 
     def draw(
         self,
