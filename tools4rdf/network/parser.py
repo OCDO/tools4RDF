@@ -261,7 +261,7 @@ class OntoParser:
 
     def add_subclasses_to_owlThing(self):
         for key, cls in self.attributes["class"].items():
-            objects = list(self.graph.objects(cls._object, RDFS.subClassOf))
+            objects = list(self.graph.objects(cls.target, RDFS.subClassOf))
             if len(objects)==0:
                 self.attributes["class"]["owl:Thing"].subclasses.append(cls.name)
 
