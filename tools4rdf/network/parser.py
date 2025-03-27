@@ -34,8 +34,6 @@ class OntoParser:
         }
         self._extract_default_namespaces()
         self.extract_classes()
-        self.extract_relations(relation_type="union")
-        self.extract_relations(relation_type="intersection")
         self.add_classes_to_attributes()
         self.parse_subclasses()
         self.parse_equivalents()
@@ -103,9 +101,6 @@ class OntoParser:
                         key
                     ].namespace_with_prefix
 
-    def extract_classes(self):
-        self._data_dict["classes"] = list(self.graph.subjects(RDF.type, OWL.Class))
-
     def extract_object_properties(self):
         object_properties = list(self.graph.subjects(RDF.type, OWL.ObjectProperty))
         for cls in object_properties:
@@ -136,32 +131,28 @@ class OntoParser:
             self.attributes["data_nodes"][data_term.name] = data_term
 
     def extract_values(self, subject, predicate):
-        vallist = list([x[2] for x in self.graph.triples((subject, predicate, None))])
-        if len(vallist) > 0:
-            return vallist[0]
-        else:
-            return None
+        for val in self.graph.objects(subject, predicate):
+            return val
+        return None
 
-    def extract_relations(self, relation_type):
-        if relation_type == "union":
-            owl_term = OWL.unionOf
-        elif relation_type == "intersection":
-            owl_term = OWL.intersectionOf
-
-        to_delete = []
-        for term in self.classes:
+    def extract_classes(self):
+        for term in self.graph.subjects(RDF.type, OWL.Class):
             if isinstance(term, BNode):
-                union_term = self.extract_values(term, owl_term)
-                if union_term is not None:
-                    unravel_list = []
-                    self.unravel_relation(union_term, unravel_list)
-                    self.mappings[term.toPython()] = {
-                        "type": relation_type,
-                        "items": [strip_name(item.toPython()) for item in unravel_list],
-                    }
-                    to_delete.append(term)
-        for term in to_delete:
-            self.classes.remove(term)
+                for relation_type, owl_term in [
+                    ("union", OWL.unionOf),
+                    ("intersection", OWL.intersectionOf),
+                ]:
+                    union_term = self.extract_values(term, owl_term)
+                    if union_term is not None:
+                        unravel_list = self.unravel_relation(union_term)
+                        self.mappings[term.toPython()] = {
+                            "type": relation_type,
+                            "items": [
+                                strip_name(item.toPython()) for item in unravel_list
+                            ],
+                        }
+            else:
+                self.classes.append(term)
 
     def add_classes_to_attributes(self):
         for cls in self.classes:
@@ -221,24 +212,18 @@ class OntoParser:
             return []
 
     def get_domain(self, cls):
+        return self._get_domain_range(cls, RDFS.domain)
+
+    def get_range(self, cls):
+        return self._get_domain_range(cls, RDFS.range)
+
+    def _get_domain_range(self, cls, predicate):
         domain = []
-        for triple in self.graph.triples(
-            (cls, URIRef("http://www.w3.org/2000/01/rdf-schema#domain"), None)
-        ):
-            domain_term = self.lookup_node(triple[2])
+        for obj in self.graph.objects(cls, predicate):
+            domain_term = self.lookup_node(obj)
             for term in domain_term:
                 domain.append(term)
         return domain
-
-    def get_range(self, cls):
-        rrange = []
-        for triple in self.graph.triples(
-            (cls, URIRef("http://www.w3.org/2000/01/rdf-schema#range"), None)
-        ):
-            range_term = self.lookup_node(triple[2])
-            for term in range_term:
-                rrange.append(term)
-        return rrange
 
     def create_term(self, cls):
         iri = cls.toPython()
@@ -256,14 +241,14 @@ class OntoParser:
                 return key
         return None
 
-    def unravel_relation(self, term, unravel_list):
+    def unravel_relation(self, term, unravel_list=[]):
         if term == RDF.nil:
-            return
+            return unravel_list
         first_term = self.graph.value(term, RDF.first)
         if first_term not in unravel_list:
             unravel_list.append(first_term)
         second_term = self.graph.value(term, RDF.rest)
-        self.unravel_relation(second_term, unravel_list)
+        return self.unravel_relation(second_term, unravel_list)
 
     def parse_subclasses(self):
         for key, cls in self.attributes["class"].items():
