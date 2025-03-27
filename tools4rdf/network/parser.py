@@ -370,6 +370,10 @@ class OntoParser:
             self.graph.add((URIRef(uri), RDF.type, OWL.DatatypeProperty))
         else:
             raise ValueError("Node type not found")
+        for r in rn:
+            self.graph.add((URIRef(uri), RDFS.range, URIRef(r)))
+        for d in dm:
+            self.graph.add((URIRef(uri), RDFS.domain, URIRef(d)))
         self._data_dict = None
 
     def add_namespace(self, namespace_name, namespace_iri):
