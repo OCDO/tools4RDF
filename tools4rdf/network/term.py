@@ -48,9 +48,10 @@ def strip_name(uri, get_what="name", namespace=None):
         _, name = _get_namespace_and_name(uri)
     if get_what == "namespace":
         return namespace
-
     elif get_what == "name":
         return ":".join([namespace, name])
+    else:
+        raise ValueError("get_what must be either namespace or name")
 
 
 class OntoTerm:
@@ -66,8 +67,12 @@ class OntoTerm:
         delimiter="/",
         description=None,
         label=None,
+        target=None,
+        name=None,
     ):
 
+        if uri is None and name is None:
+            raise ValueError("Either uri or name must be provided!")
         self.uri = uri
         # type: can be object property, data property, or class
         self.node_type = node_type
@@ -84,23 +89,26 @@ class OntoTerm:
         self.equivalent_classes = []
         self.subproperties = []
         self.delimiter = delimiter
+        self._description = None
         self.description = description
         self.label = label
-        self._description = None
         self._label = None
         self.is_domain_of = []
         self.is_range_of = []
         self._condition = None
-        self._namespace = namespace
+        if uri is not None and namespace is None:
+            namespace = strip_name(uri, get_what="namespace")
+        self.namespace = namespace
         # name of the class
         self._name = None
+        self.name = name
         # parents for the class; these are accumulated
         # when using the >> operator
         self._parents = []
         # condition parents are the parents that have conditions
         # these are accumulated when using the & or || operators
         self._condition_parents = []
-        self._object = None
+        self.target = target
 
     @property
     def URIRef(self):
@@ -178,16 +186,16 @@ class OntoTerm:
         str
             The name of the term.
         """
-        if self._name is not None:
-            return self._name
-        return strip_name(
-            self.uri,
-            get_what="name",
-            namespace=self.namespace,
-        )
+        return self._name
 
     @name.setter
     def name(self, val):
+        if val is None:
+            val = strip_name(
+                self.uri,
+                get_what="name",
+                namespace=self.namespace,
+            )
         self._name = val
 
     @property
@@ -205,21 +213,6 @@ class OntoTerm:
         name = name.replace("-", "")
         name = name.split(":")[-1]
         return name
-
-    @property
-    def namespace(self):
-        """
-        Get the namespace of the term.
-
-        Returns
-        -------
-        str
-            The namespace of the term.
-        """
-        if self._namespace is not None:
-            return self._namespace
-        else:
-            return strip_name(self.uri, get_what="namespace")
 
     @property
     def namespace_with_prefix(self):
