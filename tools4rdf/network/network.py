@@ -11,128 +11,20 @@ def _replace_name(name):
     return ".".join(name.split(":"))
 
 
-class OntologyNetworkBase:
-    """
-    Network representation of Onto
-    """
+def _strip_name(name):
+    raw = name.split(":")
+    if len(raw) > 1:
+        return raw[-1]
+    return name
 
+
+class Network:
     def __init__(self, onto):
-        self.onto = onto
-        self._terms = None
-        self._g = None
-
-    @property
-    def terms(self):
-        if self._terms is None:
-            self._terms = AttrSetter()
-            self._terms._add_attribute(self.onto.get_attributes())
-        return self._terms
-
-    @property
-    def g(self):
-        if self._g is None:
-            self._g = self.onto.get_networkx_graph()
-        return self._g
-
-    def __add__(self, ontonetwork):
-        onto = self.onto + ontonetwork.onto
-        return OntologyNetworkBase(onto)
-
-    def strip_name(self, name):
-        raw = name.split(":")
-        if len(raw) > 1:
-            return raw[-1]
-        return name
-
-    @property
-    def attributes(self):
-        return self.onto.attributes
-
-    @property
-    def namespaces(self):
-        return self.onto.namespaces
-
-    @property
-    def extra_namespaces(self):
-        return self.onto.extra_namespaces
-
-    def __radd__(self, ontonetwork):
-        return self.__add__(ontonetwork)
-
-    def add_namespace(self, namespace_name, namespace_iri):
-        self.onto.add_namespace(namespace_name, namespace_iri)
-
-    add_namespace.__doc__ = OntoParser.add_namespace.__doc__
-
-    def add_term(
-        self,
-        uri,
-        node_type,
-        namespace=None,
-        dm=(),
-        rn=(),
-        data_type=None,
-        node_id=None,
-        delimiter="/",
-    ):
-        self.onto.add_term(
-            uri=uri,
-            node_type=node_type,
-            namespace=namespace,
-            dm=dm,
-            rn=rn,
-            data_type=data_type,
-            node_id=node_id,
-            delimiter=delimiter,
-        )
-        self._terms = None
-        self._g = None
-
-    add_term.__doc__ = OntoParser.add_term.__doc__
-
-    def add_path(self, triple):
-        """
-        Add a triple as path.
-
-        Note that all attributes of the triple should already exist in the graph.
-        The ontology itself is not modified. Only the graph representation of it is.
-        The expected use is to bridge between two (or more) different ontologies.
-
-        Parameters
-        ----------
-        triple : tuple
-        A tuple representing the triple to be added. The tuple should contain three elements:
-        subject, predicate, and object.
-
-        Raises
-        ------
-        ValueError
-        If the subject or object of the triple is not found in the attributes of the ontology.
-
-        """
-
-        def to_uri(tag, namespaces):
-            if ":" in tag:
-                prefix, term = tag.split(":")
-                return URIRef(namespaces[prefix] + term)
-            else:
-                return Literal(tag)
-
-        sub, pred, obj = [to_uri(t, self.namespaces) for t in triple]
-
-        if (sub, RDF.type, OWL.Class) not in self.onto.graph:
-            raise ValueError(
-                f"{sub} not found in {list(self.onto.graph.subjects(RDF.type, OWL.Class))}"
-            )
-
-        if isinstance(obj, URIRef) and (obj, RDF.type, OWL.Class) not in self.onto.graph:
-            raise ValueError(
-                f"{obj} not found in {list(self.onto.graph.subjects(RDF.type, OWL.Class))}"
-            )
-
-        self.onto.graph.add((sub, pred, obj))
-        self._terms = None
-        self._g = None
+        self.terms = AttrSetter()
+        self.terms._add_attribute(onto.get_attributes())
+        self.g = onto.get_networkx_graph()
+        self.namespaces = onto.namespaces
+        self.extra_namespaces = onto.extra_namespaces
 
     def draw(
         self,
@@ -231,7 +123,7 @@ class OntologyNetworkBase:
         if triples:
             triple_list = []
             for x in range(len(path) // 2):
-                triple_list.append(path[2 * x: 2 * x + 3])
+                triple_list.append(path[2 * x : 2 * x + 3])
             return triple_list
 
         return path
@@ -318,7 +210,7 @@ class OntologyNetworkBase:
             if source.node_type == "class":
                 query.append(
                     "    ?%s rdf:type %s ."
-                    % (self.strip_name(source.variable_name), source.query_name)
+                    % (_strip_name(source.variable_name), source.query_name)
                 )
 
             for destination in destinations:
@@ -371,6 +263,127 @@ class OntologyNetworkBase:
                 return pd.DataFrame(res, columns=labels)
 
         return res
+
+
+class OntologyNetworkBase(Network):
+    """
+    Network representation of Onto
+    """
+
+    def __init__(self, onto):
+        self.onto = onto
+        self._terms = None
+        self._g = None
+
+    @property
+    def terms(self):
+        if self._terms is None:
+            self._terms = AttrSetter()
+            self._terms._add_attribute(self.onto.get_attributes())
+        return self._terms
+
+    @property
+    def g(self):
+        if self._g is None:
+            self._g = self.onto.get_networkx_graph()
+        return self._g
+
+    def __add__(self, ontonetwork):
+        onto = self.onto + ontonetwork.onto
+        return OntologyNetworkBase(onto)
+
+    @property
+    def attributes(self):
+        return self.onto.attributes
+
+    @property
+    def namespaces(self):
+        return self.onto.namespaces
+
+    @property
+    def extra_namespaces(self):
+        return self.onto.extra_namespaces
+
+    def __radd__(self, ontonetwork):
+        return self.__add__(ontonetwork)
+
+    def add_namespace(self, namespace_name, namespace_iri):
+        self.onto.add_namespace(namespace_name, namespace_iri)
+
+    add_namespace.__doc__ = OntoParser.add_namespace.__doc__
+
+    def add_term(
+        self,
+        uri,
+        node_type,
+        namespace=None,
+        dm=(),
+        rn=(),
+        data_type=None,
+        node_id=None,
+        delimiter="/",
+    ):
+        self.onto.add_term(
+            uri=uri,
+            node_type=node_type,
+            namespace=namespace,
+            dm=dm,
+            rn=rn,
+            data_type=data_type,
+            node_id=node_id,
+            delimiter=delimiter,
+        )
+        self._terms = None
+        self._g = None
+
+    add_term.__doc__ = OntoParser.add_term.__doc__
+
+    def add_path(self, triple):
+        """
+        Add a triple as path.
+
+        Note that all attributes of the triple should already exist in the graph.
+        The ontology itself is not modified. Only the graph representation of it is.
+        The expected use is to bridge between two (or more) different ontologies.
+
+        Parameters
+        ----------
+        triple : tuple
+        A tuple representing the triple to be added. The tuple should contain three elements:
+        subject, predicate, and object.
+
+        Raises
+        ------
+        ValueError
+        If the subject or object of the triple is not found in the attributes of the ontology.
+
+        """
+
+        def to_uri(tag, namespaces):
+            if ":" in tag:
+                prefix, term = tag.split(":")
+                return URIRef(namespaces[prefix] + term)
+            else:
+                return Literal(tag)
+
+        sub, pred, obj = [to_uri(t, self.namespaces) for t in triple]
+
+        if (sub, RDF.type, OWL.Class) not in self.onto.graph:
+            raise ValueError(
+                f"{sub} not found in {list(self.onto.graph.subjects(RDF.type, OWL.Class))}"
+            )
+
+        if (
+            isinstance(obj, URIRef)
+            and (obj, RDF.type, OWL.Class) not in self.onto.graph
+        ):
+            raise ValueError(
+                f"{obj} not found in {list(self.onto.graph.subjects(RDF.type, OWL.Class))}"
+            )
+
+        self.onto.graph.add((sub, pred, obj))
+        self._terms = None
+        self._g = None
 
 
 class OntologyNetwork(OntologyNetworkBase):
