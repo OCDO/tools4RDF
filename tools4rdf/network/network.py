@@ -17,24 +17,22 @@ class OntologyNetworkBase:
     """
 
     def __init__(self, onto):
-        self._onto = None
-        self.terms = None
-        self.g = None
         self.onto = onto
+        self._terms = None
+        self._g = None
 
     @property
-    def onto(self):
-        return self._onto
+    def terms(self):
+        if self._terms is None:
+            self._terms = AttrSetter()
+            self._terms._add_attribute(self.onto.get_attributes())
+        return self._terms
 
-    @onto.setter
-    def onto(self, onto):
-        self._onto = onto
-        self.terms = AttrSetter()
-        self.g = self.onto.get_networkx_graph()
-        self._assign_attributes()
-
-    def _assign_attributes(self):
-        self.terms._add_attribute(self.onto.get_attributes())
+    @property
+    def g(self):
+        if self._g is None:
+            self._g = self.onto.get_networkx_graph()
+        return self._g
 
     def __add__(self, ontonetwork):
         onto = self.onto + ontonetwork.onto
@@ -87,7 +85,8 @@ class OntologyNetworkBase:
             node_id=node_id,
             delimiter=delimiter,
         )
-        self._assign_attributes()
+        self._terms = None
+        self._g = None
 
     add_term.__doc__ = OntoParser.add_term.__doc__
 
@@ -132,9 +131,8 @@ class OntologyNetworkBase:
             )
 
         self.onto.graph.add((sub, pred, obj))
-        self.terms = AttrSetter()
-        self.g = self.onto.get_networkx_graph()
-        self._assign_attributes()
+        self._terms = None
+        self._g = None
 
     def draw(
         self,
