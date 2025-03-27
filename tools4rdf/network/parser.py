@@ -37,6 +37,7 @@ class OntoParser:
         self.extract_relations(relation_type="intersection")
         self.add_classes_to_attributes()
         self.parse_subclasses()
+        self.add_subclasses_to_owlThing()
         self.parse_equivalents()
         self.parse_named_individuals()
         self.extract_object_properties()
@@ -99,6 +100,7 @@ class OntoParser:
 
     def extract_classes(self):
         self._data_dict["classes"] = list(self.graph.subjects(RDF.type, OWL.Class))
+        self._data_dict["classes"].append(URIRef("http://www.w3.org/2002/07/owl#Thing"))
 
     def extract_object_properties(self):
         object_properties = list(self.graph.subjects(RDF.type, OWL.ObjectProperty))
@@ -258,6 +260,12 @@ class OntoParser:
                 superclasses = self.lookup_class(obj)
                 for superclass in superclasses:
                     self.attributes["class"][superclass].subclasses.append(cls.name)
+
+    def add_subclasses_to_owlThing(self):
+        for key, cls in self.attributes["class"].items():
+            objects = list(self.graph.objects(cls._object, RDFS.subClassOf))
+            if len(objects)==0:
+                self.attributes["class"]["owl:Thing"].subclasses.append(cls.name)
 
     def parse_equivalents(self):
         for key, cls in self.attributes["class"].items():
