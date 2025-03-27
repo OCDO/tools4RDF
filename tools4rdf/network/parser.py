@@ -258,6 +258,19 @@ class OntoParser:
                 superclasses = self.lookup_class(obj)
                 for superclass in superclasses:
                     self.attributes["class"][superclass].subclasses.append(cls.name)
+    
+    def recursively_add_subclasses(self, clsname):
+        subclasses_to_add = []
+        for subclass in self.attributes["class"][clsname].subclasses:
+            #iterate over each subclass
+            #check if it has subclasses
+            for subclass_of_subclass in self.attributes["class"][subclass].subclasses:
+                if subclass_of_subclass not in self.attributes["class"][clsname].subclasses:
+                    subclasses_to_add.append(subclass_of_subclass)
+        if len(subclasses_to_add)==0:
+            return
+        self.attributes["class"][clsname].subclasses.extend(subclasses_to_add)
+        self.recursively_add_subclasses(clsname)
 
     def add_subclasses_to_owlThing(self):
         for key, cls in self.attributes["class"].items():
