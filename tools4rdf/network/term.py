@@ -92,7 +92,9 @@ class OntoTerm:
         self.is_domain_of = []
         self.is_range_of = []
         self._condition = None
-        self._namespace = namespace
+        if uri is not None and namespace is None:
+            namespace = strip_name(uri, get_what="namespace")
+        self.namespace = namespace
         # name of the class
         self._name = None
         # parents for the class; these are accumulated
@@ -206,21 +208,6 @@ class OntoTerm:
         name = name.replace("-", "")
         name = name.split(":")[-1]
         return name
-
-    @property
-    def namespace(self):
-        """
-        Get the namespace of the term.
-
-        Returns
-        -------
-        str
-            The namespace of the term.
-        """
-        if self._namespace is not None:
-            return self._namespace
-        else:
-            return strip_name(self.uri, get_what="namespace")
 
     @property
     def namespace_with_prefix(self):
