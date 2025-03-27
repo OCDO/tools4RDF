@@ -67,8 +67,12 @@ class OntoTerm:
         delimiter="/",
         description=None,
         label=None,
+        target=None,
+        name=None,
     ):
 
+        if uri is None and name is None:
+            raise ValueError("Either uri or name must be provided!")
         self.uri = uri
         # type: can be object property, data property, or class
         self.node_type = node_type
@@ -85,9 +89,9 @@ class OntoTerm:
         self.equivalent_classes = []
         self.subproperties = []
         self.delimiter = delimiter
+        self._description = None
         self.description = description
         self.label = label
-        self._description = None
         self._label = None
         self.is_domain_of = []
         self.is_range_of = []
@@ -97,13 +101,14 @@ class OntoTerm:
         self.namespace = namespace
         # name of the class
         self._name = None
+        self.name = name
         # parents for the class; these are accumulated
         # when using the >> operator
         self._parents = []
         # condition parents are the parents that have conditions
         # these are accumulated when using the & or || operators
         self._condition_parents = []
-        self._object = None
+        self.target = target
 
     @property
     def URIRef(self):
@@ -181,16 +186,16 @@ class OntoTerm:
         str
             The name of the term.
         """
-        if self._name is not None:
-            return self._name
-        return strip_name(
-            self.uri,
-            get_what="name",
-            namespace=self.namespace,
-        )
+        return self._name
 
     @name.setter
     def name(self, val):
+        if val is None:
+            val = strip_name(
+                self.uri,
+                get_what="name",
+                namespace=self.namespace,
+            )
         self._name = val
 
     @property

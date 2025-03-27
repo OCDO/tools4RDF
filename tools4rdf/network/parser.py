@@ -124,9 +124,7 @@ class OntoParser:
             self.attributes["data_property"][term.name] = term
 
             # now create data nodes
-            data_term = OntoTerm()
-            data_term.name = term.name + "value"
-            data_term.node_type = "data_node"
+            data_term = OntoTerm(name=term.name + "value", node_type="data_node")
             self.attributes["data_property"][
                 term.name
             ].associated_data_node = data_term.name
@@ -229,9 +227,12 @@ class OntoParser:
 
     def create_term(self, cls):
         iri = cls.toPython()
-        term = OntoTerm(iri, namespace=self._lookup_namespace(iri))
-        term.description = self.get_description(cls)
-        term._object = cls
+        term = OntoTerm(
+            uri=iri,
+            namespace=self._lookup_namespace(iri),
+            description=self.get_description(cls),
+            target=cls,
+        )
         return term
 
     def _lookup_namespace(self, uri):
@@ -251,14 +252,14 @@ class OntoParser:
 
     def parse_subclasses(self):
         for key, cls in self.attributes["class"].items():
-            for obj in self.graph.objects(cls._object, RDFS.subClassOf):
+            for obj in self.graph.objects(cls.target, RDFS.subClassOf):
                 superclasses = self.lookup_class(obj)
                 for superclass in superclasses:
                     self.attributes["class"][superclass].subclasses.append(cls.name)
 
     def parse_equivalents(self):
         for key, cls in self.attributes["class"].items():
-            for equivalent in self.graph.objects(cls._object, OWL.equivalentClass):
+            for equivalent in self.graph.objects(cls.target, OWL.equivalentClass):
                 if strip_name(equivalent) in self.attributes["class"]:
                     self.attributes["class"][
                         strip_name(equivalent)
