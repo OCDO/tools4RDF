@@ -394,4 +394,4 @@ class OntoParser:
 
         """
         if namespace_name not in self.namespaces.keys():
-            self.namespaces[namespace_name] = namespace_iri
+            self.graph.bind(namespace_name, namespace_iri)
