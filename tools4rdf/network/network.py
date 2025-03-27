@@ -63,6 +63,16 @@ class Network:
             dot.edge(_replace_name(edge[0]), _replace_name(edge[1]))
         return dot
 
+    def _get_shortest_path(self, source, target):
+        # this function will be modified to take OntoTerms direcl as input; and use their names.
+        path = nx.shortest_path(
+            self.g, source=source.query_name, target=target.query_name
+        )
+        # replace the start and end with thier corresponding variable names
+        path[0] = source.variable_name
+        path[-1] = target.variable_name
+        return path
+
 
 class OntologyNetworkBase(Network):
     """
@@ -186,16 +196,6 @@ class OntologyNetworkBase(Network):
         self.onto.graph.add((sub, pred, obj))
         self._terms = None
         self._g = None
-
-    def _get_shortest_path(self, source, target):
-        # this function will be modified to take OntoTerms direcl as input; and use their names.
-        path = nx.shortest_path(
-            self.g, source=source.query_name, target=target.query_name
-        )
-        # replace the start and end with thier corresponding variable names
-        path[0] = source.variable_name
-        path[-1] = target.variable_name
-        return path
 
     def get_shortest_path(self, source, target, triples=False):
         """
