@@ -267,8 +267,6 @@ class OntoParser:
     def recursively_add_subclass(self, clsname):
         subclasses_to_add = []
         for subclass in self.attributes["class"][clsname].subclasses:
-            #iterate over each subclass
-            #check if it has subclasses
             for subclass_of_subclass in self.attributes["class"][subclass].subclasses:
                 if subclass_of_subclass not in self.attributes["class"][clsname].subclasses:
                     subclasses_to_add.append(subclass_of_subclass)
