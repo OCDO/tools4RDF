@@ -36,6 +36,7 @@ class OntoParser:
         self.extract_classes()
         self.add_classes_to_attributes()
         self.parse_subclasses()
+        self.recursively_add_subclasses()
         self.add_subclasses_to_owlThing()
         self.parse_equivalents()
         self.parse_named_individuals()
@@ -259,7 +260,11 @@ class OntoParser:
                 for superclass in superclasses:
                     self.attributes["class"][superclass].subclasses.append(cls.name)
     
-    def recursively_add_subclasses(self, clsname):
+    def recursively_add_subclasses(self):
+        for clsname in self.attributes["class"].keys():
+            self.recursively_add_subclass(clsname)
+            
+    def recursively_add_subclass(self, clsname):
         subclasses_to_add = []
         for subclass in self.attributes["class"][clsname].subclasses:
             #iterate over each subclass
