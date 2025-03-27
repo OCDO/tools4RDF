@@ -99,6 +99,7 @@ class OntoParser:
 
     def extract_classes(self):
         self._data_dict["classes"] = list(self.graph.subjects(RDF.type, OWL.Class))
+        self._data_dict["classes"].append(URIRef("http://www.w3.org/2002/07/owl#Thing"))
 
     def extract_object_properties(self):
         object_properties = list(self.graph.subjects(RDF.type, OWL.ObjectProperty))
