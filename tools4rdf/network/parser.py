@@ -6,7 +6,7 @@ from tools4rdf.network.patch import patch_terms
 from rdflib import Graph, RDF, RDFS, OWL, BNode, URIRef
 
 
-def read_ontology(infile, format="xml"):
+def parse_ontology(infile, format="xml"):
     if not os.path.exists(infile):
         raise FileNotFoundError(f"file {infile} not found!")
     graph = Graph()
