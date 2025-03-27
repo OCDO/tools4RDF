@@ -263,7 +263,7 @@ class OntoParser:
     def recursively_add_subclasses(self):
         for clsname in self.attributes["class"].keys():
             self.recursively_add_subclass(clsname)
-            
+
     def recursively_add_subclass(self, clsname):
         subclasses_to_add = []
         for subclass in self.attributes["class"][clsname].subclasses:
@@ -275,7 +275,7 @@ class OntoParser:
         if len(subclasses_to_add)==0:
             return
         self.attributes["class"][clsname].subclasses.extend(subclasses_to_add)
-        self.recursively_add_subclasses(clsname)
+        self.recursively_add_subclass(clsname)
 
     def add_subclasses_to_owlThing(self):
         for key, cls in self.attributes["class"].items():
