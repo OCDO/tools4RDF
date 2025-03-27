@@ -32,6 +32,7 @@ class OntoParser:
             "namespaces": {},
             "extra_namespaces": {},
         }
+        self._extract_default_namespaces()
         self.extract_classes()
         self.extract_relations(relation_type="union")
         self.extract_relations(relation_type="intersection")
@@ -101,7 +102,6 @@ class OntoParser:
                     self.namespaces[namespace] = self.attributes[mainkey][
                         key
                     ].namespace_with_prefix
-        self._extract_default_namespaces()
 
     def extract_classes(self):
         self._data_dict["classes"] = list(self.graph.subjects(RDF.type, OWL.Class))
