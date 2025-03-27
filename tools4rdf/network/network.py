@@ -121,11 +121,15 @@ class OntologyNetwork:
 
         sub, pred, obj = [to_uri(t, self.namespaces) for t in triple]
 
-        if (sub, RDF.type, OWL.Class) not in self.g:
-            raise ValueError(f"{sub} not found in the knowledge graph")
+        if (sub, RDF.type, OWL.Class) not in self.onto.graph:
+            raise ValueError(
+                f"{sub} not found in {list(self.onto.graph.subjects(RDF.type, OWL.Class))}"
+            )
 
-        if isinstance(obj, URIRef) and (obj, RDF.type, OWL.Class) not in self.g:
-            raise ValueError(f"{obj} not found in the knowledge graph")
+        if isinstance(obj, URIRef) and (obj, RDF.type, OWL.Class) not in self.onto.graph:
+            raise ValueError(
+                f"{obj} not found in {list(self.onto.graph.subjects(RDF.type, OWL.Class))}"
+            )
 
         self.onto.graph.add((sub, pred, obj))
         self.terms = AttrSetter()
