@@ -11,11 +11,20 @@ def _replace_name(name):
     return ".".join(name.split(":"))
 
 
+def _strip_name(name):
+    raw = name.split(":")
+    if len(raw) > 1:
+        return raw[-1]
+    return name
+
+
 class Network:
     def __init__(self, onto):
         self.terms = AttrSetter()
         self.terms._add_attribute(onto.get_attributes())
         self.g = onto.get_networkx_graph()
+        self.namespaces = onto.namespaces
+        self.extra_namespaces = onto.extra_namespaces
 
     def draw(
         self,
@@ -114,7 +123,7 @@ class Network:
         if triples:
             triple_list = []
             for x in range(len(path) // 2):
-                triple_list.append(path[2 * x: 2 * x + 3])
+                triple_list.append(path[2 * x : 2 * x + 3])
             return triple_list
 
         return path
@@ -201,7 +210,7 @@ class Network:
             if source.node_type == "class":
                 query.append(
                     "    ?%s rdf:type %s ."
-                    % (self.strip_name(source.variable_name), source.query_name)
+                    % (_strip_name(source.variable_name), source.query_name)
                 )
 
             for destination in destinations:
@@ -282,12 +291,6 @@ class OntologyNetworkBase(Network):
     def __add__(self, ontonetwork):
         onto = self.onto + ontonetwork.onto
         return OntologyNetworkBase(onto)
-
-    def strip_name(self, name):
-        raw = name.split(":")
-        if len(raw) > 1:
-            return raw[-1]
-        return name
 
     @property
     def attributes(self):
@@ -370,7 +373,10 @@ class OntologyNetworkBase(Network):
                 f"{sub} not found in {list(self.onto.graph.subjects(RDF.type, OWL.Class))}"
             )
 
-        if isinstance(obj, URIRef) and (obj, RDF.type, OWL.Class) not in self.onto.graph:
+        if (
+            isinstance(obj, URIRef)
+            and (obj, RDF.type, OWL.Class) not in self.onto.graph
+        ):
             raise ValueError(
                 f"{obj} not found in {list(self.onto.graph.subjects(RDF.type, OWL.Class))}"
             )
