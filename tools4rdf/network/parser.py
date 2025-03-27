@@ -6,7 +6,7 @@ from tools4rdf.network.patch import patch_terms
 from rdflib import Graph, RDF, RDFS, OWL, BNode, URIRef
 
 
-def read_ontology(infile, format="xml"):
+def parse_ontology(infile, format="xml"):
     if not os.path.exists(infile):
         raise FileNotFoundError(f"file {infile} not found!")
     graph = Graph()
@@ -32,6 +32,7 @@ class OntoParser:
             "namespaces": {},
             "extra_namespaces": {},
         }
+        self._extract_default_namespaces()
         self.extract_classes()
         self.extract_relations(relation_type="union")
         self.extract_relations(relation_type="intersection")
@@ -91,7 +92,7 @@ class OntoParser:
     def _extract_default_namespaces(self):
         for prefix, namespace in self.graph.namespaces():
             if len(prefix) > 0 and "default" not in prefix:
-                self.namespaces[prefix] = namespace
+                self.namespaces[prefix] = namespace.toPython()
 
     def recheck_namespaces(self):
         for mainkey in ["class", "object_property", "data_property"]:
@@ -101,7 +102,6 @@ class OntoParser:
                     self.namespaces[namespace] = self.attributes[mainkey][
                         key
                     ].namespace_with_prefix
-        self._extract_default_namespaces()
 
     def extract_classes(self):
         self._data_dict["classes"] = list(self.graph.subjects(RDF.type, OWL.Class))
@@ -363,19 +363,19 @@ class OntoParser:
             If the namespace is not found.
 
         """
-        term = OntoTerm(
-            uri,
-            namespace=namespace,
-            node_type=node_type,
-            dm=dm,
-            rn=rn,
-            data_type=data_type,
-            node_id=node_id,
-            delimiter=delimiter,
-        )
-        if term.namespace not in self.namespaces.keys():
-            raise ValueError("Namespace not found, first add namespace")
-        self.attributes[node_type][term.name] = term
+        if node_type == "class":
+            self.graph.add((URIRef(uri), RDF.type, OWL.Class))
+        elif node_type == "object_property":
+            self.graph.add((URIRef(uri), RDF.type, OWL.ObjectProperty))
+        elif node_type == "data_property":
+            self.graph.add((URIRef(uri), RDF.type, OWL.DatatypeProperty))
+        else:
+            raise ValueError("Node type not found")
+        for r in rn:
+            self.graph.add((URIRef(uri), RDFS.range, URIRef(r)))
+        for d in dm:
+            self.graph.add((URIRef(uri), RDFS.domain, URIRef(d)))
+        self._data_dict = None
 
     def add_namespace(self, namespace_name, namespace_iri):
         """
@@ -395,4 +395,5 @@ class OntoParser:
 
         """
         if namespace_name not in self.namespaces.keys():
-            self.namespaces[namespace_name] = namespace_iri
+            self.graph.bind(namespace_name, namespace_iri)
+        self._data_dict = None
