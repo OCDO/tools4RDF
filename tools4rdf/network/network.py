@@ -15,11 +15,11 @@ class OntologyNetworkBase:
     Network representation of Onto
     """
 
-    def __init__(self, infile):
+    def __init__(self, onto):
         self._onto = None
         self.terms = None
         self.g = None
-        self.onto = parse_ontology(infile)
+        self.onto = onto
 
     @property
     def onto(self):
@@ -38,6 +38,7 @@ class OntologyNetworkBase:
     def __add__(self, ontonetwork):
         onto = self.onto + ontonetwork.onto
         return OntologyNetworkBase(onto)
+
     def strip_name(self, name):
         raw = name.split(":")
         if len(raw) > 1:
