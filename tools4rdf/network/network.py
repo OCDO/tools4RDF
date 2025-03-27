@@ -85,7 +85,8 @@ class OntologyNetworkBase:
             node_id=node_id,
             delimiter=delimiter,
         )
-        self.terms._add_attribute(self.onto.get_attributes())
+        self._terms = None
+        self._g = None
 
     add_term.__doc__ = OntoParser.add_term.__doc__
 
