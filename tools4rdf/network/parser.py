@@ -395,3 +395,4 @@ class OntoParser:
         """
         if namespace_name not in self.namespaces.keys():
             self.graph.bind(namespace_name, namespace_iri)
+        self._data_dict = None
