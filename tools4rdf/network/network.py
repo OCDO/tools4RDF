@@ -135,6 +135,14 @@ class Network:
             query.append(f"PREFIX {key}: <{ns[key]}>")
         return query
 
+    def _check_conditions(self, destinations):
+        conditions = False
+        for destination in destinations:
+            if destination._condition is not None:
+                if conditions:
+                    raise ValueError("Only one condition is allowed")
+                conditions = True
+
     def create_query(self, source, destinations, enforce_types=True):
         """
         Create a SPARQL query string based on the given source, destinations, condition, and enforce_types.
@@ -159,13 +167,7 @@ class Network:
         if not isinstance(destinations, list):
             destinations = [destinations]
 
-        # check if more than one of them have an associated condition -> if so throw error
-        no_of_conditions = 0
-        for destination in destinations:
-            if destination._condition is not None:
-                no_of_conditions += 1
-        if no_of_conditions > 1:
-            raise ValueError("Only one condition is allowed")
+        self._check_conditions(destinations)
 
         # iterate through the list, if they have condition parents, add them explicitely
         for destination in destinations:
