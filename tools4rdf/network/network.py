@@ -210,6 +210,31 @@ class Network:
                     )
         return namespaces_used, query
 
+    def _get_filter(self, destinations):
+        """
+        - formulate the condition, given by the `FILTER` command:
+           - extract the filter text from the term
+           - loop over destinations:
+               - call `replace(destination.query_name, destination.variable_name)`
+        """
+        query = []
+        filter_text = ""
+
+        # make filters; get all the unique filters from all the classes in destinations
+        for destination in destinations:
+            if destination._condition is not None:
+                filter_text = destination._condition
+                break
+
+        # replace the query_name with variable_name
+        if filter_text != "":
+            for destination in destinations:
+                filter_text = filter_text.replace(
+                    destination.query_name, destination.variable_name
+                )
+            query.append(f"FILTER {filter_text}")
+        return query
+
     def create_query(self, source, destinations, enforce_types=True):
         """
         Create a SPARQL query string based on the given source, destinations, condition, and enforce_types.
@@ -234,34 +259,14 @@ class Network:
         destinations = self._regulate_destinations(destinations)
         # all names are now collected, in a list of lists
         # start prefix of query
-        query = []
-
-        query.append(
-            f'SELECT DISTINCT {self._get_select_destinations(source, destinations)}'
-        )
-        query.append("WHERE {")
+        query = [
+            f'SELECT DISTINCT {self._get_select_destinations(source, destinations)}',
+            "WHERE {",
+        ]
 
         namespaces_used, q = self._get_where(source, destinations, enforce_types)
         query = self._insert_namespaces(set(namespaces_used)) + query + q
-        # - formulate the condition, given by the `FILTER` command:
-        #    - extract the filter text from the term
-        #    - loop over destinations:
-        #        - call `replace(destination.query_name, destination.variable_name)`
-        filter_text = ""
-
-        # make filters; get all the unique filters from all the classes in destinations
-        for destination in destinations:
-            if destination._condition is not None:
-                filter_text = destination._condition
-                break
-
-        # replace the query_name with variable_name
-        if filter_text != "":
-            for destination in destinations:
-                filter_text = filter_text.replace(
-                    destination.query_name, destination.variable_name
-                )
-            query.append(f"FILTER {filter_text}")
+        query += self._get_filter(destinations)
         query.append("}")
 
         # finished, clean up the terms;
