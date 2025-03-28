@@ -166,6 +166,54 @@ class Network:
         select_destinations = ["?" + source.variable_name] + select_destinations
         return " ".join(select_destinations)
 
+    def _get_where(self, source, destinations, enforce_types):
+        """
+        constructing the spaql query path triples, by iterating over destinations
+        for each destination:
+           - check if it has  parent by looking at `._parents`
+           - if it has `_parents`, called step path method
+           - else just get the path
+           - replace the ends of the path with `variable_name`
+           - if it deosnt exist in the collection of lines, add the lines
+
+        Parameters
+        ----------
+        source : Node
+            The source node from which the query starts.
+        destinations : list
+            The destination node(s) to which the query should reach.
+        enforce_types : bool
+            Whether to enforce the types of the source and destination nodes
+            in the query.
+        """
+        namespaces_used = []
+        query = []
+        for destination in destinations:
+            triplets = self.get_shortest_path(source, destination, triples=True)
+            for triple in triplets:
+                namespaces_used.extend([x.split(":")[0] for x in triple if ":" in x])
+                line_text = "    ?%s %s ?%s ." % (
+                    triple[0].replace(":", "_"),
+                    triple[1],
+                    triple[2].replace(":", "_"),
+                )
+                if line_text not in query:
+                    query.append(line_text)
+
+        # we enforce types of the source and destination
+        if enforce_types:
+            namespaces_used.append("rdf")
+            for target in [source] + destinations:
+                if target.node_type == "class":
+                    query.append(
+                        "    ?%s rdf:type %s ."
+                        % (
+                            target.variable_name,
+                            target.query_name,
+                        )
+                    )
+        return namespaces_used, query
+
     def create_query(self, source, destinations, enforce_types=True):
         """
         Create a SPARQL query string based on the given source, destinations, condition, and enforce_types.
@@ -197,45 +245,8 @@ class Network:
         )
         query.append("WHERE {")
 
-        # constructing the spaql query path triples, by iterating over destinations
-        # for each destination:
-        #    - check if it has  parent by looking at `._parents`
-        #    - if it has `_parents`, called step path method
-        #    - else just get the path
-        #    - replace the ends of the path with `variable_name`
-        #    - if it deosnt exist in the collection of lines, add the lines
-        namespaces_used = []
-        for destination in destinations:
-            triplets = self.get_shortest_path(source, destination, triples=True)
-            for triple in triplets:
-                namespaces_used.extend([x.split(":")[0] for x in triple if ":" in x])
-                line_text = "    ?%s %s ?%s ." % (
-                    triple[0].replace(":", "_"),
-                    triple[1],
-                    triple[2].replace(":", "_"),
-                )
-                if line_text not in query:
-                    query.append(line_text)
-
-        # we enforce types of the source and destination
-        if enforce_types:
-            namespaces_used.append("rdf")
-            if source.node_type == "class":
-                query.append(
-                    "    ?%s rdf:type %s ."
-                    % (_strip_name(source.variable_name), source.query_name)
-                )
-
-            for destination in destinations:
-                if destination.node_type == "class":
-                    query.append(
-                        "    ?%s rdf:type %s ."
-                        % (
-                            destination.variable_name,
-                            destination.query_name,
-                        )
-                    )
-        query = self._insert_namespaces(set(namespaces_used)) + query
+        namespaces_used, q = self._get_where(source, destinations, enforce_types)
+        query = self._insert_namespaces(set(namespaces_used)) + query + q
         # - formulate the condition, given by the `FILTER` command:
         #    - extract the filter text from the term
         #    - loop over destinations:
