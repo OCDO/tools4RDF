@@ -206,11 +206,7 @@ class Network:
             for target in [source] + destinations:
                 if target.node_type == "class":
                     query.append(
-                        "    ?%s rdf:type %s ."
-                        % (
-                            target.variable_name,
-                            target.query_name,
-                        )
+                        f"    ?{target.variable_name} rdf:type {target.query_name} ."
                     )
         return namespaces_used, query
 
