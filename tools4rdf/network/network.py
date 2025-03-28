@@ -157,6 +157,9 @@ class Network:
                 conditions = True
 
     def _get_select_destinations(self, source, destinations):
+        # construct the select distinct command:
+        # add source `variable_name`
+        # iterate over destinations, add their `variable_name`
         select_destinations = [
             "?" + destination.variable_name for destination in destinations
         ]
@@ -189,9 +192,6 @@ class Network:
         # start prefix of query
         query = []
 
-        # construct the select distinct command:
-        # add source `variable_name`
-        # iterate over destinations, add their `variable_name`
         query.append(
             f'SELECT DISTINCT {self._get_select_destinations(source, destinations)}'
         )
@@ -205,7 +205,7 @@ class Network:
         #    - replace the ends of the path with `variable_name`
         #    - if it deosnt exist in the collection of lines, add the lines
         namespaces_used = []
-        for count, destination in enumerate(destinations):
+        for destination in destinations:
             triplets = self.get_shortest_path(source, destination, triples=True)
             for triple in triplets:
                 namespaces_used.extend([x.split(":")[0] for x in triple if ":" in x])
