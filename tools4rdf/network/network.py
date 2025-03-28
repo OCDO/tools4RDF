@@ -123,7 +123,7 @@ class Network:
         if triples:
             triple_list = []
             for x in range(len(path) // 2):
-                triple_list.append(path[2 * x : 2 * x + 3])
+                triple_list.append(path[2 * x: 2 * x + 3])
             return triple_list
 
         return path
