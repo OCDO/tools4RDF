@@ -128,6 +128,13 @@ class Network:
 
         return path
 
+    def _insert_namespaces(self, namespaces):
+        query = []
+        ns = self.namespaces | self.extra_namespaces
+        for key in namespaces:
+            query.append(f"PREFIX {key}: <{ns[key]}>")
+        return query
+
     def create_query(self, source, destinations, enforce_types=True):
         """
         Create a SPARQL query string based on the given source, destinations, condition, and enforce_types.
@@ -169,10 +176,6 @@ class Network:
         # all names are now collected, in a list of lists
         # start prefix of query
         query = []
-        for key, val in self.namespaces.items():
-            query.append(f"PREFIX {key}: <{val}>")
-        for key, val in self.extra_namespaces.items():
-            query.append(f"PREFIX {key}: <{val}>")
 
         # construct the select distinct command:
         # add source `variable_name`
@@ -191,12 +194,11 @@ class Network:
         #    - else just get the path
         #    - replace the ends of the path with `variable_name`
         #    - if it deosnt exist in the collection of lines, add the lines
+        namespaces_used = []
         for count, destination in enumerate(destinations):
-            # print(source, destination)
             triplets = self.get_shortest_path(source, destination, triples=True)
-            # print(triplets)
             for triple in triplets:
-                # print(triple)
+                namespaces_used.extend([x.split(":")[0] for x in triple if ":" in x])
                 line_text = "    ?%s %s ?%s ." % (
                     triple[0].replace(":", "_"),
                     triple[1],
@@ -207,6 +209,7 @@ class Network:
 
         # we enforce types of the source and destination
         if enforce_types:
+            namespaces_used.append("rdf")
             if source.node_type == "class":
                 query.append(
                     "    ?%s rdf:type %s ."
@@ -222,6 +225,7 @@ class Network:
                             destination.query_name,
                         )
                     )
+        query = self._insert_namespaces(set(namespaces_used)) + query
         # - formulate the condition, given by the `FILTER` command:
         #    - extract the filter text from the term
         #    - loop over destinations:
