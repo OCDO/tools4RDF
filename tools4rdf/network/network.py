@@ -123,7 +123,7 @@ class Network:
         if triples:
             triple_list = []
             for x in range(len(path) // 2):
-                triple_list.append(path[2 * x : 2 * x + 3])
+                triple_list.append(path[2 * x: 2 * x + 3])
             return triple_list
 
         return path
@@ -133,6 +133,106 @@ class Network:
         ns = self.namespaces | self.extra_namespaces
         for key in namespaces:
             query.append(f"PREFIX {key}: <{ns[key]}>")
+        return query
+
+    def _regulate_destinations(self, destinations):
+        if not isinstance(destinations, list):
+            destinations = [destinations]
+
+        self._check_conditions(destinations)
+
+        # iterate through the list, if they have condition parents, add them explicitely
+        for destination in destinations:
+            for parent in destination._condition_parents:
+                if parent.variable_name not in [d.variable_name for d in destinations]:
+                    destinations.append(parent)
+        return destinations
+
+    def _check_conditions(self, destinations):
+        conditions = False
+        for destination in destinations:
+            if destination._condition is not None:
+                if conditions:
+                    raise ValueError("Only one condition is allowed")
+                conditions = True
+
+    def _get_select_destinations(self, source, destinations):
+        # construct the select distinct command:
+        # add source `variable_name`
+        # iterate over destinations, add their `variable_name`
+        select_destinations = [
+            "?" + destination.variable_name for destination in destinations
+        ]
+        select_destinations = ["?" + source.variable_name] + select_destinations
+        return " ".join(select_destinations)
+
+    def _get_where(self, source, destinations, enforce_types):
+        """
+        constructing the spaql query path triples, by iterating over destinations
+        for each destination:
+           - check if it has  parent by looking at `._parents`
+           - if it has `_parents`, called step path method
+           - else just get the path
+           - replace the ends of the path with `variable_name`
+           - if it deosnt exist in the collection of lines, add the lines
+
+        Parameters
+        ----------
+        source : Node
+            The source node from which the query starts.
+        destinations : list
+            The destination node(s) to which the query should reach.
+        enforce_types : bool
+            Whether to enforce the types of the source and destination nodes
+            in the query.
+        """
+        namespaces_used = []
+        query = []
+        for destination in destinations:
+            triplets = self.get_shortest_path(source, destination, triples=True)
+            for triple in triplets:
+                namespaces_used.extend([x.split(":")[0] for x in triple if ":" in x])
+                line_text = "    ?%s %s ?%s ." % (
+                    triple[0].replace(":", "_"),
+                    triple[1],
+                    triple[2].replace(":", "_"),
+                )
+                if line_text not in query:
+                    query.append(line_text)
+
+        # we enforce types of the source and destination
+        if enforce_types:
+            namespaces_used.append("rdf")
+            for target in [source] + destinations:
+                if target.node_type == "class":
+                    query.append(
+                        f"    ?{target.variable_name} rdf:type {target.query_name} ."
+                    )
+        return namespaces_used, query
+
+    def _get_filter(self, destinations):
+        """
+        - formulate the condition, given by the `FILTER` command:
+           - extract the filter text from the term
+           - loop over destinations:
+               - call `replace(destination.query_name, destination.variable_name)`
+        """
+        query = []
+        filter_text = ""
+
+        # make filters; get all the unique filters from all the classes in destinations
+        for destination in destinations:
+            if destination._condition is not None:
+                filter_text = destination._condition
+                break
+
+        # replace the query_name with variable_name
+        if filter_text != "":
+            for destination in destinations:
+                filter_text = filter_text.replace(
+                    destination.query_name, destination.variable_name
+                )
+            query.append(f"FILTER {filter_text}")
         return query
 
     def create_query(self, source, destinations, enforce_types=True):
@@ -155,96 +255,18 @@ class Network:
             The generated SPARQL query string.
 
         """
-        # if not list, convert to list
-        if not isinstance(destinations, list):
-            destinations = [destinations]
 
-        # check if more than one of them have an associated condition -> if so throw error
-        no_of_conditions = 0
-        for destination in destinations:
-            if destination._condition is not None:
-                no_of_conditions += 1
-        if no_of_conditions > 1:
-            raise ValueError("Only one condition is allowed")
-
-        # iterate through the list, if they have condition parents, add them explicitely
-        for destination in destinations:
-            for parent in destination._condition_parents:
-                if parent.variable_name not in [d.variable_name for d in destinations]:
-                    destinations.append(parent)
-
+        destinations = self._regulate_destinations(destinations)
         # all names are now collected, in a list of lists
         # start prefix of query
-        query = []
-
-        # construct the select distinct command:
-        # add source `variable_name`
-        # iterate over destinations, add their `variable_name`
-        select_destinations = [
-            "?" + destination.variable_name for destination in destinations
+        query = [
+            f'SELECT DISTINCT {self._get_select_destinations(source, destinations)}',
+            "WHERE {",
         ]
-        select_destinations = ["?" + source.variable_name] + select_destinations
-        query.append(f'SELECT DISTINCT {" ".join(select_destinations)}')
-        query.append("WHERE {")
 
-        # constructing the spaql query path triples, by iterating over destinations
-        # for each destination:
-        #    - check if it has  parent by looking at `._parents`
-        #    - if it has `_parents`, called step path method
-        #    - else just get the path
-        #    - replace the ends of the path with `variable_name`
-        #    - if it deosnt exist in the collection of lines, add the lines
-        namespaces_used = []
-        for count, destination in enumerate(destinations):
-            triplets = self.get_shortest_path(source, destination, triples=True)
-            for triple in triplets:
-                namespaces_used.extend([x.split(":")[0] for x in triple if ":" in x])
-                line_text = "    ?%s %s ?%s ." % (
-                    triple[0].replace(":", "_"),
-                    triple[1],
-                    triple[2].replace(":", "_"),
-                )
-                if line_text not in query:
-                    query.append(line_text)
-
-        # we enforce types of the source and destination
-        if enforce_types:
-            namespaces_used.append("rdf")
-            if source.node_type == "class":
-                query.append(
-                    "    ?%s rdf:type %s ."
-                    % (_strip_name(source.variable_name), source.query_name)
-                )
-
-            for destination in destinations:
-                if destination.node_type == "class":
-                    query.append(
-                        "    ?%s rdf:type %s ."
-                        % (
-                            destination.variable_name,
-                            destination.query_name,
-                        )
-                    )
-        query = self._insert_namespaces(set(namespaces_used)) + query
-        # - formulate the condition, given by the `FILTER` command:
-        #    - extract the filter text from the term
-        #    - loop over destinations:
-        #        - call `replace(destination.query_name, destination.variable_name)`
-        filter_text = ""
-
-        # make filters; get all the unique filters from all the classes in destinations
-        for destination in destinations:
-            if destination._condition is not None:
-                filter_text = destination._condition
-                break
-
-        # replace the query_name with variable_name
-        if filter_text != "":
-            for destination in destinations:
-                filter_text = filter_text.replace(
-                    destination.query_name, destination.variable_name
-                )
-            query.append(f"FILTER {filter_text}")
+        namespaces_used, q = self._get_where(source, destinations, enforce_types)
+        query = self._insert_namespaces(set(namespaces_used)) + query + q
+        query += self._get_filter(destinations)
         query.append("}")
 
         # finished, clean up the terms;
