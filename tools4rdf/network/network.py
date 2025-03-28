@@ -135,6 +135,19 @@ class Network:
             query.append(f"PREFIX {key}: <{ns[key]}>")
         return query
 
+    def _regulate_destinations(self, destinations):
+        if not isinstance(destinations, list):
+            destinations = [destinations]
+
+        self._check_conditions(destinations)
+
+        # iterate through the list, if they have condition parents, add them explicitely
+        for destination in destinations:
+            for parent in destination._condition_parents:
+                if parent.variable_name not in [d.variable_name for d in destinations]:
+                    destinations.append(parent)
+        return destinations
+
     def _check_conditions(self, destinations):
         conditions = False
         for destination in destinations:
@@ -142,6 +155,13 @@ class Network:
                 if conditions:
                     raise ValueError("Only one condition is allowed")
                 conditions = True
+
+    def _get_select_destinations(self, source, destinations):
+        select_destinations = [
+            "?" + destination.variable_name for destination in destinations
+        ]
+        select_destinations = ["?" + source.variable_name] + select_destinations
+        return " ".join(select_destinations)
 
     def create_query(self, source, destinations, enforce_types=True):
         """
@@ -163,18 +183,8 @@ class Network:
             The generated SPARQL query string.
 
         """
-        # if not list, convert to list
-        if not isinstance(destinations, list):
-            destinations = [destinations]
 
-        self._check_conditions(destinations)
-
-        # iterate through the list, if they have condition parents, add them explicitely
-        for destination in destinations:
-            for parent in destination._condition_parents:
-                if parent.variable_name not in [d.variable_name for d in destinations]:
-                    destinations.append(parent)
-
+        destinations = self._regulate_destinations(destinations)
         # all names are now collected, in a list of lists
         # start prefix of query
         query = []
@@ -182,11 +192,9 @@ class Network:
         # construct the select distinct command:
         # add source `variable_name`
         # iterate over destinations, add their `variable_name`
-        select_destinations = [
-            "?" + destination.variable_name for destination in destinations
-        ]
-        select_destinations = ["?" + source.variable_name] + select_destinations
-        query.append(f'SELECT DISTINCT {" ".join(select_destinations)}')
+        query.append(
+            f'SELECT DISTINCT {self._get_select_destinations(source, destinations)}'
+        )
         query.append("WHERE {")
 
         # constructing the spaql query path triples, by iterating over destinations
