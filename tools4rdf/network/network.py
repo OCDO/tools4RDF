@@ -202,11 +202,10 @@ class Network:
 
         # we enforce types of the source and destination
         if enforce_types:
-            namespaces_used.append("rdf")
             for target in [source] + destinations:
                 if target.node_type == "class":
                     query.append(
-                        f"    ?{target.variable_name} rdf:type {target.query_name} ."
+                        f"    ?{target.variable_name} a {target.query_name} ."
                     )
         return namespaces_used, query
 
