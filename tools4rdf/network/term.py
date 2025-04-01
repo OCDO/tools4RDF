@@ -437,3 +437,6 @@ class OntoTerm:
         self._condition = None
         self._parents = []
         self._condition_parents = []
+
+    def __str__(self):
+        return self.name
