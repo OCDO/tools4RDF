@@ -439,4 +439,4 @@ class OntoTerm:
         self._condition_parents = []
 
     def __str__(self):
-        return self.name
+        return f"{self.__repr__()}"
