@@ -315,9 +315,21 @@ class Network:
         return "\n".join(query)
 
     def query(self, kg, source, destinations=None, enforce_types=True, return_df=True):
-        query_string = self.create_query(
+        query_strings = self.create_query(
             source, destinations=destinations, enforce_types=enforce_types
         )
+        res = []
+        for query_string in query_strings:
+            r = self._query(kg, query_string, return_df=return_df)
+            if r is not None:
+                res.append(r)
+        if len(res) == 0:
+            return None
+        if return_df:
+            res = pd.concat(res)            
+        return res
+
+    def _query(self, kg, query_string, return_df=True):
         res = kg.query(query_string)
         if res is not None:
             if return_df:
