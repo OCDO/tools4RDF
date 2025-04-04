@@ -135,7 +135,7 @@ class Network:
             query.append(f"PREFIX {key}: <{ns[key]}>")
         return query
 
-    def create_query(self, source, destinations, enforce_types=True):
+    def create_query(self, source, destinations=None, enforce_types=True):
         """
         Create a SPARQL query string based on the given source, destinations, condition, and enforce_types.
 
@@ -143,9 +143,11 @@ class Network:
         ----------
         source : Node
             The source node from which the query starts.
-        destinations : list or Node
+        destinations : list or Node or None, optional
             The destination node(s) to which the query should reach. If a single
             node is provided, it will be converted to a list.
+            If None, the query will not include any destination nodes, and will simply list objects of the given type.
+            None, and `enforced_types` is False, will raise a ValueError.
         enforce_types : bool, optional
             Whether to enforce the types of the source and destination nodes in the query. Defaults to True.
 
@@ -155,6 +157,14 @@ class Network:
             The generated SPARQL query string.
 
         """
+        if destinations is None and not enforce_types:
+            raise ValueError(
+                "If no destinations are provided, enforce_types must be True."
+            )
+        
+        if destinations is None:
+            destinations = []
+        
         # if not list, convert to list
         if not isinstance(destinations, list):
             destinations = [destinations]
