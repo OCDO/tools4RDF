@@ -266,9 +266,9 @@ class Network:
 
         return "\n".join(query)
 
-    def query(self, kg, source, destinations, enforce_types=True, return_df=True):
+    def query(self, kg, source, destinations=None, enforce_types=True, return_df=True):
         query_string = self.create_query(
-            source, destinations, enforce_types=enforce_types
+            source, destinations=destinations, enforce_types=enforce_types
         )
         res = kg.query(query_string)
         if res is not None:
