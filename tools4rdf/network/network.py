@@ -136,6 +136,54 @@ class Network:
         return query
 
     def create_query(self, source, destinations=None, enforce_types=True):
+        #we need to handle source and destination, the primary aim here is to handle source
+        if not isinstance(source, list):
+            source = [source]
+        #if any of the source items are data properties, fail
+        for s in source:
+            if s.node_type == "data_property":
+                raise ValueError("Data properties are not allowed as source nodes.")
+        
+        #separate sources into classes and object properties
+        classes = []
+        object_properties = []
+        for s in source:
+            if s.node_type == "class":
+                classes.append(s)
+            elif s.node_type == "object_property":
+                object_properties.append(s)
+        
+        #now one has to reduce the object properties, this can be done by finding
+        #common classes in the domains
+        #Do only if we have object properties        
+        if len(object_properties) > 0:
+            domains = [a.domain for a in object_properties]
+            common_classes = set(domains[0])
+            for d in domains[1:]:
+                common_classes = common_classes.intersection(set(d))
+            #now if we do not have any common classes, raise an error
+            common_classes = list(common_classes)
+            if len(common_classes) == 0:
+                raise ValueError("No common classes found in the domains of the object properties.")
+        
+            #now check classes; see if anython common classes are not there, if so add.
+            for c in common_classes:
+                if c not in classes:
+                    classes.append(c)
+        
+        #now classes are the new source nodes
+        #object propertiues are ADDED to the destination nodes
+        source = classes
+        if destinations is not None:
+            if not isinstance(destinations, list):
+                destinations = [destinations]
+            destinations.extend(object_properties)
+        
+        #done, now run the query
+        queries = [self.create_query(s, destinations=destinations, enforce_types=enforce_types) for s in source]
+        return queries
+
+    def _create_query(self, source, destinations=None, enforce_types=True):
         """
         Create a SPARQL query string based on the given source, destinations, condition, and enforce_types.
 
