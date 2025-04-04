@@ -135,7 +135,7 @@ class Network:
             query.append(f"PREFIX {key}: <{ns[key]}>")
         return query
 
-    def create_query(self, source, destinations, enforce_types=True):
+    def create_query(self, source, destinations=None, enforce_types=True):
         """
         Create a SPARQL query string based on the given source, destinations, condition, and enforce_types.
 
@@ -143,9 +143,11 @@ class Network:
         ----------
         source : Node
             The source node from which the query starts.
-        destinations : list or Node
+        destinations : list or Node or None, optional
             The destination node(s) to which the query should reach. If a single
             node is provided, it will be converted to a list.
+            If None, the query will not include any destination nodes, and will simply list objects of the given type.
+            None, and `enforced_types` is False, will raise a ValueError.
         enforce_types : bool, optional
             Whether to enforce the types of the source and destination nodes in the query. Defaults to True.
 
@@ -155,6 +157,14 @@ class Network:
             The generated SPARQL query string.
 
         """
+        if destinations is None and not enforce_types:
+            raise ValueError(
+                "If no destinations are provided, enforce_types must be True."
+            )
+        
+        if destinations is None:
+            destinations = []
+        
         # if not list, convert to list
         if not isinstance(destinations, list):
             destinations = [destinations]
@@ -195,6 +205,9 @@ class Network:
         #    - replace the ends of the path with `variable_name`
         #    - if it deosnt exist in the collection of lines, add the lines
         namespaces_used = []
+        #add the source to the namespaces
+        namespaces_used.append(source.name.split(":")[0])
+        # add the destination namespaces
         for count, destination in enumerate(destinations):
             triplets = self.get_shortest_path(source, destination, triples=True)
             for triple in triplets:
@@ -253,9 +266,9 @@ class Network:
 
         return "\n".join(query)
 
-    def query(self, kg, source, destinations, enforce_types=True, return_df=True):
+    def query(self, kg, source, destinations=None, enforce_types=True, return_df=True):
         query_string = self.create_query(
-            source, destinations, enforce_types=enforce_types
+            source, destinations=destinations, enforce_types=enforce_types
         )
         res = kg.query(query_string)
         if res is not None:
