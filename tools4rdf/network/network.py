@@ -195,6 +195,9 @@ class Network:
         #    - replace the ends of the path with `variable_name`
         #    - if it deosnt exist in the collection of lines, add the lines
         namespaces_used = []
+        #add the source to the namespaces
+        namespaces_used.append(source.name.split(":")[0])
+        # add the destination namespaces
         for count, destination in enumerate(destinations):
             triplets = self.get_shortest_path(source, destination, triples=True)
             for triple in triplets:
