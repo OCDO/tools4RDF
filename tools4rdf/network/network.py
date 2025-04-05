@@ -162,13 +162,14 @@ class Network:
             for d in domains[1:]:
                 common_classes = common_classes.intersection(set(d))
             #now if we do not have any common classes, raise an error
-            common_classes = list(common_classes)
+            common_classes = [self.onto.attributes["class"][x] for x in common_classes]
             if len(common_classes) == 0:
                 raise ValueError("No common classes found in the domains of the object properties.")
         
             #now check classes; see if anython common classes are not there, if so add.
+            class_names = [c.name for c in classes]
             for c in common_classes:
-                if c not in classes:
+                if c.name not in class_names:
                     classes.append(c)
         
         #now classes are the new source nodes
@@ -180,7 +181,7 @@ class Network:
             destinations.extend(object_properties)
         
         #done, now run the query
-        queries = [self.create_query(s, destinations=destinations, enforce_types=enforce_types) for s in source]
+        queries = [self._create_query(s, destinations=destinations, enforce_types=enforce_types) for s in source]
         return queries
 
     def _create_query(self, source, destinations=None, enforce_types=True):
