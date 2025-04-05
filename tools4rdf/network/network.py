@@ -179,6 +179,8 @@ class Network:
             if not isinstance(destinations, list):
                 destinations = [destinations]
             destinations.extend(object_properties)
+        else:
+            destinations = object_properties
         
         #done, now run the query
         queries = [self._create_query(s, destinations=destinations, enforce_types=enforce_types) for s in source]
