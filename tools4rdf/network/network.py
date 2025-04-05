@@ -136,15 +136,15 @@ class Network:
         return query
 
     def create_query(self, source, destinations=None, enforce_types=True):
-        #we need to handle source and destination, the primary aim here is to handle source
+        # we need to handle source and destination, the primary aim here is to handle source
         if not isinstance(source, list):
             source = [source]
-        #if any of the source items are data properties, fail
+        # if any of the source items are data properties, fail
         for s in source:
             if s.node_type == "data_property":
                 raise ValueError("Data properties are not allowed as source nodes.")
-        
-        #separate sources into classes and object properties
+
+        # separate sources into classes and object properties
         classes = []
         object_properties = []
         for s in source:
@@ -152,28 +152,30 @@ class Network:
                 classes.append(s)
             elif s.node_type == "object_property":
                 object_properties.append(s)
-        
-        #now one has to reduce the object properties, this can be done by finding
-        #common classes in the domains
-        #Do only if we have object properties        
+
+        # now one has to reduce the object properties, this can be done by finding
+        # common classes in the domains
+        # Do only if we have object properties
         if len(object_properties) > 0:
             domains = [a.domain for a in object_properties]
             common_classes = set(domains[0])
             for d in domains[1:]:
                 common_classes = common_classes.intersection(set(d))
-            #now if we do not have any common classes, raise an error
+            # now if we do not have any common classes, raise an error
             common_classes = [self.onto.attributes["class"][x] for x in common_classes]
             if len(common_classes) == 0:
-                raise ValueError("No common classes found in the domains of the object properties.")
-        
-            #now check classes; see if anython common classes are not there, if so add.
+                raise ValueError(
+                    "No common classes found in the domains of the object properties."
+                )
+
+            # now check classes; see if anython common classes are not there, if so add.
             class_names = [c.name for c in classes]
             for c in common_classes:
                 if c.name not in class_names:
                     classes.append(c)
-        
-        #now classes are the new source nodes
-        #object propertiues are ADDED to the destination nodes
+
+        # now classes are the new source nodes
+        # object propertiues are ADDED to the destination nodes
         source = classes
         if destinations is not None:
             if not isinstance(destinations, list):
@@ -181,9 +183,14 @@ class Network:
             destinations.extend(object_properties)
         else:
             destinations = object_properties
-        
-        #done, now run the query
-        queries = [self._create_query(s, destinations=destinations, enforce_types=enforce_types) for s in source]
+
+        # done, now run the query
+        queries = [
+            self._create_query(
+                s, destinations=destinations, enforce_types=enforce_types
+            )
+            for s in source
+        ]
         return queries
 
     def _create_query(self, source, destinations=None, enforce_types=True):
@@ -212,10 +219,10 @@ class Network:
             raise ValueError(
                 "If no destinations are provided, enforce_types must be True."
             )
-        
+
         if destinations is None:
             destinations = []
-        
+
         # if not list, convert to list
         if not isinstance(destinations, list):
             destinations = [destinations]
@@ -256,7 +263,7 @@ class Network:
         #    - replace the ends of the path with `variable_name`
         #    - if it deosnt exist in the collection of lines, add the lines
         namespaces_used = []
-        #add the source to the namespaces
+        # add the source to the namespaces
         namespaces_used.append(source.name.split(":")[0])
         # add the destination namespaces
         for count, destination in enumerate(destinations):
@@ -329,7 +336,7 @@ class Network:
         if len(res) == 0:
             return None
         if return_df:
-            res = pd.concat(res)            
+            res = pd.concat(res)
         return res
 
     def _query(self, kg, query_string, return_df=True):
