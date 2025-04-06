@@ -479,4 +479,4 @@ class OntologyNetwork(OntologyNetworkBase):
     """
 
     def __init__(self, infile, format="xml"):
-        super().__init__(parse_ontology(infile,format=format))
+        super().__init__(parse_ontology(infile, format=format))

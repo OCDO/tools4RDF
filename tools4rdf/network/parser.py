@@ -133,24 +133,42 @@ class OntoParser:
                 term.name
             ].associated_data_node = data_term.name
             self.attributes["data_nodes"][data_term.name] = data_term
-    
+
     def extract_subproperties(self):
-        top_most_properties = [URIRef('http://www.w3.org/2002/07/owl#topObjectProperty'), URIRef('http://www.w3.org/2002/07/owl#topDataProperty')]
-        #we iterate over all object properties, and add the subproperties
+        top_most_properties = [
+            URIRef("http://www.w3.org/2002/07/owl#topObjectProperty"),
+            URIRef("http://www.w3.org/2002/07/owl#topDataProperty"),
+        ]
+        # we iterate over all object properties, and add the subproperties
         for prop_type in ["object_property", "data_property"]:
             for key, prop in self.attributes[prop_type].items():
-                #get the subproperties
+                # get the subproperties
                 top_props = list(self.graph.objects(prop.URIRef, RDFS.subPropertyOf))
                 for top_prop in top_props:
                     if top_prop not in top_most_properties:
-                        #get the name of the subproperty
+                        # get the name of the subproperty
                         toppropname = strip_name(top_prop.toPython())
-                        #add it to the object property
-                        self.attributes[prop_type][toppropname].subclasses.append(prop.name)
-        #recursivly add the subproperties
+                        # add it to the object property
+                        self.attributes[prop_type][toppropname].subclasses.append(
+                            prop.name
+                        )
+        # recursivly add the subproperties
         for prop_type in ["object_property", "data_property"]:
             for key, prop in self.attributes[prop_type].items():
                 self.recursively_add_subclasses(item_type=prop_type)
+
+        # now go over the list again, and pass the domain and range of the topclass to all its subclasses
+        for prop_type in ["object_property", "data_property"]:
+            for key, prop in self.attributes[prop_type].items():
+                for subprop_name in self.attributes[prop_type][key].subclasses:
+                    # extend its domain
+                    for d in prop.domain:
+                        if d not in self.attributes[prop_type][subprop_name].domain:
+                            self.attributes[prop_type][subprop_name].domain.append(d)
+                    # extend its range
+                    for r in prop.range:
+                        if r not in self.attributes[prop_type][subprop_name].range:
+                            self.attributes[prop_type][subprop_name].range.append(r)
 
     def extract_values(self, subject, predicate):
         for val in self.graph.objects(subject, predicate):
