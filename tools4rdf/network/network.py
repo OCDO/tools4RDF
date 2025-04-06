@@ -478,5 +478,5 @@ class OntologyNetwork(OntologyNetworkBase):
     Network representation of Onto
     """
 
-    def __init__(self, infile):
-        super().__init__(parse_ontology(infile))
+    def __init__(self, infile, format="xml"):
+        super().__init__(parse_ontology(infile,format=format))
