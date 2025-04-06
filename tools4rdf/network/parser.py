@@ -132,6 +132,24 @@ class OntoParser:
                 term.name
             ].associated_data_node = data_term.name
             self.attributes["data_nodes"][data_term.name] = data_term
+    
+    def extract_subproperties(self):
+        top_most_properties = [URIRef('http://www.w3.org/2002/07/owl#topObjectProperty'), URIRef('http://www.w3.org/2002/07/owl#topDataProperty')]
+        #we iterate over all object properties, and add the subproperties
+        for prop_type in ["object_property", "data_property"]:
+            for key, prop in self.attributes[prop_type].items():
+                #get the subproperties
+                top_props = list(self.graph.objects(prop.URIRef, RDFS.subPropertyOf))
+                for top_prop in top_props:
+                    if top_prop not in top_most_properties:
+                        #get the name of the subproperty
+                        toppropname = strip_name(top_prop.toPython())
+                        #add it to the object property
+                        self.attributes[prop_type][toppropname].subclasses.append(prop.name)
+        #recursivly add the subproperties
+        for prop_type in ["object_property", "data_property"]:
+            for key, prop in self.attributes[prop_type].items():
+                self.recursively_add_subclasses(prop.name, item_type=prop_type)
 
     def extract_values(self, subject, predicate):
         for val in self.graph.objects(subject, predicate):
@@ -261,23 +279,23 @@ class OntoParser:
                 for superclass in superclasses:
                     self.attributes["class"][superclass].subclasses.append(cls.name)
 
-    def recursively_add_subclasses(self):
-        for clsname in self.attributes["class"].keys():
-            self._recursively_add_subclasses(clsname)
+    def recursively_add_subclasses(self, item_type="class"):
+        for clsname in self.attributes[item_type].keys():
+            self._recursively_add_subclasses(clsname, item_type=item_type)
 
-    def _recursively_add_subclasses(self, clsname):
+    def _recursively_add_subclasses(self, clsname, item_type="class"):
         subclasses_to_add = []
-        for subclass in self.attributes["class"][clsname].subclasses:
-            for subclass_of_subclass in self.attributes["class"][subclass].subclasses:
+        for subclass in self.attributes[item_type][clsname].subclasses:
+            for subclass_of_subclass in self.attributes[item_type][subclass].subclasses:
                 if (
                     subclass_of_subclass
-                    not in self.attributes["class"][clsname].subclasses
+                    not in self.attributes[item_type][clsname].subclasses
                 ):
                     subclasses_to_add.append(subclass_of_subclass)
         if len(subclasses_to_add) == 0:
             return
-        self.attributes["class"][clsname].subclasses.extend(subclasses_to_add)
-        self._recursively_add_subclasses(clsname)
+        self.attributes[item_type][clsname].subclasses.extend(subclasses_to_add)
+        self._recursively_add_subclasses(clsname, item_type=item_type)
 
     def add_subclasses_to_owlThing(self):
         for key, cls in self.attributes["class"].items():
