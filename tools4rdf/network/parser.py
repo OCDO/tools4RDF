@@ -7,8 +7,6 @@ from rdflib import Graph, RDF, RDFS, OWL, BNode, URIRef
 
 
 def parse_ontology(infile, format="xml"):
-    if not os.path.exists(infile):
-        raise FileNotFoundError(f"file {infile} not found!")
     graph = Graph()
     graph.parse(infile, format=format)
     return OntoParser(graph)
