@@ -356,7 +356,7 @@ class OntoParser:
             for k2, val in self.attributes[k1].items():
                 if val.namespace not in namespaces:
                     namespaces.append(val.namespace)
-        mapdict = {key: {} for key in namespaces.keys()}
+        mapdict = {key: {} for key in namespaces}
 
         # now iterate over all attributes
         for k1 in ["class", "object_property", "data_property"]:
