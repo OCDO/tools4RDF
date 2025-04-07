@@ -43,6 +43,7 @@ class OntoParser:
         self.parse_named_individuals()
         self.extract_object_properties()
         self.extract_data_properties()
+        self.extract_subproperties()
         self.recheck_namespaces()
 
     @property
@@ -133,6 +134,29 @@ class OntoParser:
             ].associated_data_node = data_term.name
             self.attributes["data_nodes"][data_term.name] = data_term
 
+    def extract_subproperties(self):
+        top_most_properties = [
+            URIRef("http://www.w3.org/2002/07/owl#topObjectProperty"),
+            URIRef("http://www.w3.org/2002/07/owl#topDataProperty"),
+        ]
+        # we iterate over all object properties, and add the subproperties
+        for prop_type in ["object_property", "data_property"]:
+            for key, prop in self.attributes[prop_type].items():
+                # get the subproperties
+                top_props = list(self.graph.objects(prop.URIRef, RDFS.subPropertyOf))
+                for top_prop in top_props:
+                    if top_prop not in top_most_properties:
+                        # get the name of the subproperty
+                        toppropname = strip_name(top_prop.toPython())
+                        # add it to the object property
+                        self.attributes[prop_type][toppropname].subclasses.append(
+                            prop.name
+                        )
+        # recursivly add the subproperties
+        for prop_type in ["object_property", "data_property"]:
+            for key, prop in self.attributes[prop_type].items():
+                self._recursively_add_subclasses(key, item_type=prop_type)
+
     def extract_values(self, subject, predicate):
         for val in self.graph.objects(subject, predicate):
             return val
@@ -156,7 +180,7 @@ class OntoParser:
                         }
             else:
                 self.classes.append(term)
-        self.classes.append(URIRef("http://www.w3.org/2002/07/owl#Thing")) 
+        self.classes.append(URIRef("http://www.w3.org/2002/07/owl#Thing"))
 
     def add_classes_to_attributes(self):
         for cls in self.classes:
@@ -260,26 +284,29 @@ class OntoParser:
                 superclasses = self.lookup_class(obj)
                 for superclass in superclasses:
                     self.attributes["class"][superclass].subclasses.append(cls.name)
-    
-    def recursively_add_subclasses(self):
-        for clsname in self.attributes["class"].keys():
-            self._recursively_add_subclasses(clsname)
 
-    def _recursively_add_subclasses(self, clsname):
+    def recursively_add_subclasses(self, item_type="class"):
+        for clsname in self.attributes[item_type].keys():
+            self._recursively_add_subclasses(clsname, item_type=item_type)
+
+    def _recursively_add_subclasses(self, clsname, item_type="class"):
         subclasses_to_add = []
-        for subclass in self.attributes["class"][clsname].subclasses:
-            for subclass_of_subclass in self.attributes["class"][subclass].subclasses:
-                if subclass_of_subclass not in self.attributes["class"][clsname].subclasses:
+        for subclass in self.attributes[item_type][clsname].subclasses:
+            for subclass_of_subclass in self.attributes[item_type][subclass].subclasses:
+                if (
+                    subclass_of_subclass
+                    not in self.attributes[item_type][clsname].subclasses
+                ):
                     subclasses_to_add.append(subclass_of_subclass)
-        if len(subclasses_to_add)==0:
+        if len(subclasses_to_add) == 0:
             return
-        self.attributes["class"][clsname].subclasses.extend(subclasses_to_add)
-        self._recursively_add_subclasses(clsname)
+        self.attributes[item_type][clsname].subclasses.extend(subclasses_to_add)
+        self._recursively_add_subclasses(clsname, item_type=item_type)
 
     def add_subclasses_to_owlThing(self):
         for key, cls in self.attributes["class"].items():
             objects = list(self.graph.objects(cls.target, RDFS.subClassOf))
-            if len(objects)==0:
+            if len(objects) == 0:
                 self.attributes["class"]["owl:Thing"].subclasses.append(cls.name)
 
     def parse_equivalents(self):
@@ -290,7 +317,7 @@ class OntoParser:
                         strip_name(equivalent)
                     ].equivalent_classes.append(cls.name)
                     cls.equivalent_classes.append(strip_name(equivalent))
-    
+
     def recursively_add_equivalents(self):
         for clsname in self.attributes["class"].keys():
             self._recursively_add_equivalents(clsname)
@@ -298,10 +325,15 @@ class OntoParser:
     def _recursively_add_equivalents(self, clsname):
         equivalents_to_add = []
         for equivalent in self.attributes["class"][clsname].equivalent_classes:
-            for equivalent_of_equivalent in self.attributes["class"][equivalent].equivalent_classes:
-                if equivalent_of_equivalent not in self.attributes["class"][clsname].equivalent_classes:
+            for equivalent_of_equivalent in self.attributes["class"][
+                equivalent
+            ].equivalent_classes:
+                if (
+                    equivalent_of_equivalent
+                    not in self.attributes["class"][clsname].equivalent_classes
+                ):
                     equivalents_to_add.append(equivalent_of_equivalent)
-        if len(equivalents_to_add)==0:
+        if len(equivalents_to_add) == 0:
             return
         self.attributes["class"][clsname].equivalent_classes.extend(equivalents_to_add)
         self._recursively_add_equivalents(clsname)
