@@ -351,7 +351,12 @@ class OntoParser:
 
     def get_attributes(self):
         # add first level - namespaces
-        mapdict = {key: {} for key in self.namespaces.keys()}
+        namespaces = []
+        for k1 in ["class", "object_property", "data_property"]:
+            for k2, val in self.attributes[k1].items():
+                if val.namespace not in namespaces:
+                    namespaces.append(val.namespace)
+        mapdict = {key: {} for key in namespaces.keys()}
 
         # now iterate over all attributes
         for k1 in ["class", "object_property", "data_property"]:
