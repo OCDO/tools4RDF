@@ -155,20 +155,7 @@ class OntoParser:
         # recursivly add the subproperties
         for prop_type in ["object_property", "data_property"]:
             for key, prop in self.attributes[prop_type].items():
-                self.recursively_add_subclasses(item_type=prop_type)
-
-        # now go over the list again, and pass the domain and range of the topclass to all its subclasses
-        for prop_type in ["object_property", "data_property"]:
-            for key, prop in self.attributes[prop_type].items():
-                for subprop_name in self.attributes[prop_type][key].subclasses:
-                    # extend its domain
-                    for d in prop.domain:
-                        if d not in self.attributes[prop_type][subprop_name].domain:
-                            self.attributes[prop_type][subprop_name].domain.append(d)
-                    # extend its range
-                    for r in prop.range:
-                        if r not in self.attributes[prop_type][subprop_name].range:
-                            self.attributes[prop_type][subprop_name].range.append(r)
+                self._recursively_add_subclasses(key, item_type=prop_type)
 
     def extract_values(self, subject, predicate):
         for val in self.graph.objects(subject, predicate):
