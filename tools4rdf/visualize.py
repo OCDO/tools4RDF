@@ -191,12 +191,11 @@ def visualize_graph(
                         fontname=styledict[istype1]["fontname"],
                     )
                     plot = False
-        
+
         elif sample_view:
-            green_list = ['wasDerivedFrom', 'wasGeneratedBy']
+            green_list = ["wasDerivedFrom", "wasGeneratedBy"]
             if string3 not in green_list:
                 plot = False
-            
 
         if hide_types and (string3 == "type"):
             plot = False
@@ -243,8 +242,10 @@ def visualize_graph(
 
     return dot
 
+
 def _id(item):
-    return str(item).replace(':', '_')
+    return str(item).replace(":", "_")
+
 
 def visualize_provenance(
     prov,
@@ -260,65 +261,95 @@ def visualize_provenance(
         layout=layout,
         overlap="false",
     )
-    #add all nodes
+    # add all nodes
     for key in prov.keys():
         nid = _id(key)
-        #if "activity" in key:
-        dot.node(nid, label=prov[key]['label'], 
-                shape='box', 
-                color="#C9DAF8", 
-                style="filled",
-                fontname='Helvetica',
-                fontsize='8')
-        #else:
-        #    dot.node(nid, label=prov[key]['label'], 
-        #            shape='parallelogram', 
-        #            color="#C9DAF8", 
+        # if "activity" in key:
+        dot.node(
+            nid,
+            label=prov[key]["label"],
+            shape="box",
+            color="#C9DAF8",
+            style="filled",
+            fontname="Helvetica",
+            fontsize="8",
+        )
+        # else:
+        #    dot.node(nid, label=prov[key]['label'],
+        #            shape='parallelogram',
+        #            color="#C9DAF8",
         #            style="filled",
         #            fontname='Helvetica',
         #            fontsize='8')
-    #add all edges
+    # add all edges
     for key, val in prov.items():
-        if 'inputs' in val.keys():
-            if val['operation'] == 'input_parameter':
-                for subkey, subval in val['inputs'].items():
-                    dot.edge(_id(subval), _id(key), label='input_param', 
+        if "inputs" in val.keys():
+            if val["operation"] == "input_parameter":
+                for subkey, subval in val["inputs"].items():
+                    dot.edge(
+                        _id(subval),
+                        _id(key),
+                        label="input_param",
                         color="#263238",
-                        fontname='Helvetica',
-                        fontsize='8')
-            if val['operation'] == 'output_parameter':
-                for subkey, subval in val['inputs'].items():
-                    dot.edge(_id(subval), _id(key), label='output_param', 
+                        fontname="Helvetica",
+                        fontsize="8",
+                    )
+            if val["operation"] == "output_parameter":
+                for subkey, subval in val["inputs"].items():
+                    dot.edge(
+                        _id(subval),
+                        _id(key),
+                        label="output_param",
                         color="#263238",
-                        fontname='Helvetica',
-                        fontsize='8')
-            elif val['operation'] == 'sample_for_activity':
-                for subkey, subval in val['inputs'].items():
-                    dot.edge(_id(subval), _id(key), label='input_sample', 
+                        fontname="Helvetica",
+                        fontsize="8",
+                    )
+            elif val["operation"] == "sample_for_activity":
+                for subkey, subval in val["inputs"].items():
+                    dot.edge(
+                        _id(subval),
+                        _id(key),
+                        label="input_sample",
                         color="#263238",
-                        fontname='Helvetica',
-                        fontsize='8')
-            elif val['operation'] == 'sample_output':
-                for subkey, subval in val['inputs'].items():
-                    dot.edge(_id(subval), _id(key), label='output_sample', 
+                        fontname="Helvetica",
+                        fontsize="8",
+                    )
+            elif val["operation"] == "sample_output":
+                for subkey, subval in val["inputs"].items():
+                    dot.edge(
+                        _id(subval),
+                        _id(key),
+                        label="output_sample",
                         color="#263238",
-                        fontname='Helvetica',
-                        fontsize='8')
+                        fontname="Helvetica",
+                        fontsize="8",
+                    )
             else:
                 operation_id = str(uuid.uuid4())
-                operation = dot.node(operation_id, label=val['operation'], 
-                                    color="#E6B8AF", 
-                                    shape='box', 
-                                    style='filled',
-                                    fontname='Helvetica',
-                                    fontsize='8')
-                for subkey, subval in val['inputs'].items():
-                    dot.edge(_id(subval), operation_id, label='input', 
+                operation = dot.node(
+                    operation_id,
+                    label=val["operation"],
+                    color="#E6B8AF",
+                    shape="box",
+                    style="filled",
+                    fontname="Helvetica",
+                    fontsize="8",
+                )
+                for subkey, subval in val["inputs"].items():
+                    dot.edge(
+                        _id(subval),
+                        operation_id,
+                        label="input",
                         color="#263238",
-                        fontname='Helvetica',
-                        fontsize='8')
-                dot.edge(operation_id, _id(key), label='output', 
-                        color="#263238",
-                        fontname='Helvetica',
-                        fontsize='8')
+                        fontname="Helvetica",
+                        fontsize="8",
+                    )
+                dot.edge(
+                    operation_id,
+                    _id(key),
+                    label="output",
+                    color="#263238",
+                    fontname="Helvetica",
+                    fontsize="8",
+                )
     return dot

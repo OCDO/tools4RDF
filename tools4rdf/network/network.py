@@ -135,7 +135,9 @@ class Network:
             query.append(f"PREFIX {key}: <{ns[key]}>")
         return query
 
-    def create_query(self, source, destinations=None, enforce_types=True):
+    def create_query(
+        self, source, destinations=None, enforce_types=True, return_list=False
+    ):
         # we need to handle source and destination, the primary aim here is to handle source
         if not isinstance(source, list):
             source = [source]
@@ -191,6 +193,8 @@ class Network:
             )
             for s in source
         ]
+        if (len(queries) == 1) and not return_list:
+            return queries[0]
         return queries
 
     def _create_query(self, source, destinations=None, enforce_types=True):
@@ -326,7 +330,10 @@ class Network:
 
     def query(self, kg, source, destinations=None, enforce_types=True, return_df=True):
         query_strings = self.create_query(
-            source, destinations=destinations, enforce_types=enforce_types
+            source,
+            destinations=destinations,
+            enforce_types=enforce_types,
+            return_list=True,
         )
         res = []
         for query_string in query_strings:
@@ -479,4 +486,4 @@ class OntologyNetwork(OntologyNetworkBase):
     """
 
     def __init__(self, infile, format="xml"):
-        super().__init__(parse_ontology(infile,format=format))
+        super().__init__(parse_ontology(infile, format=format))
