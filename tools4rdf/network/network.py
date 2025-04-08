@@ -115,20 +115,18 @@ class Network:
         if len(target._parents) > 0:
             # this needs a stepped query
             complete_list = [source, *target._parents, target]
-            print(f"target is- {target}")
-            print(f"target parents are- {target._parents}")
-            print(f"complete_list is {complete_list}")
             # get path for first two terms
-            print(f"finding path between {complete_list[0]} and {complete_list[1]}")
             path = self._get_shortest_path(complete_list[0], complete_list[1])
-            #for x in range(2, len(complete_list)):
-            #    temp_source = complete_list[x - 1]
-            #    temp_dest = complete_list[x]
-            #    print(f"finding path between {temp_source} and {temp_dest}")
-            #    temp_path = self._get_shortest_path(temp_source, temp_dest)
-            #    print(f"temp_path is {temp_path}")
-            #    path.extend(temp_path[1:])
-            #    print(f"current path is {path}")
+            for x in range(2, len(complete_list)):
+                temp_source = complete_list[x - 1]
+                temp_dest = complete_list[x]
+                temp_path = self._get_shortest_path(temp_source, temp_dest)
+                if len(temp_path) == 2:
+                    #this means that they are next to each other, so we cannot form a full path
+                    # so we need to add the last item of the previous path
+                    path[-1] = temp_path[-1]
+                else:
+                    path.extend(temp_path[1:])
         else:
             path = self._get_shortest_path(source, target)
 
