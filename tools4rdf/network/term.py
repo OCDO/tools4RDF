@@ -256,10 +256,10 @@ class OntoTerm:
         """
         if self.node_type == "data_property":
             return self.name + "value"
-        elif self.node_type == "object_property":
-            if len(self.range) > 0:
-                # this has a domain
-                return self.range[0]
+        #elif self.node_type == "object_property":
+        #    if len(self.range) > 0:
+        #        # this has a domain
+        #        return self.range[0]
         return self.name
 
     @property
@@ -304,10 +304,10 @@ class OntoTerm:
         return self.uri
 
     def __repr__(self):
-        if self.description is not None:
-            return str(self.name + "\n" + self.description)
-        else:
-            return str(self.name)
+        #if self.description is not None:
+        #    return str(self.name + "\n" + self.description)
+        #else:
+        return str(self.name)
 
     def _clean_datatype(self, r):
         if r == "str":

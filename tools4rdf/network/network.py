@@ -79,7 +79,12 @@ class Network:
         )
         # replace the start and end with thier corresponding variable names
         path[0] = source.variable_name
-        path[-1] = target.variable_name
+        if target.node_type == "object_property":
+            path.append(target.variable_name)
+        else:
+            path[-1] = target.variable_name
+        print(path)
+        #now if target is an object property, we add an extra item to the path to complete it
         return path
 
     def get_shortest_path(self, source, target, triples=False):
@@ -110,13 +115,20 @@ class Network:
         if len(target._parents) > 0:
             # this needs a stepped query
             complete_list = [source, *target._parents, target]
+            print(f"target is- {target}")
+            print(f"target parents are- {target._parents}")
+            print(f"complete_list is {complete_list}")
             # get path for first two terms
+            print(f"finding path between {complete_list[0]} and {complete_list[1]}")
             path = self._get_shortest_path(complete_list[0], complete_list[1])
             for x in range(2, len(complete_list)):
                 temp_source = complete_list[x - 1]
                 temp_dest = complete_list[x]
+                print(f"finding path between {temp_source} and {temp_dest}")
                 temp_path = self._get_shortest_path(temp_source, temp_dest)
+                print(f"temp_path is {temp_path}")
                 path.extend(temp_path[1:])
+                print(f"current path is {path}")
         else:
             path = self._get_shortest_path(source, target)
 
@@ -186,6 +198,17 @@ class Network:
         else:
             destinations = object_properties
 
+        #the pplan is to phase out the @ operator, so we look for lists within destinations
+        modified_destinations = []
+        for count, destination in enumerate(destinations):
+            if isinstance(destination, (list, tuple)):
+                last_destination = destination[-1]
+                for d in destination[:-1]:
+                    last_destination._parents.append(d)
+                modified_destinations.append(last_destination)
+            else:
+                modified_destinations.append(destination)
+        destinations = modified_destinations
         # done, now run the query
         queries = [
             self._create_query(
