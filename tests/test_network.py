@@ -11,5 +11,5 @@ def test_network():
 
 def test_owlThing():
     onto = read_ontology()
-    query = (onto.create_query(onto.terms.cmso.AtomicScaleSample,onto.terms.cmso.hasAltName@onto.terms.cmso.CrystalStructure))
+    query = (onto.create_query(onto.terms.cmso.AtomicScaleSample, [[onto.terms.cmso.CrystalStructure, onto.terms.cmso.hasAltName]]))
     assert "CrystalStructure_hasAltNamevalue" in query
