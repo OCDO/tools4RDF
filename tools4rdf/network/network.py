@@ -186,6 +186,19 @@ class Network:
             if common_class.name not in class_names:
                 classes.append(common_class.any)
 
+        #the pplan is to phase out the @ operator, so we look for lists within destinations
+        if destinations is not None:
+            modified_destinations = []
+            for count, destination in enumerate(destinations):
+                if isinstance(destination, (list, tuple)):
+                    last_destination = destination[-1]
+                    for d in destination[:-1]:
+                        last_destination._parents.append(d)
+                    modified_destinations.append(last_destination)
+                else:
+                    modified_destinations.append(destination)
+            destinations = modified_destinations
+
         # now classes are the new source nodes
         # object propertiues are ADDED to the destination nodes
         source = classes
@@ -201,20 +214,9 @@ class Network:
                         already_there = True
                 if not already_there:
                     destinations.append(object_property)
-        else:
+        elif len(object_properties) > 0:
             destinations = object_properties
 
-        #the pplan is to phase out the @ operator, so we look for lists within destinations
-        modified_destinations = []
-        for count, destination in enumerate(destinations):
-            if isinstance(destination, (list, tuple)):
-                last_destination = destination[-1]
-                for d in destination[:-1]:
-                    last_destination._parents.append(d)
-                modified_destinations.append(last_destination)
-            else:
-                modified_destinations.append(destination)
-        destinations = modified_destinations
         # done, now run the query
         queries = [
             self._create_query(
