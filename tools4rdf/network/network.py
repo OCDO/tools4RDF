@@ -192,7 +192,15 @@ class Network:
         if destinations is not None:
             if not isinstance(destinations, list):
                 destinations = [destinations]
-            destinations.extend(object_properties)
+            for object_property in object_properties:
+                already_there = False
+                if object_property in destinations:
+                    already_there = True
+                for d in destinations:
+                    if object_property in d._parents:
+                        already_there = True
+                if not already_there:
+                    destinations.append(object_property)
         else:
             destinations = object_properties
 
