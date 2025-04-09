@@ -109,6 +109,7 @@ class OntoTerm:
         # these are accumulated when using the & or || operators
         self._condition_parents = []
         self.target = target
+        self._enforce_type = True
 
     @property
     def URIRef(self):
@@ -300,6 +301,13 @@ class OntoTerm:
             return self.name_without_prefix + "value"
         return self.name_without_prefix
 
+    @property
+    def any(self):
+        #this indicates that type enforcing is not needed
+        item = copy.deepcopy(self)
+        item._enforce_type = False
+        return item
+    
     def toPython(self):
         return self.uri
 
@@ -430,6 +438,7 @@ class OntoTerm:
         item = copy.deepcopy(self)
         item._parents.append(copy.deepcopy(term))
         return item
+    
 
     def refresh_condition(self):
         self._condition = None
