@@ -353,11 +353,13 @@ class OntoTerm:
         """
         # print("eq")
         # print(f'lhs {self} rhs {val}')
-        self._is_data_node()
-        item = copy.deepcopy(self)
-        item._condition = item._create_condition_string("=", val)
-        return item
-
+        if self.node_type == "data_property":
+            item = copy.deepcopy(self)
+            item._condition = item._create_condition_string("=", val)
+            return item
+        else:
+            return self.name == val.name
+        
     def __lt__(self, val):
         self._is_number(val)
         self._is_data_node()
