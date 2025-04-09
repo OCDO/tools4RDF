@@ -7,6 +7,7 @@ import numbers
 import copy
 import warnings
 
+
 def _get_namespace_and_name(uri):
     uri_split = uri.split("#")
     if len(uri_split) > 1:
@@ -257,7 +258,7 @@ class OntoTerm:
         """
         if self.node_type == "data_property":
             return self.name + "value"
-        #elif self.node_type == "object_property":
+        # elif self.node_type == "object_property":
         #    if len(self.range) > 0:
         #        # this has a domain
         #        return self.range[0]
@@ -303,18 +304,18 @@ class OntoTerm:
 
     @property
     def any(self):
-        #this indicates that type enforcing is not needed
+        # this indicates that type enforcing is not needed
         item = copy.deepcopy(self)
         item._enforce_type = False
         return item
-    
+
     def toPython(self):
         return self.uri
 
     def __repr__(self):
-        #if self.description is not None:
+        # if self.description is not None:
         #    return str(self.name + "\n" + self.description)
-        #else:
+        # else:
         return str(self.name)
 
     def _clean_datatype(self, r):
@@ -359,7 +360,7 @@ class OntoTerm:
             return item
         else:
             return self.name == val.name
-        
+
     def __lt__(self, val):
         self._is_number(val)
         self._is_data_node()
@@ -433,14 +434,13 @@ class OntoTerm:
         self.__or__(term)
 
     def __matmul__(self, term):
-        #we will phase out this operator soon
+        # we will phase out this operator soon
         warnings.warn(
             "The @ operator is deprecated and will be removed in future versions. termA@termB should be [termA, termB] instead.",
         )
         item = copy.deepcopy(self)
         item._parents.append(copy.deepcopy(term))
         return item
-    
 
     def refresh_condition(self):
         self._condition = None

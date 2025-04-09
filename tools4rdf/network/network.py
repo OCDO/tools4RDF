@@ -83,7 +83,7 @@ class Network:
             path.append(target.variable_name)
         else:
             path[-1] = target.variable_name
-        #now if target is an object property, we add an extra item to the path to complete it
+        # now if target is an object property, we add an extra item to the path to complete it
         return path
 
     def get_shortest_path(self, source, target, triples=False):
@@ -121,7 +121,7 @@ class Network:
                 temp_dest = complete_list[x]
                 temp_path = self._get_shortest_path(temp_source, temp_dest)
                 if len(temp_path) == 2:
-                    #this means that they are next to each other, so we cannot form a full path
+                    # this means that they are next to each other, so we cannot form a full path
                     # so we need to add the last item of the previous path
                     path[-1] = temp_path[-1]
                 else:
@@ -144,9 +144,7 @@ class Network:
             query.append(f"PREFIX {key}: <{ns[key]}>")
         return query
 
-    def create_query(
-        self, source, destinations=None, return_list=False
-    ):
+    def create_query(self, source, destinations=None, return_list=False):
         # we need to handle source and destination, the primary aim here is to handle source
         if not isinstance(source, list):
             source = [source]
@@ -180,13 +178,13 @@ class Network:
                 )
 
             # now check classes; see if anython common classes are not there, if so add.
-            #we just need one common class, these queries will NOT be type fixed
+            # we just need one common class, these queries will NOT be type fixed
             common_class = common_classes[0]
             class_names = [c.name for c in classes]
             if common_class.name not in class_names:
                 classes.append(common_class.any)
 
-        #the pplan is to phase out the @ operator, so we look for lists within destinations
+        # the pplan is to phase out the @ operator, so we look for lists within destinations
         if destinations is not None:
             modified_destinations = []
             for count, destination in enumerate(destinations):
@@ -220,7 +218,8 @@ class Network:
         # done, now run the query
         queries = [
             self._create_query(
-                s, destinations=destinations,
+                s,
+                destinations=destinations,
             )
             for s in source
         ]
