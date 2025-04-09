@@ -239,9 +239,9 @@ class Network:
             The generated SPARQL query string.
 
         """
-        if destinations is None and not enforce_types:
+        if destinations is None and not source._enforce_type:
             raise ValueError(
-                "If no destinations are provided, enforce_types must be True."
+                "If no destinations are provided, source.any cannot be used!."
             )
 
         if destinations is None:
@@ -348,11 +348,10 @@ class Network:
 
         return "\n".join(query)
 
-    def query(self, kg, source, destinations=None, enforce_types=True, return_df=True):
+    def query(self, kg, source, destinations=None, return_df=True):
         query_strings = self.create_query(
             source,
             destinations=destinations,
-            enforce_types=enforce_types,
             return_list=True,
         )
         res = []
