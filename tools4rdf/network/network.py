@@ -83,7 +83,6 @@ class Network:
             path.append(target.variable_name)
         else:
             path[-1] = target.variable_name
-        print(path)
         #now if target is an object property, we add an extra item to the path to complete it
         return path
 
@@ -349,6 +348,7 @@ class Network:
         return "\n".join(query)
 
     def query(self, kg, source, destinations=None, return_df=True):
+
         query_strings = self.create_query(
             source,
             destinations=destinations,
