@@ -5,7 +5,7 @@ https://docs.python.org/3/library/operator.html
 from rdflib import URIRef
 import numbers
 import copy
-
+import warnings
 
 def _get_namespace_and_name(uri):
     uri_split = uri.split("#")
@@ -423,8 +423,10 @@ class OntoTerm:
         self.__or__(term)
 
     def __matmul__(self, term):
-        # print("matmul")
-        # print(f'lhs {self} rhs {term}')
+        #we will phase out this operator soon
+        warnings.warn(
+            "The @ operator is deprecated and will be removed in future versions. termA@termB should be [termA, termB] instead.",
+        )
         item = copy.deepcopy(self)
         item._parents.append(copy.deepcopy(term))
         return item
