@@ -146,7 +146,7 @@ class Network:
         return query
 
     def create_query(
-        self, source, destinations=None, enforce_types=True, return_list=False
+        self, source, destinations=None, return_list=False
     ):
         # we need to handle source and destination, the primary aim here is to handle source
         if not isinstance(source, list):
@@ -210,7 +210,7 @@ class Network:
         # done, now run the query
         queries = [
             self._create_query(
-                s, destinations=destinations, enforce_types=enforce_types
+                s, destinations=destinations,
             )
             for s in source
         ]
@@ -218,9 +218,9 @@ class Network:
             return queries[0]
         return queries
 
-    def _create_query(self, source, destinations=None, enforce_types=True):
+    def _create_query(self, source, destinations=None):
         """
-        Create a SPARQL query string based on the given source, destinations, condition, and enforce_types.
+        Create a SPARQL query string based on the given source, destinations, condition.
 
         Parameters
         ----------
@@ -231,8 +231,6 @@ class Network:
             node is provided, it will be converted to a list.
             If None, the query will not include any destination nodes, and will simply list objects of the given type.
             None, and `enforced_types` is False, will raise a ValueError.
-        enforce_types : bool, optional
-            Whether to enforce the types of the source and destination nodes in the query. Defaults to True.
 
         Returns
         -------
