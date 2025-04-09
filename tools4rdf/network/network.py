@@ -181,10 +181,11 @@ class Network:
                 )
 
             # now check classes; see if anython common classes are not there, if so add.
+            #we just need one common class, these queries will NOT be type fixed
+            common_class = common_classes[0]
             class_names = [c.name for c in classes]
-            for c in common_classes:
-                if c.name not in class_names:
-                    classes.append(c)
+            if common_class.name not in class_names:
+                classes.append(common_class.any)
 
         # now classes are the new source nodes
         # object propertiues are ADDED to the destination nodes
