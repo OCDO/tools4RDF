@@ -304,23 +304,23 @@ class Network:
                     query.append(line_text)
 
         # we enforce types of the source and destination
-        if enforce_types:
-            namespaces_used.append("rdf")
-            if source.node_type == "class":
+        namespaces_used.append("rdf")
+        if source._enforce_type and source.node_type == "class":
+            query.append(
+                "    ?%s rdf:type %s ."
+                % (_strip_name(source.variable_name), source.query_name)
+            )
+
+        for destination in destinations:
+            if destination._enforce_type and destination.node_type == "class":
                 query.append(
                     "    ?%s rdf:type %s ."
-                    % (_strip_name(source.variable_name), source.query_name)
+                    % (
+                        destination.variable_name,
+                        destination.query_name,
+                    )
                 )
 
-            for destination in destinations:
-                if destination.node_type == "class":
-                    query.append(
-                        "    ?%s rdf:type %s ."
-                        % (
-                            destination.variable_name,
-                            destination.query_name,
-                        )
-                    )
         query = self._insert_namespaces(set(namespaces_used)) + query
         # - formulate the condition, given by the `FILTER` command:
         #    - extract the filter text from the term
