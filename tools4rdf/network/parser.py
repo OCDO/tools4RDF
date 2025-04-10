@@ -41,7 +41,7 @@ class OntoParser:
         self.parse_named_individuals()
         self.extract_object_properties()
         self.extract_data_properties()
-        # self.extract_subproperties()
+        self.extract_subproperties()
         self.recheck_namespaces()
 
     @property
