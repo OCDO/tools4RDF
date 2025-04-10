@@ -344,7 +344,7 @@ class OntoParser:
             self.attributes["class"][term.name] = term
             parents = list(self.graph.objects(cls, RDF.type))
             for parent in parents:
-                if parent != OWL.NamedIndividual:
+                if parent not in [OWL.NamedIndividual, OWL.Class]:
                     self.attributes["class"][
                         strip_name(parent.toPython())
                     ].named_individuals.append(term.name)
