@@ -133,10 +133,7 @@ class OntoParser:
             self.attributes["data_nodes"][data_term.name] = data_term
 
     def extract_subproperties(self):
-        top_most_properties = [
-            URIRef("http://www.w3.org/2002/07/owl#topObjectProperty"),
-            URIRef("http://www.w3.org/2002/07/owl#topDataProperty"),
-        ]
+        top_most_properties = [OWL.topObjectProperty, OWL.topDataProperty]
         # we iterate over all object properties, and add the subproperties
         for prop_type in ["object_property", "data_property"]:
             for key, prop in self.attributes[prop_type].items():
@@ -178,7 +175,7 @@ class OntoParser:
                         }
             else:
                 self.classes.append(term)
-        self.classes.append(URIRef("http://www.w3.org/2002/07/owl#Thing"))
+        self.classes.append(OWL.Thing)
 
     def add_classes_to_attributes(self):
         for cls in self.classes:
@@ -191,9 +188,7 @@ class OntoParser:
             cls, URIRef("http://purl.obolibrary.org/obo/IAO_0000115")
         )
         if comment is None:
-            comment = self.graph.value(
-                cls, URIRef("http://www.w3.org/2000/01/rdf-schema#comment")
-            )
+            comment = self.graph.value(cls, RDFS.comment)
         if comment is None:
             comment = ""
         return comment
