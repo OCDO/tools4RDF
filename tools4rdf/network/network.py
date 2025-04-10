@@ -79,7 +79,11 @@ class Network:
         )
         # replace the start and end with thier corresponding variable names
         path[0] = source.variable_name
-        path[-1] = target.variable_name
+        if target.node_type == "object_property":
+            path.append(target.variable_name)
+        else:
+            path[-1] = target.variable_name
+        # now if target is an object property, we add an extra item to the path to complete it
         return path
 
     def get_shortest_path(self, source, target, triples=False):
@@ -116,7 +120,12 @@ class Network:
                 temp_source = complete_list[x - 1]
                 temp_dest = complete_list[x]
                 temp_path = self._get_shortest_path(temp_source, temp_dest)
-                path.extend(temp_path[1:])
+                if len(temp_path) == 2:
+                    # this means that they are next to each other, so we cannot form a full path
+                    # so we need to add the last item of the previous path
+                    path[-1] = temp_path[-1]
+                else:
+                    path.extend(temp_path[1:])
         else:
             path = self._get_shortest_path(source, target)
 
@@ -135,9 +144,7 @@ class Network:
             query.append(f"PREFIX {key}: <{ns[key]}>")
         return query
 
-    def create_query(
-        self, source, destinations=None, enforce_types=True, return_list=False
-    ):
+    def create_query(self, source, destinations=None, return_list=False):
         # we need to handle source and destination, the primary aim here is to handle source
         if not isinstance(source, list):
             source = [source]
@@ -171,10 +178,24 @@ class Network:
                 )
 
             # now check classes; see if anython common classes are not there, if so add.
+            # we just need one common class, these queries will NOT be type fixed
+            common_class = common_classes[0]
             class_names = [c.name for c in classes]
-            for c in common_classes:
-                if c.name not in class_names:
-                    classes.append(c)
+            if common_class.name not in class_names:
+                classes.append(common_class.any)
+
+        # the pplan is to phase out the @ operator, so we look for lists within destinations
+        if destinations is not None:
+            modified_destinations = []
+            for count, destination in enumerate(destinations):
+                if isinstance(destination, (list, tuple)):
+                    last_destination = destination[-1]
+                    for d in destination[:-1]:
+                        last_destination._parents.append(d)
+                    modified_destinations.append(last_destination)
+                else:
+                    modified_destinations.append(destination)
+            destinations = modified_destinations
 
         # now classes are the new source nodes
         # object propertiues are ADDED to the destination nodes
@@ -182,14 +203,23 @@ class Network:
         if destinations is not None:
             if not isinstance(destinations, list):
                 destinations = [destinations]
-            destinations.extend(object_properties)
-        else:
+            for object_property in object_properties:
+                already_there = False
+                if object_property in destinations:
+                    already_there = True
+                for d in destinations:
+                    if object_property in d._parents:
+                        already_there = True
+                if not already_there:
+                    destinations.append(object_property)
+        elif len(object_properties) > 0:
             destinations = object_properties
 
         # done, now run the query
         queries = [
             self._create_query(
-                s, destinations=destinations, enforce_types=enforce_types
+                s,
+                destinations=destinations,
             )
             for s in source
         ]
@@ -197,9 +227,9 @@ class Network:
             return queries[0]
         return queries
 
-    def _create_query(self, source, destinations=None, enforce_types=True):
+    def _create_query(self, source, destinations=None):
         """
-        Create a SPARQL query string based on the given source, destinations, condition, and enforce_types.
+        Create a SPARQL query string based on the given source, destinations, condition.
 
         Parameters
         ----------
@@ -210,8 +240,6 @@ class Network:
             node is provided, it will be converted to a list.
             If None, the query will not include any destination nodes, and will simply list objects of the given type.
             None, and `enforced_types` is False, will raise a ValueError.
-        enforce_types : bool, optional
-            Whether to enforce the types of the source and destination nodes in the query. Defaults to True.
 
         Returns
         -------
@@ -219,9 +247,9 @@ class Network:
             The generated SPARQL query string.
 
         """
-        if destinations is None and not enforce_types:
+        if destinations is None and not source._enforce_type:
             raise ValueError(
-                "If no destinations are provided, enforce_types must be True."
+                "If no destinations are provided, source.any cannot be used!."
             )
 
         if destinations is None:
@@ -283,23 +311,23 @@ class Network:
                     query.append(line_text)
 
         # we enforce types of the source and destination
-        if enforce_types:
-            namespaces_used.append("rdf")
-            if source.node_type == "class":
+        namespaces_used.append("rdf")
+        if source._enforce_type and source.node_type == "class":
+            query.append(
+                "    ?%s rdf:type %s ."
+                % (_strip_name(source.variable_name), source.query_name)
+            )
+
+        for destination in destinations:
+            if destination._enforce_type and destination.node_type == "class":
                 query.append(
                     "    ?%s rdf:type %s ."
-                    % (_strip_name(source.variable_name), source.query_name)
+                    % (
+                        destination.variable_name,
+                        destination.query_name,
+                    )
                 )
 
-            for destination in destinations:
-                if destination.node_type == "class":
-                    query.append(
-                        "    ?%s rdf:type %s ."
-                        % (
-                            destination.variable_name,
-                            destination.query_name,
-                        )
-                    )
         query = self._insert_namespaces(set(namespaces_used)) + query
         # - formulate the condition, given by the `FILTER` command:
         #    - extract the filter text from the term
@@ -328,11 +356,11 @@ class Network:
 
         return "\n".join(query)
 
-    def query(self, kg, source, destinations=None, enforce_types=True, return_df=True):
+    def query(self, kg, source, destinations=None, return_df=True):
+
         query_strings = self.create_query(
             source,
             destinations=destinations,
-            enforce_types=enforce_types,
             return_list=True,
         )
         res = []

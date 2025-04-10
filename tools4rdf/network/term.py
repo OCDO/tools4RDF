@@ -5,6 +5,7 @@ https://docs.python.org/3/library/operator.html
 from rdflib import URIRef
 import numbers
 import copy
+import warnings
 
 
 def _get_namespace_and_name(uri):
@@ -109,6 +110,7 @@ class OntoTerm:
         # these are accumulated when using the & or || operators
         self._condition_parents = []
         self.target = target
+        self._enforce_type = True
 
     @property
     def URIRef(self):
@@ -256,10 +258,10 @@ class OntoTerm:
         """
         if self.node_type == "data_property":
             return self.name + "value"
-        elif self.node_type == "object_property":
-            if len(self.range) > 0:
-                # this has a domain
-                return self.range[0]
+        # elif self.node_type == "object_property":
+        #    if len(self.range) > 0:
+        #        # this has a domain
+        #        return self.range[0]
         return self.name
 
     @property
@@ -300,14 +302,21 @@ class OntoTerm:
             return self.name_without_prefix + "value"
         return self.name_without_prefix
 
+    @property
+    def any(self):
+        # this indicates that type enforcing is not needed
+        item = copy.deepcopy(self)
+        item._enforce_type = False
+        return item
+
     def toPython(self):
         return self.uri
 
     def __repr__(self):
-        if self.description is not None:
-            return str(self.name + "\n" + self.description)
-        else:
-            return str(self.name)
+        # if self.description is not None:
+        #    return str(self.name + "\n" + self.description)
+        # else:
+        return str(self.name)
 
     def _clean_datatype(self, r):
         if r == "str":
@@ -345,10 +354,12 @@ class OntoTerm:
         """
         # print("eq")
         # print(f'lhs {self} rhs {val}')
-        self._is_data_node()
-        item = copy.deepcopy(self)
-        item._condition = item._create_condition_string("=", val)
-        return item
+        if self.node_type == "data_property":
+            item = copy.deepcopy(self)
+            item._condition = item._create_condition_string("=", val)
+            return item
+        else:
+            return self.name == val.name
 
     def __lt__(self, val):
         self._is_number(val)
@@ -423,8 +434,10 @@ class OntoTerm:
         self.__or__(term)
 
     def __matmul__(self, term):
-        # print("matmul")
-        # print(f'lhs {self} rhs {term}')
+        # we will phase out this operator soon
+        warnings.warn(
+            "The @ operator is deprecated and will be removed in future versions. termA@termB should be [termA, termB] instead.",
+        )
         item = copy.deepcopy(self)
         item._parents.append(copy.deepcopy(term))
         return item
