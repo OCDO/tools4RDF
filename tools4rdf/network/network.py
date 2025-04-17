@@ -443,12 +443,13 @@ class Network:
             created_queries.append("\n".join(query))
         return created_queries
 
-    def query(self, kg, source, destinations=None, return_df=True):
+    def query(self, kg, source, destinations=None, return_df=True, num_paths=1):
 
         query_strings = self.create_query(
             source,
             destinations=destinations,
             return_list=True,
+            num_paths=num_paths,
         )
         res = []
         for query_string in query_strings:
