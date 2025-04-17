@@ -320,6 +320,9 @@ class Network:
                 % (_strip_name(source.variable_name), source.query_name)
             )
             for cls_name in source.subclasses:
+                if cls_name.split(":")[0] not in namespaces_used:
+                    namespaces_used.append(cls_name.split(":")[0])
+
                 query.append("    UNION    ")
                 cls_term = self.attributes["class"][cls_name]
                 query.append(
@@ -335,7 +338,22 @@ class Network:
         
         for destination in destinations:
             if destination._add_subclass and destination.node_type == "class":
-                pass
+                #we have to make a type query connection by union
+                query.append(
+                    "   { ?%s rdf:type %s . }"
+                    % (_strip_name(destination.variable_name), destination.query_name)
+                )
+                for cls_name in destination.subclasses:
+                    if cls_name.split(":")[0] not in namespaces_used:
+                        namespaces_used.append(cls_name.split(":")[0])
+
+                    query.append("    UNION    ")
+                    cls_term = self.attributes["class"][cls_name]
+                    query.append(
+                        "   { ?%s rdf:type %s . }"
+                        % (_strip_name(cls_term.variable_name), cls_term.query_name)
+                    )
+
             elif destination._enforce_type and destination.node_type == "class":
                 query.append(
                     "    ?%s rdf:type %s ."
