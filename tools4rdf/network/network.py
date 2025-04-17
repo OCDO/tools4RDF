@@ -91,7 +91,6 @@ class Network:
             else:
                 path[-1] = target.variable_name
             paths.append(path)
-        
         return paths
 
     def get_shortest_path(self, source, target, triples=False, num_paths=1):
@@ -118,7 +117,7 @@ class Network:
 
         """
         # this function should also check for stepped queries
-        path = []
+        paths = []
         if len(target._parents) > 0:
             # this needs a stepped query
             complete_list = [source, *target._parents, target]
@@ -134,10 +133,9 @@ class Network:
                     path[-1] = temp_path[-1]
                 else:
                     path.extend(temp_path[1:])
-            paths.append(path)
+            paths.extend(path)
         else:
             paths = self._get_shortest_path(source, target, num_paths=num_paths)
-
         if triples:
             triple_lists = []
             for path in paths:
@@ -156,7 +154,7 @@ class Network:
             query.append(f"PREFIX {key}: <{ns[key]}>")
         return query
 
-    def create_query(self, source, destinations=None, return_list=False):
+    def create_query(self, source, destinations=None, return_list=False, num_paths=1):
         # we need to handle source and destination, the primary aim here is to handle source
         if not isinstance(source, list):
             source = [source]
@@ -236,7 +234,7 @@ class Network:
         # done, now run the query
         queries = []
         for s in source:
-            queries.extend(self._create_query(s,destinations=destinations))
+            queries.extend(self._create_query(s,destinations=destinations, num_paths=num_paths))
 
         if (len(queries) == 1) and not return_list:
             return queries[0]
@@ -284,11 +282,13 @@ class Network:
         #then these have to be combined; and each set to be made into individual queries
         complete_triples = []
         for count, destination in enumerate(destinations):
-            triplets = self.get_shortest_path(source, destination, triples=True)
+            triplets = self.get_shortest_path(source, destination, triples=True, num_paths=num_paths)
             complete_triples.append(triplets)
-        zipped = list(zip(*complete_triples))
+        #flattened = [[item[0] for item in group] for group in complete_triples]
+        # Get Cartesian product (all combinations)
+        prepared = [[triple for triple in group] for group in complete_triples]
         # Get all combinations
-        combinations = list(itertools.product(*zipped))        
+        combinations = list(itertools.product(*prepared))
         namespaces = []
         queries = []
 
@@ -389,7 +389,7 @@ class Network:
             destination.refresh()
         return query
 
-    def _create_query(self, source, destinations=None):
+    def _create_query(self, source, destinations=None, num_paths=1):
         """
         Create a SPARQL query string based on the given source, destinations, condition.
 
@@ -425,7 +425,7 @@ class Network:
         namespaces_used.append("rdf")
         
         #get a list of queries
-        queries, namespaces = self._get_triples(source, destinations)
+        queries, namespaces = self._get_triples(source, destinations, num_paths=num_paths)
 
         #here we have to loop over each query and append it nicely
 
