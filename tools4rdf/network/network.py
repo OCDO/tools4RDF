@@ -312,14 +312,31 @@ class Network:
 
         # we enforce types of the source and destination
         namespaces_used.append("rdf")
-        if source._enforce_type and source.node_type == "class":
+        
+        if source._add_subclass and source.node_type == "class":
+            #we have to make a type query connection by union
+            query.append(
+                "   { ?%s rdf:type %s . }"
+                % (_strip_name(source.variable_name), source.query_name)
+            )
+            for cls_name in source.subclasses:
+                query.append("    UNION    ")
+                cls_term = self.attributes["class"][cls_name]
+                query.append(
+                    "   { ?%s rdf:type %s . }"
+                    % (_strip_name(cls_term.variable_name), cls_term.query_name)
+                )
+        elif source._enforce_type and source.node_type == "class":
             query.append(
                 "    ?%s rdf:type %s ."
                 % (_strip_name(source.variable_name), source.query_name)
             )
 
+        
         for destination in destinations:
-            if destination._enforce_type and destination.node_type == "class":
+            if destination._add_subclass and destination.node_type == "class":
+                pass
+            elif destination._enforce_type and destination.node_type == "class":
                 query.append(
                     "    ?%s rdf:type %s ."
                     % (
