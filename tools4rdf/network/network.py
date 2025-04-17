@@ -312,9 +312,9 @@ class Network:
 
         # we enforce types of the source and destination
         namespaces_used.append("rdf")
-        
+
         if source._add_subclass and source.node_type == "class":
-            #we have to make a type query connection by union
+            # we have to make a type query connection by union
             query.append(
                 "   { ?%s rdf:type %s . }"
                 % (_strip_name(source.variable_name), source.query_name)
@@ -335,10 +335,9 @@ class Network:
                 % (_strip_name(source.variable_name), source.query_name)
             )
 
-        
         for destination in destinations:
             if destination._add_subclass and destination.node_type == "class":
-                #we have to make a type query connection by union
+                # we have to make a type query connection by union
                 query.append(
                     "   { ?%s rdf:type %s . }"
                     % (_strip_name(destination.variable_name), destination.query_name)
