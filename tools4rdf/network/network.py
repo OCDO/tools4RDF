@@ -2,6 +2,7 @@ import networkx as nx
 import graphviz
 import pandas as pd
 from rdflib import URIRef, Literal, RDF, OWL
+import itertools
 
 from tools4rdf.network.attrsetter import AttrSetter
 from tools4rdf.network.parser import parse_ontology, OntoParser
@@ -72,21 +73,28 @@ class Network:
             dot.edge(_replace_name(edge[0]), _replace_name(edge[1]))
         return dot
 
-    def _get_shortest_path(self, source, target):
+    def _get_shortest_path(self, source, target, num_paths=1):
         # this function will be modified to take OntoTerms direcl as input; and use their names.
-        path = nx.shortest_path(
+        path_iterator = nx.shortest_simple_paths(
             self.g, source=source.query_name, target=target.query_name
         )
         # replace the start and end with thier corresponding variable names
-        path[0] = source.variable_name
-        if target.node_type == "object_property":
-            path.append(target.variable_name)
-        else:
-            path[-1] = target.variable_name
-        # now if target is an object property, we add an extra item to the path to complete it
-        return path
+        paths = []
+        for count, path in enumerate(path_iterator):
+            if count == num_paths:
+                break
+            path = list(path)
+            # now we need to replace the start and end with their variable names
+            path[0] = source.variable_name
+            if target.node_type == "object_property":
+                path.append(target.variable_name)
+            else:
+                path[-1] = target.variable_name
+            paths.append(path)
+        
+        return paths
 
-    def get_shortest_path(self, source, target, triples=False):
+    def get_shortest_path(self, source, target, triples=False, num_paths=1):
         """
         Compute the shortest path between two nodes in the graph.
 
@@ -126,16 +134,20 @@ class Network:
                     path[-1] = temp_path[-1]
                 else:
                     path.extend(temp_path[1:])
+            paths.append(path)
         else:
-            path = self._get_shortest_path(source, target)
+            paths = self._get_shortest_path(source, target, num_paths=num_paths)
 
         if triples:
-            triple_list = []
-            for x in range(len(path) // 2):
-                triple_list.append(path[2 * x : 2 * x + 3])
-            return triple_list
+            triple_lists = []
+            for path in paths:
+                triple_list = []
+                for x in range(len(path) // 2):
+                    triple_list.append(path[2 * x : 2 * x + 3])
+                triple_lists.append(triple_list)
+            return triple_lists
 
-        return path
+        return paths
 
     def _insert_namespaces(self, namespaces):
         query = []
@@ -217,50 +229,24 @@ class Network:
                     destinations.append(object_property)
         elif len(object_properties) > 0:
             destinations = object_properties
+        
+        if destinations is None:
+            destinations = []
 
         # done, now run the query
-        queries = [
-            self._create_query(
-                s,
-                destinations=destinations,
-            )
-            for s in source
-        ]
+        queries = []
+        for s in source:
+            queries.extend(self._create_query(s,destinations=destinations))
+
         if (len(queries) == 1) and not return_list:
             return queries[0]
         return queries
 
-    def _create_query(self, source, destinations=None):
-        """
-        Create a SPARQL query string based on the given source, destinations, condition.
-
-        Parameters
-        ----------
-        source : Node
-            The source node from which the query starts.
-        destinations : list or Node or None, optional
-            The destination node(s) to which the query should reach. If a single
-            node is provided, it will be converted to a list.
-            If None, the query will not include any destination nodes, and will simply list objects of the given type.
-            None, and `enforced_types` is False, will raise a ValueError.
-
-        Returns
-        -------
-        str
-            The generated SPARQL query string.
-
-        """
+    def _prepare_destinations(self, destinations=None):
         if destinations is None and not source._enforce_type:
             raise ValueError(
                 "If no destinations are provided, source.any cannot be used!."
             )
-
-        if destinations is None:
-            destinations = []
-
-        # if not list, convert to list
-        if not isinstance(destinations, list):
-            destinations = [destinations]
 
         # check if more than one of them have an associated condition -> if so throw error
         no_of_conditions = 0
@@ -275,7 +261,9 @@ class Network:
             for parent in destination._condition_parents:
                 if parent.variable_name not in [d.variable_name for d in destinations]:
                     destinations.append(parent)
-
+        return destinations
+    
+    def _create_query_prefix(self, source, destinations):
         # all names are now collected, in a list of lists
         # start prefix of query
         query = []
@@ -289,33 +277,42 @@ class Network:
         select_destinations = ["?" + source.variable_name] + select_destinations
         query.append(f'SELECT DISTINCT {" ".join(select_destinations)}')
         query.append("WHERE {")
+        return query
 
-        # constructing the spaql query path triples, by iterating over destinations
-        # for each destination:
-        #    - check if it has  parent by looking at `._parents`
-        #    - if it has `_parents`, called step path method
-        #    - else just get the path
-        #    - replace the ends of the path with `variable_name`
-        #    - if it deosnt exist in the collection of lines, add the lines
-        namespaces_used = []
-        # add the source to the namespaces
-        namespaces_used.append(source.name.split(":")[0])
-        # add the destination namespaces
+    def _get_triples(self, source, destinations, num_paths=1):
+        #for each source and destinations, we need to find num_paths paths
+        #then these have to be combined; and each set to be made into individual queries
+        complete_triples = []
         for count, destination in enumerate(destinations):
             triplets = self.get_shortest_path(source, destination, triples=True)
-            for triple in triplets:
-                namespaces_used.extend([x.split(":")[0] for x in triple if ":" in x])
-                line_text = "    ?%s %s ?%s ." % (
-                    triple[0].replace(":", "_"),
-                    triple[1],
-                    triple[2].replace(":", "_"),
-                )
-                if line_text not in query:
-                    query.append(line_text)
+            complete_triples.append(triplets)
+        zipped = list(zip(*complete_triples))
+        # Get all combinations
+        combinations = list(itertools.product(*zipped))        
+        namespaces = []
+        queries = []
 
-        # we enforce types of the source and destination
-        namespaces_used.append("rdf")
+        for count, combination in enumerate(combinations):
+            query = []
+            namespace = []
+            for triples in combination:
+                for triple in triples:
+                    namespace.extend([x.split(":")[0] for x in triple if ":" in x])
+                    line_text = "    ?%s %s ?%s ." % (
+                        triple[0].replace(":", "_"),
+                        triple[1],
+                        triple[2].replace(":", "_"),
+                    )
+                    if line_text not in query:
+                        query.append(line_text)
+            queries.append(query)
+            namespaces.extend(namespace)
 
+        return queries, namespaces
+
+    def _add_types_for_source(self, source):
+        query = []
+        namespaces_used = []
         if source._add_subclass and source.node_type == "class":
             # we have to make a type query connection by union
             query.append(
@@ -337,7 +334,11 @@ class Network:
                 "    ?%s rdf:type %s ."
                 % (_strip_name(source.variable_name), source.query_name)
             )
+        return query, namespaces_used
 
+    def _add_types_for_destination(self, destinations):
+        query = []
+        namespaces_used = []
         for destination in destinations:
             if destination._add_subclass and destination.node_type == "class":
                 # we have to make a type query connection by union
@@ -364,15 +365,11 @@ class Network:
                         destination.query_name,
                     )
                 )
+        return query, namespaces_used
 
-        query = self._insert_namespaces(set(namespaces_used)) + query
-        # - formulate the condition, given by the `FILTER` command:
-        #    - extract the filter text from the term
-        #    - loop over destinations:
-        #        - call `replace(destination.query_name, destination.variable_name)`
+    def _add_filters(self, destinations):
         filter_text = ""
-
-        # make filters; get all the unique filters from all the classes in destinations
+        query = []
         for destination in destinations:
             if destination._condition is not None:
                 filter_text = destination._condition
@@ -390,8 +387,61 @@ class Network:
         # finished, clean up the terms;
         for destination in destinations:
             destination.refresh()
+        return query
 
-        return "\n".join(query)
+    def _create_query(self, source, destinations=None):
+        """
+        Create a SPARQL query string based on the given source, destinations, condition.
+
+        Parameters
+        ----------
+        source : Node
+            The source node from which the query starts.
+        destinations : list or Node or None, optional
+            The destination node(s) to which the query should reach. If a single
+            node is provided, it will be converted to a list.
+            If None, the query will not include any destination nodes, and will simply list objects of the given type.
+            None, and `enforced_types` is False, will raise a ValueError.
+
+        Returns
+        -------
+        str
+            The generated SPARQL query string.
+
+        """
+        destinations = self._prepare_destinations(destinations=destinations)
+        query_header = self._create_query_prefix(source, destinations)
+
+        # constructing the spaql query path triples, by iterating over destinations
+        # for each destination:
+        #    - check if it has  parent by looking at `._parents`
+        #    - if it has `_parents`, called step path method
+        #    - else just get the path
+        #    - replace the ends of the path with `variable_name`
+        #    - if it deosnt exist in the collection of lines, add the lines
+        namespaces_used = []
+        # add the source to the namespaces
+        namespaces_used.append(source.name.split(":")[0])
+        namespaces_used.append("rdf")
+        
+        #get a list of queries
+        queries, namespaces = self._get_triples(source, destinations)
+
+        #here we have to loop over each query and append it nicely
+
+        # we enforce types of the source and destination
+        
+        query_footer_source_types, namespaces_source = self._add_types_for_source(source)
+        query_footer_dest_types, namespaces_dest = self._add_types_for_destination(destinations)
+
+        query_filter = self._add_filters(destinations)
+
+        created_queries = []
+        for query in queries:
+            query_header_new = self._insert_namespaces(set(namespaces_used+namespaces+namespaces_source+namespaces_dest)) + query_header
+            query = query_header_new + query + query_footer_source_types + query_footer_dest_types + query_filter
+            created_queries.append("\n".join(query))
+        return created_queries
 
     def query(self, kg, source, destinations=None, return_df=True):
 
