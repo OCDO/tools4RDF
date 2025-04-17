@@ -227,14 +227,16 @@ class Network:
                     destinations.append(object_property)
         elif len(object_properties) > 0:
             destinations = object_properties
-        
+
         if destinations is None:
             destinations = []
 
         # done, now run the query
         queries = []
         for s in source:
-            queries.extend(self._create_query(s,destinations=destinations, num_paths=num_paths))
+            queries.extend(
+                self._create_query(s, destinations=destinations, num_paths=num_paths)
+            )
 
         if (len(queries) == 1) and not return_list:
             return queries[0]
@@ -260,7 +262,7 @@ class Network:
                 if parent.variable_name not in [d.variable_name for d in destinations]:
                     destinations.append(parent)
         return destinations
-    
+
     def _create_query_prefix(self, source, destinations):
         # all names are now collected, in a list of lists
         # start prefix of query
@@ -278,13 +280,15 @@ class Network:
         return query
 
     def _get_triples(self, source, destinations, num_paths=1):
-        #for each source and destinations, we need to find num_paths paths
-        #then these have to be combined; and each set to be made into individual queries
+        # for each source and destinations, we need to find num_paths paths
+        # then these have to be combined; and each set to be made into individual queries
         complete_triples = []
         for count, destination in enumerate(destinations):
-            triplets = self.get_shortest_path(source, destination, triples=True, num_paths=num_paths)
+            triplets = self.get_shortest_path(
+                source, destination, triples=True, num_paths=num_paths
+            )
             complete_triples.append(triplets)
-        #flattened = [[item[0] for item in group] for group in complete_triples]
+        # flattened = [[item[0] for item in group] for group in complete_triples]
         # Get Cartesian product (all combinations)
         prepared = [[triple for triple in group] for group in complete_triples]
         # Get all combinations
@@ -423,23 +427,45 @@ class Network:
         # add the source to the namespaces
         namespaces_used.append(source.name.split(":")[0])
         namespaces_used.append("rdf")
-        
-        #get a list of queries
-        queries, namespaces = self._get_triples(source, destinations, num_paths=num_paths)
 
-        #here we have to loop over each query and append it nicely
+        # get a list of queries
+        queries, namespaces = self._get_triples(
+            source, destinations, num_paths=num_paths
+        )
+
+        # here we have to loop over each query and append it nicely
 
         # we enforce types of the source and destination
-        
-        query_footer_source_types, namespaces_source = self._add_types_for_source(source)
-        query_footer_dest_types, namespaces_dest = self._add_types_for_destination(destinations)
+
+        query_footer_source_types, namespaces_source = self._add_types_for_source(
+            source
+        )
+        query_footer_dest_types, namespaces_dest = self._add_types_for_destination(
+            destinations
+        )
 
         query_filter = self._add_filters(destinations)
 
         created_queries = []
         for query in queries:
-            query_header_new = self._insert_namespaces(set(namespaces_used+namespaces+namespaces_source+namespaces_dest)) + query_header
-            query = query_header_new + query + query_footer_source_types + query_footer_dest_types + query_filter
+            query_header_new = (
+                self._insert_namespaces(
+                    set(
+                        namespaces_used
+                        + namespaces
+                        + namespaces_source
+                        + namespaces_dest
+                    )
+                )
+                + query_header
+            )
+            query = (
+                query_header_new
+                + query
+                + query_footer_source_types
+                + query_footer_dest_types
+                + query_filter
+            )
             created_queries.append("\n".join(query))
         return created_queries
 
