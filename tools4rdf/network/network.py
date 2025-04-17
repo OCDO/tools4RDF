@@ -148,6 +148,9 @@ class Network:
         # we need to handle source and destination, the primary aim here is to handle source
         if not isinstance(source, list):
             source = [source]
+        if destinations is not None:
+            if not isinstance(destinations, list):
+                destinations = [destinations]
         # if any of the source items are data properties, fail
         for s in source:
             if s.node_type == "data_property":
