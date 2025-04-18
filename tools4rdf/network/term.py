@@ -111,6 +111,7 @@ class OntoTerm:
         self._condition_parents = []
         self.target = target
         self._enforce_type = True
+        self._add_subclass = False
 
     @property
     def URIRef(self):
@@ -307,6 +308,13 @@ class OntoTerm:
         # this indicates that type enforcing is not needed
         item = copy.deepcopy(self)
         item._enforce_type = False
+        return item
+
+    @property
+    def all_subtypes(self):
+        # this indicates that type enforcing is not needed
+        item = copy.deepcopy(self)
+        item._add_subclass = True
         return item
 
     def toPython(self):
