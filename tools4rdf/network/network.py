@@ -1,9 +1,20 @@
+"""
+This module provides a network representation of ontologies, enabling operations such as
+query generation, shortest path computation, and visualization of ontology graphs.
+
+Features:
+- Generate SPARQL queries based on ontology structure and relationships.
+- Compute shortest paths between ontology terms.
+- Visualize ontology graphs using Graphviz.
+- Extend and manipulate ontology networks with additional namespaces, terms, and paths.
+"""
+
 import networkx as nx
 import graphviz
 import pandas as pd
-from rdflib import URIRef, Literal, RDF, OWL
 import itertools
 
+from rdflib import URIRef, Literal, RDF, OWL
 from tools4rdf.network.attrsetter import AttrSetter
 from tools4rdf.network.parser import parse_ontology, OntoParser
 
@@ -20,6 +31,57 @@ def _strip_name(name):
 
 
 class Network:
+    """
+    Network
+    -------
+    A class for representing and interacting with a network graph derived from an ontology. 
+    This class provides methods for visualizing the graph, computing shortest paths, 
+    and generating SPARQL queries based on the graph structure.
+
+    Attributes
+    ----------
+
+    terms : AttrSetter
+        An object for managing attributes of the ontology terms.
+    g : networkx.Graph
+        The NetworkX graph representation of the ontology.
+    namespaces : dict
+        A dictionary of namespaces defined in the ontology.
+    extra_namespaces : dict
+        Additional namespaces that are not part of the core ontology.
+
+    Methods
+    -------
+
+    draw(styledict=None)
+        Draw the network graph using Graphviz with customizable styles for node types.
+    _get_shortest_path(source, target, num_paths=1)
+        Compute the shortest path(s) between two nodes in the graph.
+    get_shortest_path(source, target, triples=False, num_paths=1)
+        Compute the shortest path(s) between two nodes, optionally returning the path as triples.
+    _insert_namespaces(namespaces)
+        Insert namespace prefixes into a SPARQL query.
+    create_query(source, destinations=None, return_list=False, num_paths=1)
+        Generate SPARQL queries based on the source and destination nodes.
+    _prepare_destinations(destinations=None)
+        Prepare and validate destination nodes for query generation.
+    _create_query_prefix(source, destinations)
+        Create the prefix and SELECT clause for a SPARQL query.
+    _get_triples(source, destinations, num_paths=1)
+        Generate triples for SPARQL queries based on paths between source and destination nodes.
+    _add_types_for_source(source)
+        Add type constraints for the source node in a SPARQL query.
+    _add_types_for_destination(destinations)
+        Add type constraints for the destination nodes in a SPARQL query.
+    _add_filters(destinations)
+        Add filter conditions to a SPARQL query based on destination nodes.
+    _create_query(source, destinations=None, num_paths=1)
+        Generate a complete SPARQL query string based on the source and destination nodes.
+    query(kg, source, destinations=None, return_df=True, num_paths=1)
+        Execute SPARQL queries on a knowledge graph and return the results.
+    _query(kg, query_string, return_df=True)
+        Execute a single SPARQL query on a knowledge graph and return the results.
+    """
     def __init__(self, onto):
         self.terms = AttrSetter()
         self.terms._add_attribute(onto.get_attributes())
@@ -74,6 +136,42 @@ class Network:
         return dot
 
     def _get_shortest_path(self, source, target, num_paths=1):
+        """
+        Compute the shortest paths between two nodes in a graph.
+
+        This method finds the shortest paths between a source and target node 
+        in the graph `self.g` using their `query_name` attributes. The resulting 
+        paths are modified to replace the start and end nodes with their 
+        corresponding variable names.
+
+        Parameters
+        ----------
+        source : OntoTerm
+            The source node, represented as an OntoTerm object. The `query_name` 
+            attribute is used to identify the node in the graph, and the 
+            `variable_name` attribute is used to replace the start node in the path.
+        target : OntoTerm
+            The target node, represented as an OntoTerm object. The `query_name` 
+            attribute is used to identify the node in the graph, and the 
+            `variable_name` attribute is used to replace the end node in the path.
+            If the `node_type` of the target is "object_property", the 
+            `variable_name` is appended to the path; otherwise, it replaces the 
+            last node in the path.
+        num_paths : int, optional
+            The maximum number of shortest paths to compute (default is 1).
+
+        Returns
+        -------
+        list of list
+            A list of shortest paths, where each path is represented as a list of 
+            nodes. The start and end nodes in each path are replaced with their 
+            corresponding variable names.
+
+        Notes
+        -----
+        - This method uses the `networkx.shortest_simple_paths` function to 
+          compute the paths.
+        """
         # this function will be modified to take OntoTerms direcl as input; and use their names.
         path_iterator = nx.shortest_simple_paths(
             self.g, source=source.query_name, target=target.query_name
@@ -95,26 +193,35 @@ class Network:
 
     def get_shortest_path(self, source, target, triples=False, num_paths=1):
         """
-        Compute the shortest path between two nodes in the graph.
+        Computes the shortest path(s) between a source and target node in a network.
 
-        Parameters:
-        -----------
-        source : node
-            The starting node for the path.
-        target : node
-            The target node for the path.
+        If the target node has parent nodes, the function computes a stepped query
+        that includes paths through the parent nodes. Otherwise, it computes the
+        shortest path directly between the source and target.
+
+        Parameters
+        ----------
+        source : Node
+            The starting node for the path computation.
+        target : Node
+            The destination node for the path computation.
         triples : bool, optional
-            If True, returns the path as a list of triples. Each triple consists
-            of three consecutive nodes in the path. If False, returns the path
-            as a list of nodes.
+            If True, the function returns the paths as lists of triples (default is False).
+        num_paths : int, optional
+            The number of shortest paths to compute (default is 1). Only used if it is not a 
+            stepped query.
 
-        Returns:
-        --------
-        path : list
-            The shortest path between the source and target nodes. If `triples`
-            is True, the path is returned as a list of triples. If `triples` is
-            False, the path is returned as a list of nodes.
+        Returns
+        -------
+        list
+            If `triples` is False, returns a list of nodes representing the shortest path(s).
+            If `triples` is True, returns a list of lists, where each inner list contains
+            triples representing the path(s).
 
+        Notes
+        -----
+        - If the target node has parent nodes, the function computes a stepped query
+          by combining paths between consecutive nodes in the sequence: source -> parent1 -> ... -> target.
         """
         # this function should also check for stepped queries
         paths = []
@@ -148,6 +255,24 @@ class Network:
         return paths
 
     def _insert_namespaces(self, namespaces):
+        """
+        Constructs a list of SPARQL PREFIX declarations for the given namespaces.
+
+        Parameters
+        ----------
+        namespaces : dict
+            A dictionary where keys are namespace prefixes and values are their corresponding URIs.
+
+        Returns
+        -------
+        list of str
+            A list of SPARQL PREFIX declarations in the format "PREFIX prefix: <URI>".
+
+        Notes
+        -----
+        This method combines the instance's `namespaces` and `extra_namespaces` attributes
+        to resolve the URIs for the provided namespace prefixes.
+        """
         query = []
         ns = self.namespaces | self.extra_namespaces
         for key in namespaces:
@@ -155,6 +280,35 @@ class Network:
         return query
 
     def create_query(self, source, destinations=None, return_list=False, num_paths=1):
+        """
+        Creates a query based on the given source and destination nodes.
+
+        Parameters
+        ----------
+        source : list or object
+            The source nodes for the query. If not a list, it will be converted to a list.
+            Each source node must not be of type "data_property".
+        destinations : list, object, or None, optional
+            The destination nodes for the query. If not a list, it will be converted to a list.
+            If None, the query will only consider the source nodes. Default is None.
+        return_list : bool, optional
+            If True, the function will return a list of queries. If False, it will return a single query
+            if only one query is generated. Default is False.
+        num_paths : int, optional
+            The number of paths to consider in the query. Default is 1.
+
+        Raises
+        ------
+        ValueError
+            If any source node is of type "data_property".
+            If no common classes are found in the domains of the object properties.
+
+        Returns
+        -------
+        list or object
+            A list of queries if `return_list` is True or multiple queries are generated.
+            A single query if `return_list` is False and only one query is generated.
+        """
         # we need to handle source and destination, the primary aim here is to handle source
         if not isinstance(source, list):
             source = [source]
@@ -243,6 +397,31 @@ class Network:
         return queries
 
     def _prepare_destinations(self, destinations=None):
+        """
+        Prepares and validates the list of destination objects.
+
+        This method ensures that the provided destinations meet specific conditions
+        and adds any necessary parent destinations based on their conditions.
+
+        Parameters
+        ----------
+        destinations : list, optional
+            A list of destination objects to be prepared. If None, the method checks
+            if `source._enforce_type` is enabled and raises a ValueError if it is not.
+
+        Returns
+        -------
+        list
+            A modified list of destination objects, including any necessary parent
+            destinations.
+
+        Raises
+        ------
+        ValueError
+            If `destinations` is None and `source.any` is used without enforcing type.
+        ValueError
+            If more than one destination has an associated condition.
+        """
         if destinations is None and not source._enforce_type:
             raise ValueError(
                 "If no destinations are provided, source.any cannot be used!."
@@ -264,6 +443,29 @@ class Network:
         return destinations
 
     def _create_query_prefix(self, source, destinations):
+        """
+        Constructs the prefix of a SPARQL query with a SELECT DISTINCT clause.
+
+        This method generates the initial part of a SPARQL query, including the 
+        SELECT DISTINCT clause and the opening of the WHERE block. It includes 
+        the source variable and a list of destination variables in the SELECT 
+        clause.
+
+        Parameters
+        ----------
+        source : object
+            The source object, which must have a `variable_name` attribute 
+            representing its SPARQL variable name.
+        destinations : list of objects
+            A list of destination objects, each of which must have a 
+            `variable_name` attribute representing its SPARQL variable name.
+
+        Returns
+        -------
+        list of str
+            A list of strings representing the initial lines of the SPARQL query, 
+            including the SELECT DISTINCT clause and the opening of the WHERE block.
+        """
         # all names are now collected, in a list of lists
         # start prefix of query
         query = []
@@ -280,6 +482,28 @@ class Network:
         return query
 
     def _get_triples(self, source, destinations, num_paths=1):
+        """
+        Generate SPARQL queries and namespaces based on the shortest paths between a source and multiple destinations.
+
+        For each source-destination pair, this method finds the shortest paths (up to `num_paths` paths) and combines 
+        the resulting triples into SPARQL queries. It also extracts namespaces from the triples.
+
+        Parameters
+        ----------
+        source : str
+            The starting node for the paths.
+        destinations : list of str
+            A list of destination nodes for which paths need to be computed.
+        num_paths : int, optional
+            The number of shortest paths to compute for each source-destination pair (default is 1).
+
+        Returns
+        -------
+        queries : list of list of str
+            A list of SPARQL queries, where each query is represented as a list of triple patterns.
+        namespaces : list of str
+            A list of namespaces extracted from the triples.
+        """
         # for each source and destinations, we need to find num_paths paths
         # then these have to be combined; and each set to be made into individual queries
         complete_triples = []
@@ -315,6 +539,28 @@ class Network:
         return queries, namespaces
 
     def _add_types_for_source(self, source):
+        """
+        Constructs SPARQL query fragments to add type constraints for a given source node.
+
+        This method generates query fragments to enforce RDF type constraints for a source node
+        in a SPARQL query. It handles cases where subclasses need to be included or where a 
+        specific type constraint is enforced.
+
+        Parameters
+        ----------
+        source : object
+            The source node object containing information about the node type, variable name, 
+            query name, and additional attributes such as subclasses or type enforcement flags.
+
+        Returns
+        -------
+        tuple
+            A tuple containing:
+            - query : list of str
+                A list of SPARQL query fragments representing the type constraints.
+            - namespaces_used : list of str
+                A list of namespace prefixes used in the query fragments.
+        """
         query = []
         namespaces_used = []
         if source._add_subclass and source.node_type == "class":
@@ -341,6 +587,29 @@ class Network:
         return query, namespaces_used
 
     def _add_types_for_destination(self, destinations):
+        """
+        Constructs SPARQL query fragments to add type information for the given destinations.
+
+        This method generates SPARQL query fragments to enforce or add type relationships 
+        for RDF nodes based on the provided `destinations`. It handles both subclass 
+        relationships and enforced type constraints.
+
+        Parameters
+        ----------
+        destinations : list
+            A list of destination objects. Each destination object is expected to have 
+            attributes such as `_add_subclass`, `_enforce_type`, `node_type`, `variable_name`, 
+            `query_name`, and `subclasses`.
+
+        Returns
+        -------
+        tuple
+            A tuple containing:
+            - query : list
+                A list of SPARQL query fragments as strings.
+            - namespaces_used : list
+                A list of unique namespace prefixes used in the query.
+        """
         query = []
         namespaces_used = []
         for destination in destinations:
@@ -372,6 +641,28 @@ class Network:
         return query, namespaces_used
 
     def _add_filters(self, destinations):
+        """
+        Adds filter conditions to a SPARQL query based on the provided destinations.
+
+        This method processes a list of destination objects, extracts their filter
+        conditions, and constructs a SPARQL query fragment with the appropriate
+        FILTER clause. It also replaces query names with variable names in the
+        filter conditions and ensures that the destination objects are refreshed
+        after processing.
+
+        Parameters
+        ----------
+        destinations : list
+            A list of destination objects, each of which may contain a `_condition`
+            attribute (representing a filter condition), `query_name` (the name of
+            the query), and `variable_name` (the corresponding variable name).
+
+        Returns
+        -------
+        list
+            A list of strings representing the SPARQL query fragment, including
+            the FILTER clause and a closing brace.
+        """
         filter_text = ""
         query = []
         for destination in destinations:
@@ -395,34 +686,37 @@ class Network:
 
     def _create_query(self, source, destinations=None, num_paths=1):
         """
-        Create a SPARQL query string based on the given source, destinations, condition.
+        Creates SPARQL queries based on the given source, destinations, and number of paths.
+
+        This method generates SPARQL queries by preparing the destinations, constructing
+        query headers, adding namespaces, and appending filters and type information for
+        both the source and destinations.
 
         Parameters
         ----------
-        source : Node
-            The source node from which the query starts.
-        destinations : list or Node or None, optional
-            The destination node(s) to which the query should reach. If a single
-            node is provided, it will be converted to a list.
-            If None, the query will not include any destination nodes, and will simply list objects of the given type.
-            None, and `enforced_types` is False, will raise a ValueError.
+        source : object
+            The source node for the query. It is expected to have a `name` attribute
+            that includes a namespace prefix (e.g., "prefix:localName").
+        destinations : list, optional
+            A list of destination nodes for the query. If not provided, defaults to None.
+        num_paths : int, optional
+            The number of paths to include in the query. Defaults to 1.
 
         Returns
         -------
-        str
-            The generated SPARQL query string.
+        list of str
+            A list of SPARQL query strings generated based on the input parameters.
 
+        Notes
+        -----
+        - The method internally handles namespace extraction and ensures that all
+          required namespaces are included in the query.
+        - Filters and type information are added to the query to refine the results.
         """
+
         destinations = self._prepare_destinations(destinations=destinations)
         query_header = self._create_query_prefix(source, destinations)
 
-        # constructing the spaql query path triples, by iterating over destinations
-        # for each destination:
-        #    - check if it has  parent by looking at `._parents`
-        #    - if it has `_parents`, called step path method
-        #    - else just get the path
-        #    - replace the ends of the path with `variable_name`
-        #    - if it deosnt exist in the collection of lines, add the lines
         namespaces_used = []
         # add the source to the namespaces
         namespaces_used.append(source.name.split(":")[0])
@@ -432,10 +726,6 @@ class Network:
         queries, namespaces = self._get_triples(
             source, destinations, num_paths=num_paths
         )
-
-        # here we have to loop over each query and append it nicely
-
-        # we enforce types of the source and destination
 
         query_footer_source_types, namespaces_source = self._add_types_for_source(
             source
@@ -470,6 +760,29 @@ class Network:
         return created_queries
 
     def query(self, kg, source, destinations=None, return_df=True, num_paths=1):
+        """
+        Executes queries on a knowledge graph (KG) to retrieve data from a SPARQL query.
+
+        Parameters
+        ----------
+        kg : object
+            The knowledge graph object to query.
+        source : OntoTerm
+            The source node from which paths are to be queried.
+        destinations : list of OntoTerm, optional
+            A list of destination nodes to which paths are to be queried. If None, queries will not be restricted to specific destinations.
+        return_df : bool, default=True
+            If True, the results will be returned as a concatenated pandas DataFrame. Otherwise, results will be returned as a list.
+        num_paths : int, default=1
+            The number of paths to retrieve for each query.
+
+        Returns
+        -------
+        pandas.DataFrame or list
+            If `return_df` is True, returns a pandas DataFrame containing the query results.
+            If `return_df` is False, returns a list of query results.
+            Returns None if no results are found.
+        """
 
         query_strings = self.create_query(
             source,
@@ -489,6 +802,35 @@ class Network:
         return res
 
     def _query(self, kg, query_string, return_df=True):
+        """
+        Executes a SPARQL query on the given knowledge graph (KG) and optionally 
+        returns the result as a pandas DataFrame.
+
+        Parameters
+        ----------
+        kg : object
+            The knowledge graph object that supports the `query` method.
+        query_string : str
+            The SPARQL query string to be executed on the knowledge graph.
+        return_df : bool, optional
+            If True, the query result is returned as a pandas DataFrame. 
+            Defaults to True.
+
+        Returns
+        -------
+        pandas.DataFrame or object
+            If `return_df` is True and the query result is not None, returns a 
+            pandas DataFrame with the query results. The column names are derived 
+            from the SELECT clause of the query. If `return_df` is False or the 
+            query result is None, returns the raw query result.
+
+        Notes
+        -----
+        - The method assumes that the query string contains a SELECT DISTINCT 
+          clause if `return_df` is True.
+        - The column names in the DataFrame are extracted from the SELECT clause 
+          by removing the leading '?' from variable names.
+        """
         res = kg.query(query_string)
         if res is not None:
             if return_df:
@@ -624,8 +966,24 @@ class OntologyNetworkBase(Network):
 
 class OntologyNetwork(OntologyNetworkBase):
     """
-    Network representation of Onto
-    """
+    A class to represent an ontology network by extending the OntologyNetworkBase.
 
+    This class initializes an ontology network by parsing the given ontology file.
+
+    Parameters
+    ----------
+    infile : str
+        The path to the ontology file to be parsed.
+    format : str, optional
+        The format of the ontology file (default is "xml").
+    terms : AttrSetter
+        An object for managing attributes of the ontology terms.
+    g : networkx.Graph
+        The NetworkX graph representation of the ontology.
+    namespaces : dict
+        A dictionary of namespaces defined in the ontology.
+    extra_namespaces : dict
+        Additional namespaces that are not part of the core ontology.
+    """
     def __init__(self, infile, format="xml"):
         super().__init__(parse_ontology(infile, format=format))

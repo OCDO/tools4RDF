@@ -1,3 +1,9 @@
+"""
+This module provides tools for setting attributes dynamically using the AttrSetter class.
+It includes functionality for reading YAML files, managing nested attributes, and enabling
+tab-completion for dynamically added attributes.
+"""
+
 import yaml
 import os
 import numpy as np

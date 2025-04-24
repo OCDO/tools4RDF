@@ -1,5 +1,21 @@
 """
-https://docs.python.org/3/library/operator.html
+This module provides utilities for working with ontology terms, specifically for RDF (Resource Description Framework) data. 
+It includes helper functions for parsing and manipulating URIs, as well as a class `OntoTerm` for representing and managing 
+ontology terms with various properties and behaviors.
+
+The `OntoTerm` class encapsulates the details of an ontology term, including its URI, namespace, type, domain, range, 
+data type, and other metadata. It also provides methods for generating SPARQL query names, handling conditions, and 
+overloading operators for logical and comparison operations.
+
+Key Features:
+- Parsing URIs to extract namespaces and names.
+- Managing ontology term properties such as description, label, and name.
+- Support for SPARQL query generation with namespace and prefix handling.
+- Operator overloading for logical (`and`, `or`) and comparison (`<`, `>`, `==`, etc.) operations.
+- Utilities for handling data properties, object properties, and class hierarchies.
+
+This module is designed to facilitate the creation and manipulation of ontology terms in RDF-based systems, 
+making it easier to work with semantic data and SPARQL queries.
 """
 
 from rdflib import URIRef
@@ -9,6 +25,21 @@ import warnings
 
 
 def _get_namespace_and_name(uri):
+    """
+    Extracts the namespace and name from a given URI.
+
+    Parameters
+    ----------
+    uri : str
+        The URI string to be parsed.
+
+    Returns
+    -------
+    tuple
+        A tuple containing:
+        - namespace (str): The namespace extracted from the URI. If no namespace is found, an empty string is returned.
+        - name (str): The name extracted from the URI.
+    """
     uri_split = uri.split("#")
     if len(uri_split) > 1:
         # possible that delimiter is #
@@ -27,6 +58,20 @@ def _get_namespace_and_name(uri):
 
 
 def _get_namespace_with_prefix(uri):
+    """
+    Extracts the namespace from a given URI, appending a trailing delimiter if necessary.
+
+    Parameters
+    ----------
+    uri : str
+        The URI from which the namespace is to be extracted.
+
+    Returns
+    -------
+    str
+        The extracted namespace. If the URI does not contain a recognizable delimiter
+        ('#' or '/'), an empty string is returned.
+    """
     uri_split = uri.split("#")
     if len(uri_split) > 1:
         # possible that delimiter is #
@@ -43,6 +88,28 @@ def _get_namespace_with_prefix(uri):
 
 
 def strip_name(uri, get_what="name", namespace=None):
+    """
+    Extracts and returns either the namespace or the full name (namespace:name) 
+    from a given URI.
+
+    Parameters
+    ----------
+    uri : str
+        The URI from which the namespace and name are to be extracted.
+    get_what : str, optional
+        Specifies what to return: "namespace" to return only the namespace, 
+        or "name" to return the full name in the format "namespace:name". 
+        Default is "name".
+    namespace : str, optional
+        If provided, this value will be used as the namespace instead of 
+        extracting it from the URI. Default is None.
+
+    Returns
+    -------
+    str
+        The extracted namespace or the full name (namespace:name), depending 
+        on the value of `get_what`.
+    """
     if namespace is None:
         namespace, name = _get_namespace_and_name(uri)
     else:
