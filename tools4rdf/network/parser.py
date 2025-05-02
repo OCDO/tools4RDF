@@ -1,8 +1,8 @@
 """
-This module provides functionality for parsing and manipulating RDF/OWL ontologies. 
-It defines the `OntoParser` class, which is used to extract and process ontology 
-data, including classes, properties, namespaces, and relationships. The module 
-leverages the `rdflib` library for RDF graph operations and `networkx` for graph 
+This module provides functionality for parsing and manipulating RDF/OWL ontologies.
+It defines the `OntoParser` class, which is used to extract and process ontology
+data, including classes, properties, namespaces, and relationships. The module
+leverages the `rdflib` library for RDF graph operations and `networkx` for graph
 representations.
 
 Key Features:
@@ -18,13 +18,14 @@ Dependencies:
 - `networkx` for graph-based representations of ontology structures.
 
 Usage:
-This module is designed to be used as part of a larger ontology processing pipeline. 
-The `OntoParser` class provides methods for extracting and analyzing ontology data, 
+This module is designed to be used as part of a larger ontology processing pipeline.
+The `OntoParser` class provides methods for extracting and analyzing ontology data,
 as well as for extending the ontology with new terms and namespaces.
 """
 
 import os
 import networkx as nx
+import warnings
 
 from tools4rdf.network.term import OntoTerm, strip_name
 from tools4rdf.network.patch import patch_terms
@@ -83,6 +84,7 @@ class OntoParser:
     base_iri : str or None
         The base IRI of the ontology, if available.
     """
+
     def __init__(self, graph):
         self.graph = graph
         self._data_dict = None
@@ -178,9 +180,9 @@ class OntoParser:
         """
         Extracts and stores non-default namespaces from the RDF graph.
 
-        Iterates through the namespaces in the RDF graph and adds those with 
-        non-empty prefixes that do not contain the word "default" to the 
-        `self.namespaces` dictionary. The prefix is used as the key, and the 
+        Iterates through the namespaces in the RDF graph and adds those with
+        non-empty prefixes that do not contain the word "default" to the
+        `self.namespaces` dictionary. The prefix is used as the key, and the
         namespace URI (converted to a Python string) is used as the value.
 
         Parameters
@@ -261,8 +263,8 @@ class OntoParser:
         """
         Extracts and organizes subproperties for object and data properties in the RDF graph.
 
-        This method processes the RDF graph to identify subproperties of both object and 
-        data properties. It updates the `attributes` dictionary with the hierarchical 
+        This method processes the RDF graph to identify subproperties of both object and
+        data properties. It updates the `attributes` dictionary with the hierarchical
         relationships between properties and recursively adds subclasses for each property.
         """
         top_most_properties = [OWL.topObjectProperty, OWL.topDataProperty]
@@ -276,9 +278,14 @@ class OntoParser:
                         # get the name of the subproperty
                         toppropname = strip_name(top_prop.toPython())
                         # add it to the object property
-                        self.attributes[prop_type][toppropname].subclasses.append(
-                            prop.name
-                        )
+                        if toppropname in self.attributes[prop_type]:
+                            self.attributes[prop_type][toppropname].subclasses.append(
+                                prop.name
+                            )
+                        else:
+                            warnings.warn(
+                                f"{toppropname} is a superproperty of {key}, but not found in attribute."
+                            )
         # recursivly add the subproperties
         for prop_type in ["object_property", "data_property"]:
             for key, prop in self.attributes[prop_type].items():
@@ -286,7 +293,7 @@ class OntoParser:
 
     def extract_values(self, subject, predicate):
         """
-        Extract the first value associated with a given subject and predicate 
+        Extract the first value associated with a given subject and predicate
         from the RDF graph.
 
         Parameters
@@ -383,9 +390,9 @@ class OntoParser:
         """
         Maps a given term to its corresponding domain, range, and related hierarchies.
 
-        This method processes a term (either a blank node or a named node) and retrieves 
-        its associated mappings, subclasses, equivalent classes, and named individuals 
-        from the class attributes. The resulting terms include the original term and 
+        This method processes a term (either a blank node or a named node) and retrieves
+        its associated mappings, subclasses, equivalent classes, and named individuals
+        from the class attributes. The resulting terms include the original term and
         any additional terms derived from the hierarchy.
 
         Parameters
@@ -396,7 +403,7 @@ class OntoParser:
         Returns
         -------
         list
-            A list of terms including the original term and any additional terms 
+            A list of terms including the original term and any additional terms
             derived from the hierarchy (subclasses, equivalent classes, and named individuals).
 
         """
@@ -528,13 +535,13 @@ class OntoParser:
         Returns
         -------
         OntoTerm
-            An instance of OntoTerm containing the URI, namespace, description, 
+            An instance of OntoTerm containing the URI, namespace, description,
             and target class.
 
         Notes
         -----
         This method extracts the IRI from the given class, determines its namespace,
-        retrieves its description, and creates an OntoTerm object encapsulating 
+        retrieves its description, and creates an OntoTerm object encapsulating
         these details.
         """
         iri = cls.toPython()
@@ -550,8 +557,8 @@ class OntoParser:
         """
         Look up the namespace prefix for a given URI.
 
-        This method iterates through the stored namespaces and checks if the 
-        provided URI starts with any of the namespace values. If a match is found, 
+        This method iterates through the stored namespaces and checks if the
+        provided URI starts with any of the namespace values. If a match is found,
         the corresponding namespace prefix is returned.
 
         Parameters
@@ -573,23 +580,23 @@ class OntoParser:
         """
         Recursively unravels an RDF collection into a Python list.
 
-        This method traverses an RDF collection starting from the given `term` 
-        and extracts its elements into a Python list. The RDF collection is 
+        This method traverses an RDF collection starting from the given `term`
+        and extracts its elements into a Python list. The RDF collection is
         expected to follow the structure defined by `RDF.first` and `RDF.rest`.
 
         Parameters
         ----------
         term : rdflib.term.Identifier
-            The starting RDF term of the collection to unravel. Typically, this 
+            The starting RDF term of the collection to unravel. Typically, this
             is the head of the RDF list.
         unravel_list : list, optional
-            A list to accumulate the elements of the RDF collection. Defaults 
+            A list to accumulate the elements of the RDF collection. Defaults
             to an empty list.
 
         Returns
         -------
         list
-            A Python list containing the elements of the RDF collection in the 
+            A Python list containing the elements of the RDF collection in the
             order they appear.
         """
         if term == RDF.nil:
@@ -604,9 +611,9 @@ class OntoParser:
         """
         Parses and processes subclass relationships in the RDF graph.
 
-        This method iterates over the classes defined in the `attributes["class"]` 
-        dictionary and identifies their superclasses by examining the RDF graph. 
-        It then updates the `subclasses` attribute of each superclass to include 
+        This method iterates over the classes defined in the `attributes["class"]`
+        dictionary and identifies their superclasses by examining the RDF graph.
+        It then updates the `subclasses` attribute of each superclass to include
         the current class.
         """
         for key, cls in self.attributes["class"].items():
@@ -677,10 +684,10 @@ class OntoParser:
         """
         Parses and updates equivalent classes in the RDF graph.
 
-        This method iterates through the classes in the `attributes["class"]` 
-        dictionary and identifies equivalent classes using the OWL.equivalentClass 
-        predicate in the RDF graph. For each equivalent class found, it updates 
-        the `equivalent_classes` attribute of both the current class and its 
+        This method iterates through the classes in the `attributes["class"]`
+        dictionary and identifies equivalent classes using the OWL.equivalentClass
+        predicate in the RDF graph. For each equivalent class found, it updates
+        the `equivalent_classes` attribute of both the current class and its
         equivalent class.
         """
         for key, cls in self.attributes["class"].items():
@@ -706,9 +713,9 @@ class OntoParser:
         """
         Recursively adds all equivalent classes for a given class.
 
-        This method ensures that all transitive equivalent classes of the 
-        specified class are added to its list of equivalent classes. It 
-        traverses the equivalence relationships and updates the class 
+        This method ensures that all transitive equivalent classes of the
+        specified class are added to its list of equivalent classes. It
+        traverses the equivalence relationships and updates the class
         attributes accordingly.
 
         Parameters
@@ -756,16 +763,16 @@ class OntoParser:
         """
         Constructs a mapping of attributes grouped by their namespaces.
 
-        This method processes the attributes of classes, object properties, and 
-        data properties, organizing them into a dictionary where the keys are 
-        namespaces and the values are dictionaries of attributes belonging to 
+        This method processes the attributes of classes, object properties, and
+        data properties, organizing them into a dictionary where the keys are
+        namespaces and the values are dictionaries of attributes belonging to
         those namespaces.
 
         Returns
         -------
         dict
-            A dictionary where each key is a namespace (str), and the value is 
-            another dictionary. The inner dictionary maps attribute names 
+            A dictionary where each key is a namespace (str), and the value is
+            another dictionary. The inner dictionary maps attribute names
             (without prefixes) to their corresponding attribute objects.
         """
         # add first level - namespaces
@@ -786,20 +793,20 @@ class OntoParser:
         """
         Constructs a directed graph representation of the ontology using NetworkX.
 
-        This method creates a directed graph (`DiGraph`) where nodes represent 
-        classes, object properties, and data properties, and edges represent 
-        relationships between them. The graph is built based on the `attributes` 
-        dictionary of the object, which contains information about classes, 
+        This method creates a directed graph (`DiGraph`) where nodes represent
+        classes, object properties, and data properties, and edges represent
+        relationships between them. The graph is built based on the `attributes`
+        dictionary of the object, which contains information about classes,
         object properties, and data properties.
 
         Returns
         -------
         networkx.DiGraph
             A directed graph where:
-            - Nodes are labeled with their names and have a `node_type` attribute 
-              indicating whether they are a "class", "object_property", or 
+            - Nodes are labeled with their names and have a `node_type` attribute
+              indicating whether they are a "class", "object_property", or
               "data_property".
-            - Edges represent relationships between classes and properties, 
+            - Edges represent relationships between classes and properties,
               including domains and ranges.
         """
         g = nx.DiGraph()
