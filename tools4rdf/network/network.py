@@ -279,6 +279,19 @@ class Network:
             query.append(f"PREFIX {key}: <{ns[key]}>")
         return query
 
+    def _modify_destinations(self, destinations):
+        """look for lists within destinations to phase out the @ operator"""
+        modified_destinations = []
+        for count, destination in enumerate(destinations):
+            if isinstance(destination, (list, tuple)):
+                last_destination = destination[-1]
+                for d in destination[:-1]:
+                    last_destination._parents.append(d)
+                modified_destinations.append(last_destination)
+            else:
+                modified_destinations.append(destination)
+        return modified_destinations
+
     def create_query(self, source, destinations=None, return_list=False, num_paths=1):
         """
         Creates a query based on the given source and destination nodes.
@@ -351,18 +364,8 @@ class Network:
             if common_class.name not in class_names:
                 classes.append(common_class.any)
 
-        # the pplan is to phase out the @ operator, so we look for lists within destinations
         if destinations is not None:
-            modified_destinations = []
-            for count, destination in enumerate(destinations):
-                if isinstance(destination, (list, tuple)):
-                    last_destination = destination[-1]
-                    for d in destination[:-1]:
-                        last_destination._parents.append(d)
-                    modified_destinations.append(last_destination)
-                else:
-                    modified_destinations.append(destination)
-            destinations = modified_destinations
+            destinations = self._modify_destinations(destinations)
 
         # now classes are the new source nodes
         # object propertiues are ADDED to the destination nodes
