@@ -279,7 +279,8 @@ class Network:
             query.append(f"PREFIX {key}: <{ns[key]}>")
         return query
 
-    def _modify_destinations(self, destinations):
+    @staticmethod
+    def _modify_destinations(destinations):
         """look for lists within destinations to phase out the @ operator"""
         modified_destinations = []
         for count, destination in enumerate(destinations):
