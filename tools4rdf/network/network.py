@@ -326,9 +326,8 @@ class Network:
         # we need to handle source and destination, the primary aim here is to handle source
         if not isinstance(source, list):
             source = [source]
-        if destinations is not None:
-            if not isinstance(destinations, list):
-                destinations = [destinations]
+        if destinations is not None and not isinstance(destinations, list):
+            destinations = [destinations]
         # if any of the source items are data properties, fail
         for s in source:
             if s.node_type == "data_property":
@@ -358,7 +357,7 @@ class Network:
                     "No common classes found in the domains of the object properties."
                 )
 
-            # now check classes; see if anython common classes are not there, if so add.
+            # now check classes; see if any common classes are not there, if so add.
             # we just need one common class, these queries will NOT be type fixed
             common_class = common_classes[0]
             class_names = [c.name for c in classes]
@@ -369,11 +368,9 @@ class Network:
             destinations = self._modify_destinations(destinations)
 
         # now classes are the new source nodes
-        # object propertiues are ADDED to the destination nodes
+        # object properties are ADDED to the destination nodes
         source = classes
         if destinations is not None:
-            if not isinstance(destinations, list):
-                destinations = [destinations]
             for object_property in object_properties:
                 already_there = False
                 if object_property in destinations:
