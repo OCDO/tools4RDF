@@ -280,6 +280,29 @@ class Network:
             query.append(f"PREFIX {key}: <{ns[key]}>")
         return query
 
+    @staticmethod
+    def _modify_destinations(destinations):
+        """look for lists within destinations to phase out the @ operator"""
+        modified_destinations = []
+        for count, destination in enumerate(destinations):
+            if isinstance(destination, (list, tuple)):
+                last_destination = destination[-1]
+                for d in destination[:-1]:
+                    last_destination._parents.append(d)
+                modified_destinations.append(last_destination)
+            else:
+                modified_destinations.append(destination)
+        return modified_destinations
+
+    @staticmethod
+    def _is_already_in_destinations(object_property, destinations):
+        if object_property in destinations:
+            return True
+        for d in destinations:
+            if object_property in d._parents:
+                return True
+        return False
+
     def create_query(self, source, destinations=None, return_list=False, num_paths=1):
         """
         Creates a query based on the given source and destination nodes.
@@ -313,22 +336,16 @@ class Network:
         # we need to handle source and destination, the primary aim here is to handle source
         if not isinstance(source, list):
             source = [source]
-        if destinations is not None:
-            if not isinstance(destinations, list):
-                destinations = [destinations]
+        if destinations is not None and not isinstance(destinations, list):
+            destinations = [destinations]
         # if any of the source items are data properties, fail
         for s in source:
             if s.node_type == "data_property":
                 raise ValueError("Data properties are not allowed as source nodes.")
 
         # separate sources into classes and object properties
-        classes = []
-        object_properties = []
-        for s in source:
-            if s.node_type == "class":
-                classes.append(s)
-            elif s.node_type == "object_property":
-                object_properties.append(s)
+        classes = [s for s in source if s.node_type == "class"]
+        object_properties = [s for s in source if s.node_type == "object_property"]
 
         # now one has to reduce the object properties, this can be done by finding
         # common classes in the domains
@@ -345,40 +362,17 @@ class Network:
                     "No common classes found in the domains of the object properties."
                 )
 
-            # now check classes; see if anython common classes are not there, if so add.
+            # now check classes; see if any common classes are not there, if so add.
             # we just need one common class, these queries will NOT be type fixed
             common_class = common_classes[0]
             class_names = [c.name for c in classes]
             if common_class.name not in class_names:
                 classes.append(common_class.any)
 
-        # the pplan is to phase out the @ operator, so we look for lists within destinations
         if destinations is not None:
-            modified_destinations = []
-            for count, destination in enumerate(destinations):
-                if isinstance(destination, (list, tuple)):
-                    last_destination = destination[-1]
-                    for d in destination[:-1]:
-                        last_destination._parents.append(d)
-                    modified_destinations.append(last_destination)
-                else:
-                    modified_destinations.append(destination)
-            destinations = modified_destinations
-
-        # now classes are the new source nodes
-        # object propertiues are ADDED to the destination nodes
-        source = classes
-        if destinations is not None:
-            if not isinstance(destinations, list):
-                destinations = [destinations]
+            destinations = self._modify_destinations(destinations)
             for object_property in object_properties:
-                already_there = False
-                if object_property in destinations:
-                    already_there = True
-                for d in destinations:
-                    if object_property in d._parents:
-                        already_there = True
-                if not already_there:
+                if not _is_already_in_destinations(object_property, destinations):
                     destinations.append(object_property)
         elif len(object_properties) > 0:
             destinations = object_properties
@@ -388,7 +382,7 @@ class Network:
 
         # done, now run the query
         queries = []
-        for s in source:
+        for s in classes:
             queries.extend(
                 self._create_query(s, destinations=destinations, num_paths=num_paths)
             )
