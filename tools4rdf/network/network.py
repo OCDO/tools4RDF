@@ -34,8 +34,8 @@ class Network:
     """
     Network
     -------
-    A class for representing and interacting with a network graph derived from an ontology. 
-    This class provides methods for visualizing the graph, computing shortest paths, 
+    A class for representing and interacting with a network graph derived from an ontology.
+    This class provides methods for visualizing the graph, computing shortest paths,
     and generating SPARQL queries based on the graph structure.
 
     Attributes
@@ -82,6 +82,7 @@ class Network:
     _query(kg, query_string, return_df=True)
         Execute a single SPARQL query on a knowledge graph and return the results.
     """
+
     def __init__(self, onto):
         self.terms = AttrSetter()
         self.terms._add_attribute(onto.get_attributes())
@@ -139,23 +140,23 @@ class Network:
         """
         Compute the shortest paths between two nodes in a graph.
 
-        This method finds the shortest paths between a source and target node 
-        in the graph `self.g` using their `query_name` attributes. The resulting 
-        paths are modified to replace the start and end nodes with their 
+        This method finds the shortest paths between a source and target node
+        in the graph `self.g` using their `query_name` attributes. The resulting
+        paths are modified to replace the start and end nodes with their
         corresponding variable names.
 
         Parameters
         ----------
         source : OntoTerm
-            The source node, represented as an OntoTerm object. The `query_name` 
-            attribute is used to identify the node in the graph, and the 
+            The source node, represented as an OntoTerm object. The `query_name`
+            attribute is used to identify the node in the graph, and the
             `variable_name` attribute is used to replace the start node in the path.
         target : OntoTerm
-            The target node, represented as an OntoTerm object. The `query_name` 
-            attribute is used to identify the node in the graph, and the 
+            The target node, represented as an OntoTerm object. The `query_name`
+            attribute is used to identify the node in the graph, and the
             `variable_name` attribute is used to replace the end node in the path.
-            If the `node_type` of the target is "object_property", the 
-            `variable_name` is appended to the path; otherwise, it replaces the 
+            If the `node_type` of the target is "object_property", the
+            `variable_name` is appended to the path; otherwise, it replaces the
             last node in the path.
         num_paths : int, optional
             The maximum number of shortest paths to compute (default is 1).
@@ -163,13 +164,13 @@ class Network:
         Returns
         -------
         list of list
-            A list of shortest paths, where each path is represented as a list of 
-            nodes. The start and end nodes in each path are replaced with their 
+            A list of shortest paths, where each path is represented as a list of
+            nodes. The start and end nodes in each path are replaced with their
             corresponding variable names.
 
         Notes
         -----
-        - This method uses the `networkx.shortest_simple_paths` function to 
+        - This method uses the `networkx.shortest_simple_paths` function to
           compute the paths.
         """
         # this function will be modified to take OntoTerms direcl as input; and use their names.
@@ -208,7 +209,7 @@ class Network:
         triples : bool, optional
             If True, the function returns the paths as lists of triples (default is False).
         num_paths : int, optional
-            The number of shortest paths to compute (default is 1). Only used if it is not a 
+            The number of shortest paths to compute (default is 1). Only used if it is not a
             stepped query.
 
         Returns
@@ -279,6 +280,29 @@ class Network:
             query.append(f"PREFIX {key}: <{ns[key]}>")
         return query
 
+    @staticmethod
+    def _modify_destinations(destinations):
+        """look for lists within destinations to phase out the @ operator"""
+        modified_destinations = []
+        for count, destination in enumerate(destinations):
+            if isinstance(destination, (list, tuple)):
+                last_destination = destination[-1]
+                for d in destination[:-1]:
+                    last_destination._parents.append(d)
+                modified_destinations.append(last_destination)
+            else:
+                modified_destinations.append(destination)
+        return modified_destinations
+
+    @staticmethod
+    def _is_already_in_destinations(object_property, destinations):
+        if object_property in destinations:
+            return True
+        for d in destinations:
+            if object_property in d._parents:
+                return True
+        return False
+
     def create_query(self, source, destinations=None, return_list=False, num_paths=1):
         """
         Creates a query based on the given source and destination nodes.
@@ -312,22 +336,16 @@ class Network:
         # we need to handle source and destination, the primary aim here is to handle source
         if not isinstance(source, list):
             source = [source]
-        if destinations is not None:
-            if not isinstance(destinations, list):
-                destinations = [destinations]
+        if destinations is not None and not isinstance(destinations, list):
+            destinations = [destinations]
         # if any of the source items are data properties, fail
         for s in source:
             if s.node_type == "data_property":
                 raise ValueError("Data properties are not allowed as source nodes.")
 
         # separate sources into classes and object properties
-        classes = []
-        object_properties = []
-        for s in source:
-            if s.node_type == "class":
-                classes.append(s)
-            elif s.node_type == "object_property":
-                object_properties.append(s)
+        classes = [s for s in source if s.node_type == "class"]
+        object_properties = [s for s in source if s.node_type == "object_property"]
 
         # now one has to reduce the object properties, this can be done by finding
         # common classes in the domains
@@ -344,40 +362,17 @@ class Network:
                     "No common classes found in the domains of the object properties."
                 )
 
-            # now check classes; see if anython common classes are not there, if so add.
+            # now check classes; see if any common classes are not there, if so add.
             # we just need one common class, these queries will NOT be type fixed
             common_class = common_classes[0]
             class_names = [c.name for c in classes]
             if common_class.name not in class_names:
                 classes.append(common_class.any)
 
-        # the pplan is to phase out the @ operator, so we look for lists within destinations
         if destinations is not None:
-            modified_destinations = []
-            for count, destination in enumerate(destinations):
-                if isinstance(destination, (list, tuple)):
-                    last_destination = destination[-1]
-                    for d in destination[:-1]:
-                        last_destination._parents.append(d)
-                    modified_destinations.append(last_destination)
-                else:
-                    modified_destinations.append(destination)
-            destinations = modified_destinations
-
-        # now classes are the new source nodes
-        # object propertiues are ADDED to the destination nodes
-        source = classes
-        if destinations is not None:
-            if not isinstance(destinations, list):
-                destinations = [destinations]
+            destinations = self._modify_destinations(destinations)
             for object_property in object_properties:
-                already_there = False
-                if object_property in destinations:
-                    already_there = True
-                for d in destinations:
-                    if object_property in d._parents:
-                        already_there = True
-                if not already_there:
+                if not _is_already_in_destinations(object_property, destinations):
                     destinations.append(object_property)
         elif len(object_properties) > 0:
             destinations = object_properties
@@ -387,7 +382,7 @@ class Network:
 
         # done, now run the query
         queries = []
-        for s in source:
+        for s in classes:
             queries.extend(
                 self._create_query(s, destinations=destinations, num_paths=num_paths)
             )
@@ -446,24 +441,24 @@ class Network:
         """
         Constructs the prefix of a SPARQL query with a SELECT DISTINCT clause.
 
-        This method generates the initial part of a SPARQL query, including the 
-        SELECT DISTINCT clause and the opening of the WHERE block. It includes 
-        the source variable and a list of destination variables in the SELECT 
+        This method generates the initial part of a SPARQL query, including the
+        SELECT DISTINCT clause and the opening of the WHERE block. It includes
+        the source variable and a list of destination variables in the SELECT
         clause.
 
         Parameters
         ----------
         source : object
-            The source object, which must have a `variable_name` attribute 
+            The source object, which must have a `variable_name` attribute
             representing its SPARQL variable name.
         destinations : list of objects
-            A list of destination objects, each of which must have a 
+            A list of destination objects, each of which must have a
             `variable_name` attribute representing its SPARQL variable name.
 
         Returns
         -------
         list of str
-            A list of strings representing the initial lines of the SPARQL query, 
+            A list of strings representing the initial lines of the SPARQL query,
             including the SELECT DISTINCT clause and the opening of the WHERE block.
         """
         # all names are now collected, in a list of lists
@@ -485,7 +480,7 @@ class Network:
         """
         Generate SPARQL queries and namespaces based on the shortest paths between a source and multiple destinations.
 
-        For each source-destination pair, this method finds the shortest paths (up to `num_paths` paths) and combines 
+        For each source-destination pair, this method finds the shortest paths (up to `num_paths` paths) and combines
         the resulting triples into SPARQL queries. It also extracts namespaces from the triples.
 
         Parameters
@@ -543,13 +538,13 @@ class Network:
         Constructs SPARQL query fragments to add type constraints for a given source node.
 
         This method generates query fragments to enforce RDF type constraints for a source node
-        in a SPARQL query. It handles cases where subclasses need to be included or where a 
+        in a SPARQL query. It handles cases where subclasses need to be included or where a
         specific type constraint is enforced.
 
         Parameters
         ----------
         source : object
-            The source node object containing information about the node type, variable name, 
+            The source node object containing information about the node type, variable name,
             query name, and additional attributes such as subclasses or type enforcement flags.
 
         Returns
@@ -590,15 +585,15 @@ class Network:
         """
         Constructs SPARQL query fragments to add type information for the given destinations.
 
-        This method generates SPARQL query fragments to enforce or add type relationships 
-        for RDF nodes based on the provided `destinations`. It handles both subclass 
+        This method generates SPARQL query fragments to enforce or add type relationships
+        for RDF nodes based on the provided `destinations`. It handles both subclass
         relationships and enforced type constraints.
 
         Parameters
         ----------
         destinations : list
-            A list of destination objects. Each destination object is expected to have 
-            attributes such as `_add_subclass`, `_enforce_type`, `node_type`, `variable_name`, 
+            A list of destination objects. Each destination object is expected to have
+            attributes such as `_add_subclass`, `_enforce_type`, `node_type`, `variable_name`,
             `query_name`, and `subclasses`.
 
         Returns
@@ -803,7 +798,7 @@ class Network:
 
     def _query(self, kg, query_string, return_df=True):
         """
-        Executes a SPARQL query on the given knowledge graph (KG) and optionally 
+        Executes a SPARQL query on the given knowledge graph (KG) and optionally
         returns the result as a pandas DataFrame.
 
         Parameters
@@ -813,22 +808,22 @@ class Network:
         query_string : str
             The SPARQL query string to be executed on the knowledge graph.
         return_df : bool, optional
-            If True, the query result is returned as a pandas DataFrame. 
+            If True, the query result is returned as a pandas DataFrame.
             Defaults to True.
 
         Returns
         -------
         pandas.DataFrame or object
-            If `return_df` is True and the query result is not None, returns a 
-            pandas DataFrame with the query results. The column names are derived 
-            from the SELECT clause of the query. If `return_df` is False or the 
+            If `return_df` is True and the query result is not None, returns a
+            pandas DataFrame with the query results. The column names are derived
+            from the SELECT clause of the query. If `return_df` is False or the
             query result is None, returns the raw query result.
 
         Notes
         -----
-        - The method assumes that the query string contains a SELECT DISTINCT 
+        - The method assumes that the query string contains a SELECT DISTINCT
           clause if `return_df` is True.
-        - The column names in the DataFrame are extracted from the SELECT clause 
+        - The column names in the DataFrame are extracted from the SELECT clause
           by removing the leading '?' from variable names.
         """
         res = kg.query(query_string)
@@ -985,5 +980,6 @@ class OntologyNetwork(OntologyNetworkBase):
     extra_namespaces : dict
         Additional namespaces that are not part of the core ontology.
     """
+
     def __init__(self, infile, format="xml"):
         super().__init__(parse_ontology(infile, format=format))
