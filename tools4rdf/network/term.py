@@ -1,10 +1,10 @@
 """
-This module provides utilities for working with ontology terms, specifically for RDF (Resource Description Framework) data. 
-It includes helper functions for parsing and manipulating URIs, as well as a class `OntoTerm` for representing and managing 
+This module provides utilities for working with ontology terms, specifically for RDF (Resource Description Framework) data.
+It includes helper functions for parsing and manipulating URIs, as well as a class `OntoTerm` for representing and managing
 ontology terms with various properties and behaviors.
 
-The `OntoTerm` class encapsulates the details of an ontology term, including its URI, namespace, type, domain, range, 
-data type, and other metadata. It also provides methods for generating SPARQL query names, handling conditions, and 
+The `OntoTerm` class encapsulates the details of an ontology term, including its URI, namespace, type, domain, range,
+data type, and other metadata. It also provides methods for generating SPARQL query names, handling conditions, and
 overloading operators for logical and comparison operations.
 
 Key Features:
@@ -14,7 +14,7 @@ Key Features:
 - Operator overloading for logical (`and`, `or`) and comparison (`<`, `>`, `==`, etc.) operations.
 - Utilities for handling data properties, object properties, and class hierarchies.
 
-This module is designed to facilitate the creation and manipulation of ontology terms in RDF-based systems, 
+This module is designed to facilitate the creation and manipulation of ontology terms in RDF-based systems,
 making it easier to work with semantic data and SPARQL queries.
 """
 
@@ -89,7 +89,7 @@ def _get_namespace_with_prefix(uri):
 
 def strip_name(uri, get_what="name", namespace=None):
     """
-    Extracts and returns either the namespace or the full name (namespace:name) 
+    Extracts and returns either the namespace or the full name (namespace:name)
     from a given URI.
 
     Parameters
@@ -97,17 +97,17 @@ def strip_name(uri, get_what="name", namespace=None):
     uri : str
         The URI from which the namespace and name are to be extracted.
     get_what : str, optional
-        Specifies what to return: "namespace" to return only the namespace, 
-        or "name" to return the full name in the format "namespace:name". 
+        Specifies what to return: "namespace" to return only the namespace,
+        or "name" to return the full name in the format "namespace:name".
         Default is "name".
     namespace : str, optional
-        If provided, this value will be used as the namespace instead of 
+        If provided, this value will be used as the namespace instead of
         extracting it from the URI. Default is None.
 
     Returns
     -------
     str
-        The extracted namespace or the full name (namespace:name), depending 
+        The extracted namespace or the full name (namespace:name), depending
         on the value of `get_what`.
     """
     if namespace is None:
