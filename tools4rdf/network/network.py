@@ -294,6 +294,15 @@ class Network:
                 modified_destinations.append(destination)
         return modified_destinations
 
+    @staticmethod
+    def _is_already_in_destinations(object_property, destinations):
+        if object_property in destinations:
+            return True
+        for d in destinations:
+            if object_property in d._parents:
+                return True
+        return False
+
     def create_query(self, source, destinations=None, return_list=False, num_paths=1):
         """
         Creates a query based on the given source and destination nodes.
@@ -335,13 +344,8 @@ class Network:
                 raise ValueError("Data properties are not allowed as source nodes.")
 
         # separate sources into classes and object properties
-        classes = []
-        object_properties = []
-        for s in source:
-            if s.node_type == "class":
-                classes.append(s)
-            elif s.node_type == "object_property":
-                object_properties.append(s)
+        classes = [s for s in source if s.node_type == "class"]
+        object_properties = [s for s in source if s.node_type == "object_property"]
 
         # now one has to reduce the object properties, this can be done by finding
         # common classes in the domains
@@ -367,19 +371,8 @@ class Network:
 
         if destinations is not None:
             destinations = self._modify_destinations(destinations)
-
-        # now classes are the new source nodes
-        # object properties are ADDED to the destination nodes
-        source = classes
-        if destinations is not None:
             for object_property in object_properties:
-                already_there = False
-                if object_property in destinations:
-                    already_there = True
-                for d in destinations:
-                    if object_property in d._parents:
-                        already_there = True
-                if not already_there:
+                if not _is_already_in_destinations(object_property, destinations):
                     destinations.append(object_property)
         elif len(object_properties) > 0:
             destinations = object_properties
@@ -389,7 +382,7 @@ class Network:
 
         # done, now run the query
         queries = []
-        for s in source:
+        for s in classes:
             queries.extend(
                 self._create_query(s, destinations=destinations, num_paths=num_paths)
             )
