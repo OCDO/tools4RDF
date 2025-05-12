@@ -332,6 +332,30 @@ class Network:
         list or object
             A list of queries if `return_list` is True or multiple queries are generated.
             A single query if `return_list` is False and only one query is generated.
+
+
+        Examples
+        --------
+
+        >>> create_query([sourceA, sourceB], destination)
+
+        - `sourceA` and `sourceB` are classes:
+            - it returns a list of queries from `sourceA` to `destination`
+              and `sourceB` to `destination`
+        - Any of source is a data property:
+            - ValueError, since you cannot start a query with data property
+        - `sourceA` and `sourceB` are object properties:
+            - it looks for a common item in the domain of both sources, and
+              starts the query from there.
+
+        >>> create_query(source,  [destA, destB])
+        
+        - find paths from `source` to `destA`, and `source` to `destB`.
+
+        >>> create_query(source,  [[destA, destB]])
+
+        - find paths from `source` to `destB`, while going through `destA`.
+
         """
         # we need to handle source and destination, the primary aim here is to handle source
         if not isinstance(source, list):
