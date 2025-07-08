@@ -1,0 +1,9 @@
+{
+  "name": "Python with Conda",
+  "features": {
+    "ghcr.io/devcontainers/features/python:1": {
+      "installConda": true
+    }
+  },
+  "postCreateCommand": "conda env create -f environment.yml && conda activate myenv"
+}
