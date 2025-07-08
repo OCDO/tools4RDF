@@ -5,5 +5,5 @@
       "installConda": true
     }
   },
-  "postCreateCommand": "conda env create -f environment.yml && conda activate myenv"
+  "postCreateCommand": "conda env create -f environment.yml && conda activate tools4rdf"
 }
