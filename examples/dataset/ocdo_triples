@@ -1,0 +1,2110 @@
+@prefix ns1: <http://purls.helmholtz-metadaten.de/cmso/> .
+@prefix ns2: <http://purls.helmholtz-metadaten.de/pldo/> .
+@prefix ns3: <http://purls.helmholtz-metadaten.de/cdos/ldo/> .
+@prefix ns4: <http://purls.helmholtz-metadaten.de/asmo/> .
+@prefix ns5: <http://purls.helmholtz-metadaten.de/podo/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ns1:LatticeVector rdfs:subClassOf ns1:Vector .
+
+<sample:054ba281-e86e-46a7-ae6c-fa5664b5e601> a ns1:AtomicScaleSample ;
+    ns1:hasAttribute <sample:054ba281-e86e-46a7-ae6c-fa5664b5e601_Position>,
+        <sample:054ba281-e86e-46a7-ae6c-fa5664b5e601_Species> ;
+    ns1:hasMaterial <sample:054ba281-e86e-46a7-ae6c-fa5664b5e601_Material> ;
+    ns1:hasNumberOfAtoms 8 ;
+    ns1:hasSimulationCell <sample:054ba281-e86e-46a7-ae6c-fa5664b5e601_SimulationCell> ;
+    ns1:hasSpecies <sample:054ba281-e86e-46a7-ae6c-fa5664b5e601_ChemicalSpecies> .
+
+<sample:10ffd2cc-9e92-4f04-896d-d6c0fdb9e55f> a ns1:AtomicScaleSample ;
+    ns1:hasAttribute <sample:10ffd2cc-9e92-4f04-896d-d6c0fdb9e55f_Position>,
+        <sample:10ffd2cc-9e92-4f04-896d-d6c0fdb9e55f_Species> ;
+    ns1:hasMaterial <sample:10ffd2cc-9e92-4f04-896d-d6c0fdb9e55f_Material> ;
+    ns1:hasNumberOfAtoms 4 ;
+    ns1:hasSimulationCell <sample:10ffd2cc-9e92-4f04-896d-d6c0fdb9e55f_SimulationCell> ;
+    ns1:hasSpecies <sample:10ffd2cc-9e92-4f04-896d-d6c0fdb9e55f_ChemicalSpecies> .
+
+<sample:286c3974-962b-4333-a2bb-d164ae645454> a ns1:AtomicScaleSample ;
+    ns1:hasAttribute <sample:286c3974-962b-4333-a2bb-d164ae645454_Position>,
+        <sample:286c3974-962b-4333-a2bb-d164ae645454_Species> ;
+    ns1:hasMaterial <sample:286c3974-962b-4333-a2bb-d164ae645454_Material> ;
+    ns1:hasNumberOfAtoms 4 ;
+    ns1:hasSimulationCell <sample:286c3974-962b-4333-a2bb-d164ae645454_SimulationCell> ;
+    ns1:hasSpecies <sample:286c3974-962b-4333-a2bb-d164ae645454_ChemicalSpecies> ;
+    ns5:hasImpurityConcentration "6.75"^^xsd:float ;
+    ns5:hasNumberOfImpurityAtoms 27 ;
+    prov:wasDerivedFrom <sample:1f6b1b0f-446a-4ad8-877e-d2e6176797df> ;
+    prov:wasGeneratedBy <activity:6dcdbfec-356e-4d95-a509-ac9de9909352> .
+
+<sample:34672ac1-d37f-48be-84c9-e1baf546472f> a ns1:AtomicScaleSample ;
+    ns1:hasAttribute <sample:34672ac1-d37f-48be-84c9-e1baf546472f_Position>,
+        <sample:34672ac1-d37f-48be-84c9-e1baf546472f_Species> ;
+    ns1:hasMaterial <sample:34672ac1-d37f-48be-84c9-e1baf546472f_Material> ;
+    ns1:hasNumberOfAtoms 1 ;
+    ns1:hasSimulationCell <sample:34672ac1-d37f-48be-84c9-e1baf546472f_SimulationCell> ;
+    ns1:hasSpecies <sample:34672ac1-d37f-48be-84c9-e1baf546472f_ChemicalSpecies> ;
+    ns5:hasNumberOfVacancies 1 ;
+    ns5:hasVacancyConcentration "0.5"^^xsd:float ;
+    prov:wasDerivedFrom <sample:c8d9d88f-57fe-462b-bf1e-c4dbbd4e93e9> ;
+    prov:wasGeneratedBy <activity:fbc50dcb-9791-405f-b33e-784f3e8cdc75> .
+
+<sample:3ec7f8ac-610e-4f08-953c-669f55b809e7> a ns1:AtomicScaleSample ;
+    ns1:hasAttribute <sample:3ec7f8ac-610e-4f08-953c-669f55b809e7_Position>,
+        <sample:3ec7f8ac-610e-4f08-953c-669f55b809e7_Species> ;
+    ns1:hasMaterial <sample:3ec7f8ac-610e-4f08-953c-669f55b809e7_Material> ;
+    ns1:hasNumberOfAtoms 2 ;
+    ns1:hasSimulationCell <sample:3ec7f8ac-610e-4f08-953c-669f55b809e7_SimulationCell> ;
+    ns1:hasSpecies <sample:3ec7f8ac-610e-4f08-953c-669f55b809e7_ChemicalSpecies> .
+
+<sample:8fc8e47b-acee-40f8-bcbf-fc298cc31f05> a ns1:AtomicScaleSample,
+        prov:Entity ;
+    rdfs:label "sample:8fc8e47b-acee-40f8-bcbf-fc298cc31f05_from_sample:aef7472e-7577-4256-8422-6ba77a954ce1_from_sample:fb01a7f2-8984-442b-a32e-15321c4fa99b_from_sample:aef7472e-7577-4256-8422-6ba77a954ce1_from_sample:ab2bea57-39ea-49ea-ad3f-c1c40b013154_from_sample:aef7472e-7577-4256-8422-6ba77a954ce1_from_sample:b1f52dc6-5c92-428f-8f7a-78794fd0544c_from_sample:aef7472e-7577-4256-8422-6ba77a954ce1_from_sample:d015cfca-e047-40bc-baab-423e87fa2618_from_sample:aef7472e-7577-4256-8422-6ba77a954ce1_from_sample:721b7447-8363-4e65-9515-9da2581d7124_from_sample:aef7472e-7577-4256-8422-6ba77a954ce1"^^xsd:string ;
+    ns1:hasAttribute <sample:8fc8e47b-acee-40f8-bcbf-fc298cc31f05_Position>,
+        <sample:8fc8e47b-acee-40f8-bcbf-fc298cc31f05_Species> ;
+    ns1:hasCalculatedProperty <activity:e537aad6-967f-48aa-8337-11bdaf6a80c1_BulkModulus>,
+        <activity:e537aad6-967f-48aa-8337-11bdaf6a80c1_EquilibriumEnergy>,
+        <activity:e537aad6-967f-48aa-8337-11bdaf6a80c1_EquilibriumVolume> ;
+    ns1:hasMaterial <sample:8fc8e47b-acee-40f8-bcbf-fc298cc31f05_Material> ;
+    ns1:hasNumberOfAtoms 4 ;
+    ns1:hasSimulationCell <sample:8fc8e47b-acee-40f8-bcbf-fc298cc31f05_SimulationCell> ;
+    ns1:hasSpecies <sample:8fc8e47b-acee-40f8-bcbf-fc298cc31f05_ChemicalSpecies> ;
+    prov:wasDerivedFrom <sample:721b7447-8363-4e65-9515-9da2581d7124>,
+        <sample:ab2bea57-39ea-49ea-ad3f-c1c40b013154>,
+        <sample:aef7472e-7577-4256-8422-6ba77a954ce1>,
+        <sample:b1f52dc6-5c92-428f-8f7a-78794fd0544c>,
+        <sample:d015cfca-e047-40bc-baab-423e87fa2618>,
+        <sample:fb01a7f2-8984-442b-a32e-15321c4fa99b> ;
+    prov:wasGeneratedBy <activity:e537aad6-967f-48aa-8337-11bdaf6a80c1> .
+
+<sample:92247b7f-f2a1-43aa-abe9-6774b3064503> a ns1:AtomicScaleSample ;
+    ns1:hasAttribute <sample:92247b7f-f2a1-43aa-abe9-6774b3064503_Position>,
+        <sample:92247b7f-f2a1-43aa-abe9-6774b3064503_Species> ;
+    ns1:hasMaterial <sample:92247b7f-f2a1-43aa-abe9-6774b3064503_Material> ;
+    ns1:hasNumberOfAtoms 96 ;
+    ns1:hasSimulationCell <sample:92247b7f-f2a1-43aa-abe9-6774b3064503_SimulationCell> ;
+    ns1:hasSpecies <sample:92247b7f-f2a1-43aa-abe9-6774b3064503_ChemicalSpecies> .
+
+<sample:92247b7f-f2a1-43aa-abe9-6774b3064503_DislocationSlipDirection> a ns3:SlipDirection ;
+    ns3:belongsToSystem <sample:92247b7f-f2a1-43aa-abe9-6774b3064503_DislocationSlipSystem> ;
+    ns1:hasComponent_x "1.0"^^xsd:float ;
+    ns1:hasComponent_y "0.0"^^xsd:float ;
+    ns1:hasComponent_z "-1.0"^^xsd:float .
+
+<sample:92247b7f-f2a1-43aa-abe9-6774b3064503_DislocationSlipPlane> a ns3:SlipPlane ;
+    ns3:belongsToSystem <sample:92247b7f-f2a1-43aa-abe9-6774b3064503_DislocationSlipSystem> ;
+    ns3:hasNormalVector <sample:92247b7f-f2a1-43aa-abe9-6774b3064503_DislocationNormalVector> .
+
+<sample:9f0f48d1-5ebf-4f7a-b241-5e7aa273f5a0> a ns1:AtomicScaleSample,
+        prov:Entity ;
+    rdfs:label "sample:9f0f48d1-5ebf-4f7a-b241-5e7aa273f5a0_from_sample:a3cf6d97-c922-4c4d-8517-e784df83b71e"^^xsd:string ;
+    ns1:hasAttribute <sample:9f0f48d1-5ebf-4f7a-b241-5e7aa273f5a0_Position>,
+        <sample:9f0f48d1-5ebf-4f7a-b241-5e7aa273f5a0_Species> ;
+    ns1:hasCalculatedProperty <activity:4a7eb321-b41b-4487-97e8-afff4f38ebad_QuasiHarmonicFreeEnergy>,
+        <activity:4a7eb321-b41b-4487-97e8-afff4f38ebad_QuasiHarmonicTemperature>,
+        <activity:4a7eb321-b41b-4487-97e8-afff4f38ebad_QuasiHarmonicVolume> ;
+    ns1:hasMaterial <sample:9f0f48d1-5ebf-4f7a-b241-5e7aa273f5a0_Material> ;
+    ns1:hasNumberOfAtoms 4 ;
+    ns1:hasSimulationCell <sample:9f0f48d1-5ebf-4f7a-b241-5e7aa273f5a0_SimulationCell> ;
+    ns1:hasSpecies <sample:9f0f48d1-5ebf-4f7a-b241-5e7aa273f5a0_ChemicalSpecies> ;
+    prov:wasDerivedFrom <sample:a3cf6d97-c922-4c4d-8517-e784df83b71e> ;
+    prov:wasGeneratedBy <activity:4a7eb321-b41b-4487-97e8-afff4f38ebad> .
+
+<sample:a0e3d71b-6ffd-4e60-bfd4-3178215f4080> a ns1:AtomicScaleSample ;
+    ns1:hasAttribute <sample:a0e3d71b-6ffd-4e60-bfd4-3178215f4080_Position>,
+        <sample:a0e3d71b-6ffd-4e60-bfd4-3178215f4080_Species> ;
+    ns1:hasMaterial <sample:a0e3d71b-6ffd-4e60-bfd4-3178215f4080_Material> ;
+    ns1:hasNumberOfAtoms 40 ;
+    ns1:hasSimulationCell <sample:a0e3d71b-6ffd-4e60-bfd4-3178215f4080_SimulationCell> ;
+    ns1:hasSpecies <sample:a0e3d71b-6ffd-4e60-bfd4-3178215f4080_ChemicalSpecies> .
+
+<sample:a3f1d0ea-de5a-48ff-80c4-ff34f2721e76> a ns1:AtomicScaleSample ;
+    ns1:hasAttribute <sample:a3f1d0ea-de5a-48ff-80c4-ff34f2721e76_Position>,
+        <sample:a3f1d0ea-de5a-48ff-80c4-ff34f2721e76_Species> ;
+    ns1:hasMaterial <sample:a3f1d0ea-de5a-48ff-80c4-ff34f2721e76_Material> ;
+    ns1:hasNumberOfAtoms 1976 ;
+    ns1:hasSimulationCell <sample:a3f1d0ea-de5a-48ff-80c4-ff34f2721e76_SimulationCell> ;
+    ns1:hasSpecies <sample:a3f1d0ea-de5a-48ff-80c4-ff34f2721e76_ChemicalSpecies> .
+
+<sample:e4be66c5-1c88-4507-a33d-ab54ed7f39c7> a ns1:AtomicScaleSample ;
+    ns1:hasAttribute <sample:e4be66c5-1c88-4507-a33d-ab54ed7f39c7_Position>,
+        <sample:e4be66c5-1c88-4507-a33d-ab54ed7f39c7_Species> ;
+    ns1:hasMaterial <sample:e4be66c5-1c88-4507-a33d-ab54ed7f39c7_Material> ;
+    ns1:hasNumberOfAtoms 456 ;
+    ns1:hasSimulationCell <sample:e4be66c5-1c88-4507-a33d-ab54ed7f39c7_SimulationCell> ;
+    ns1:hasSpecies <sample:e4be66c5-1c88-4507-a33d-ab54ed7f39c7_ChemicalSpecies> .
+
+<sample:e54c0e91-52ec-4c47-8ba3-43979a1ebe2e> a ns1:AtomicScaleSample,
+        prov:Entity ;
+    rdfs:label "sample:e54c0e91-52ec-4c47-8ba3-43979a1ebe2e_from_sample:67be61c7-f9c7-4d46-a61d-5350fd0ee246"^^xsd:string ;
+    ns1:hasAttribute <sample:e54c0e91-52ec-4c47-8ba3-43979a1ebe2e_Position>,
+        <sample:e54c0e91-52ec-4c47-8ba3-43979a1ebe2e_Species> ;
+    ns1:hasCalculatedProperty <activity:f61a2139-2dae-4aab-954e-73d34d7bc042_TotalEnergy>,
+        <activity:f61a2139-2dae-4aab-954e-73d34d7bc042_TotalVolume> ;
+    ns1:hasMaterial <sample:e54c0e91-52ec-4c47-8ba3-43979a1ebe2e_Material> ;
+    ns1:hasNumberOfAtoms 4 ;
+    ns1:hasSimulationCell <sample:e54c0e91-52ec-4c47-8ba3-43979a1ebe2e_SimulationCell> ;
+    ns1:hasSpecies <sample:e54c0e91-52ec-4c47-8ba3-43979a1ebe2e_ChemicalSpecies> ;
+    prov:wasDerivedFrom <sample:67be61c7-f9c7-4d46-a61d-5350fd0ee246> ;
+    prov:wasGeneratedBy <activity:f61a2139-2dae-4aab-954e-73d34d7bc042> .
+
+<activity:0848b931-d647-41c7-a6dc-8150989e36c7_TotalEnergy> a ns1:CalculatedProperty ;
+    rdfs:label "TotalEnergy" ;
+    ns4:hasUnit <http://qudt.org/vocab/unit/EV> ;
+    ns4:hasValue -1.39922e+01 ;
+    ns4:wasCalculatedBy <activity:0848b931-d647-41c7-a6dc-8150989e36c7> .
+
+<activity:0848b931-d647-41c7-a6dc-8150989e36c7_TotalVolume> a ns1:CalculatedProperty ;
+    rdfs:label "TotalVolume" ;
+    ns4:hasUnit <http://qudt.org/vocab/unit/ANGSTROM3> ;
+    ns4:hasValue 5.17505e+01 ;
+    ns4:wasCalculatedBy <activity:0848b931-d647-41c7-a6dc-8150989e36c7> .
+
+<activity:0848b931-d647-41c7-a6dc-8150989e36c7_method> a ns4:MolecularStatics ;
+    prov:wasAssociatedWith <http://demo.fiz-karlsruhe.de/matwerk/E457491> .
+
+<activity:0848b931-d647-41c7-a6dc-8150989e36c7_potential> a ns4:EmbeddedAtomModel ;
+    rdfs:label "2001--Mishin-Y--Cu-1--LAMMPS--ipr1" ;
+    ns1:hasReference "https://doi.org/10.1103%2Fphysrevb.63.224106"^^xsd:string .
+
+<activity:1e081e86-73fd-45e5-8341-cab787b9ff0c_TotalEnergy> a ns1:CalculatedProperty ;
+    rdfs:label "TotalEnergy" ;
+    ns4:hasUnit <http://qudt.org/vocab/unit/EV> ;
+    ns4:hasValue -1.41194e+01 ;
+    ns4:wasCalculatedBy <activity:1e081e86-73fd-45e5-8341-cab787b9ff0c> .
+
+<activity:1e081e86-73fd-45e5-8341-cab787b9ff0c_TotalVolume> a ns1:CalculatedProperty ;
+    rdfs:label "TotalVolume" ;
+    ns4:hasUnit <http://qudt.org/vocab/unit/ANGSTROM3> ;
+    ns4:hasValue 4.93982e+01 ;
+    ns4:wasCalculatedBy <activity:1e081e86-73fd-45e5-8341-cab787b9ff0c> .
+
+<activity:1e081e86-73fd-45e5-8341-cab787b9ff0c_method> a ns4:MolecularStatics ;
+    prov:wasAssociatedWith <http://demo.fiz-karlsruhe.de/matwerk/E457491> .
+
+<activity:1e081e86-73fd-45e5-8341-cab787b9ff0c_potential> a ns4:EmbeddedAtomModel ;
+    rdfs:label "2001--Mishin-Y--Cu-1--LAMMPS--ipr1" ;
+    ns1:hasReference "https://doi.org/10.1103%2Fphysrevb.63.224106"^^xsd:string .
+
+<activity:2e461195-15a4-45ba-b369-5a2429ded084_TotalEnergy> a ns1:CalculatedProperty ;
+    rdfs:label "TotalEnergy" ;
+    ns4:hasUnit <http://qudt.org/vocab/unit/EV> ;
+    ns4:hasValue -1.41596e+01 ;
+    ns4:wasCalculatedBy <activity:2e461195-15a4-45ba-b369-5a2429ded084> .
+
+<activity:2e461195-15a4-45ba-b369-5a2429ded084_TotalVolume> a ns1:CalculatedProperty ;
+    rdfs:label "TotalVolume" ;
+    ns4:hasUnit <http://qudt.org/vocab/unit/ANGSTROM3> ;
+    ns4:hasValue 4.70459e+01 ;
+    ns4:wasCalculatedBy <activity:2e461195-15a4-45ba-b369-5a2429ded084> .
+
+<activity:2e461195-15a4-45ba-b369-5a2429ded084_method> a ns4:MolecularStatics ;
+    prov:wasAssociatedWith <http://demo.fiz-karlsruhe.de/matwerk/E457491> .
+
+<activity:2e461195-15a4-45ba-b369-5a2429ded084_potential> a ns4:EmbeddedAtomModel ;
+    rdfs:label "2001--Mishin-Y--Cu-1--LAMMPS--ipr1" ;
+    ns1:hasReference "https://doi.org/10.1103%2Fphysrevb.63.224106"^^xsd:string .
+
+<activity:4a7eb321-b41b-4487-97e8-afff4f38ebad_QuasiHarmonicFreeEnergy> a ns1:CalculatedProperty ;
+    rdfs:label "QuasiHarmonicFreeEnergy" ;
+    ns4:hasUnit <http://qudt.org/vocab/unit/EV> ;
+    ns4:hasValue "[[0.1414, 0.139, 0.136, 0.1328, 0.1292, 0.1255, 0.123, 0.1207, 0.1186, 0.117, 0.1155], [-0.3276, -0.3361, -0.3475, -0.3609, -0.3764, -0.3934, -0.4066, -0.4186, -0.4302, -0.4392, -0.4467]]" ;
+    ns4:wasCalculatedBy <activity:4a7eb321-b41b-4487-97e8-afff4f38ebad> .
+
+<activity:4a7eb321-b41b-4487-97e8-afff4f38ebad_QuasiHarmonicTemperature> a ns1:CalculatedProperty ;
+    rdfs:label "QuasiHarmonicTemperature" ;
+    ns4:hasUnit <http://qudt.org/vocab/unit/K> ;
+    ns4:hasValue "[0.0, 500.0]" ;
+    ns4:wasCalculatedBy <activity:4a7eb321-b41b-4487-97e8-afff4f38ebad> .
+
+<activity:4a7eb321-b41b-4487-97e8-afff4f38ebad_QuasiHarmonicVolume> a ns1:CalculatedProperty ;
+    rdfs:label "QuasiHarmonicVolume" ;
+    ns4:hasUnit <http://qudt.org/vocab/unit/ANGSTROM3> ;
+    ns4:hasValue "[[42.3413, 43.2822, 44.2231, 45.164, 46.105, 47.0459, 47.9868, 48.9277, 49.8686, 50.8096, 51.7505], [42.3413, 43.2822, 44.2231, 45.164, 46.105, 47.0459, 47.9868, 48.9277, 49.8686, 50.8096, 51.7505]]" ;
+    ns4:wasCalculatedBy <activity:4a7eb321-b41b-4487-97e8-afff4f38ebad> .
+
+<activity:4a7eb321-b41b-4487-97e8-afff4f38ebad_method> prov:wasAssociatedWith <http://demo.fiz-karlsruhe.de/matwerk/E457491> .
+
+<activity:6dcdbfec-356e-4d95-a509-ac9de9909352> a prov:Activity ;
+    rdfs:label "SubstituteAtom" .
+
+<activity:8a680cb2-c7f1-4747-95b0-a4ce71fab87f_TotalEnergy> a ns1:CalculatedProperty ;
+    rdfs:label "TotalEnergy" ;
+    ns4:hasUnit <http://qudt.org/vocab/unit/EV> ;
+    ns4:hasValue -1.40954e+01 ;
+    ns4:wasCalculatedBy <activity:8a680cb2-c7f1-4747-95b0-a4ce71fab87f> .
+
+<activity:8a680cb2-c7f1-4747-95b0-a4ce71fab87f_TotalVolume> a ns1:CalculatedProperty ;
+    rdfs:label "TotalVolume" ;
+    ns4:hasUnit <http://qudt.org/vocab/unit/ANGSTROM3> ;
+    ns4:hasValue 4.46936e+01 ;
+    ns4:wasCalculatedBy <activity:8a680cb2-c7f1-4747-95b0-a4ce71fab87f> .
+
+<activity:8a680cb2-c7f1-4747-95b0-a4ce71fab87f_method> a ns4:MolecularStatics ;
+    prov:wasAssociatedWith <http://demo.fiz-karlsruhe.de/matwerk/E457491> .
+
+<activity:8a680cb2-c7f1-4747-95b0-a4ce71fab87f_potential> a ns4:EmbeddedAtomModel ;
+    rdfs:label "2001--Mishin-Y--Cu-1--LAMMPS--ipr1" ;
+    ns1:hasReference "https://doi.org/10.1103%2Fphysrevb.63.224106"^^xsd:string .
+
+<activity:923e1808-efdf-4a6a-a5de-9e0a64cb198c_TotalEnergy> a ns1:CalculatedProperty ;
+    rdfs:label "TotalEnergy" ;
+    ns4:hasUnit <http://qudt.org/vocab/unit/EV> ;
+    ns4:hasValue -1.38978e+01 ;
+    ns4:wasCalculatedBy <activity:923e1808-efdf-4a6a-a5de-9e0a64cb198c> .
+
+<activity:923e1808-efdf-4a6a-a5de-9e0a64cb198c_TotalVolume> a ns1:CalculatedProperty ;
+    rdfs:label "TotalVolume" ;
+    ns4:hasUnit <http://qudt.org/vocab/unit/ANGSTROM3> ;
+    ns4:hasValue 4.23413e+01 ;
+    ns4:wasCalculatedBy <activity:923e1808-efdf-4a6a-a5de-9e0a64cb198c> .
+
+<activity:923e1808-efdf-4a6a-a5de-9e0a64cb198c_method> a ns4:MolecularStatics ;
+    prov:wasAssociatedWith <http://demo.fiz-karlsruhe.de/matwerk/E457491> .
+
+<activity:923e1808-efdf-4a6a-a5de-9e0a64cb198c_potential> a ns4:EmbeddedAtomModel ;
+    rdfs:label "2001--Mishin-Y--Cu-1--LAMMPS--ipr1" ;
+    ns1:hasReference "https://doi.org/10.1103%2Fphysrevb.63.224106"^^xsd:string .
+
+<activity:e537aad6-967f-48aa-8337-11bdaf6a80c1_BulkModulus> a ns1:CalculatedProperty ;
+    rdfs:label "BulkModulus" ;
+    ns4:hasUnit <http://qudt.org/vocab/unit/GigaPA> ;
+    ns4:hasValue 1.449e+02 ;
+    ns4:wasCalculatedBy <activity:e537aad6-967f-48aa-8337-11bdaf6a80c1> .
+
+<activity:e537aad6-967f-48aa-8337-11bdaf6a80c1_EquilibriumEnergy> a ns1:CalculatedProperty ;
+    rdfs:label "EquilibriumEnergy" ;
+    ns4:hasUnit <http://qudt.org/vocab/unit/EV> ;
+    ns4:hasValue -1.41609e+01 ;
+    ns4:wasCalculatedBy <activity:e537aad6-967f-48aa-8337-11bdaf6a80c1> .
+
+<activity:e537aad6-967f-48aa-8337-11bdaf6a80c1_EquilibriumVolume> a ns1:CalculatedProperty ;
+    rdfs:label "EquilibriumVolume" ;
+    ns4:hasUnit <http://qudt.org/vocab/unit/ANGSTROM3> ;
+    ns4:hasValue 4.72242e+01 ;
+    ns4:wasCalculatedBy <activity:e537aad6-967f-48aa-8337-11bdaf6a80c1> .
+
+<activity:e537aad6-967f-48aa-8337-11bdaf6a80c1_method> prov:wasAssociatedWith <http://demo.fiz-karlsruhe.de/matwerk/E457491> .
+
+<activity:f61a2139-2dae-4aab-954e-73d34d7bc042_TotalEnergy> a ns1:CalculatedProperty ;
+    rdfs:label "TotalEnergy" ;
+    ns4:hasUnit <http://qudt.org/vocab/unit/EV> ;
+    ns4:hasValue -1.37346e+01 ;
+    ns4:wasCalculatedBy <activity:f61a2139-2dae-4aab-954e-73d34d7bc042> .
+
+<activity:f61a2139-2dae-4aab-954e-73d34d7bc042_TotalVolume> a ns1:CalculatedProperty ;
+    rdfs:label "TotalVolume" ;
+    ns4:hasUnit <http://qudt.org/vocab/unit/ANGSTROM3> ;
+    ns4:hasValue 4.82558e+01 ;
+    ns4:wasCalculatedBy <activity:f61a2139-2dae-4aab-954e-73d34d7bc042> .
+
+<activity:f61a2139-2dae-4aab-954e-73d34d7bc042_method> a ns4:MolecularDynamics ;
+    prov:wasAssociatedWith <http://demo.fiz-karlsruhe.de/matwerk/E457491> .
+
+<activity:f61a2139-2dae-4aab-954e-73d34d7bc042_potential> a ns4:EmbeddedAtomModel ;
+    rdfs:label "2001--Mishin-Y--Cu-1--LAMMPS--ipr1" ;
+    ns1:hasReference "https://doi.org/10.1103%2Fphysrevb.63.224106"^^xsd:string .
+
+<activity:f61a2139-2dae-4aab-954e-73d34d7bc042_pressure> a ns4:InputParameter ;
+    rdfs:label "pressure"^^xsd:string ;
+    ns4:hasUnit <http://qudt.org/vocab/unit/GigaPA> ;
+    ns4:hasValue "0.0"^^xsd:float .
+
+<activity:f61a2139-2dae-4aab-954e-73d34d7bc042_temperature> a ns4:InputParameter ;
+    rdfs:label "temperature"^^xsd:string ;
+    ns4:hasUnit <http://qudt.org/vocab/unit/K> ;
+    ns4:hasValue "500.0"^^xsd:float .
+
+<activity:fbc50dcb-9791-405f-b33e-784f3e8cdc75> a prov:Activity ;
+    rdfs:label "DeleteAtom" .
+
+<http://demo.fiz-karlsruhe.de/matwerk/E447986> a prov:SoftwareAgent ;
+    rdfs:label "LAMMPS" .
+
+<https://www.ebi.ac.uk/chebi/searchId.do?chebiId=CHEBI:25107> a ns1:ChemicalElement ;
+    ns1:hasChemicalSymbol "Mg"^^xsd:string ;
+    ns1:hasElementRatio "0.25"^^xsd:float .
+
+<https://www.ebi.ac.uk/chebi/searchId.do?chebiId=CHEBI:27573> a ns1:ChemicalElement ;
+    ns1:hasChemicalSymbol "Si"^^xsd:string ;
+    ns1:hasElementRatio "1.0"^^xsd:float .
+
+<https://www.ebi.ac.uk/chebi/searchId.do?chebiId=CHEBI:27594> a ns1:ChemicalElement ;
+    ns1:hasChemicalSymbol "C"^^xsd:string ;
+    ns1:hasElementRatio "1.0"^^xsd:float .
+
+<https://www.ebi.ac.uk/chebi/searchId.do?chebiId=CHEBI:28112> a ns1:ChemicalElement ;
+    ns1:hasChemicalSymbol "Ni"^^xsd:string ;
+    ns1:hasElementRatio "0.75"^^xsd:float .
+
+<sample:054ba281-e86e-46a7-ae6c-fa5664b5e601_ChemicalSpecies> a ns1:ChemicalSpecies ;
+    ns1:hasElement <https://www.ebi.ac.uk/chebi/searchId.do?chebiId=CHEBI:27573> .
+
+<sample:054ba281-e86e-46a7-ae6c-fa5664b5e601_CrystalStructure> a ns1:CrystalStructure ;
+    ns1:hasAltName "diamond"^^xsd:string ;
+    ns1:hasSpaceGroupNumber 227 ;
+    ns1:hasSpaceGroupSymbol "Fd-3m"^^xsd:string ;
+    ns1:hasUnitCell <sample:054ba281-e86e-46a7-ae6c-fa5664b5e601_UnitCell> .
+
+<sample:054ba281-e86e-46a7-ae6c-fa5664b5e601_LatticeAngle> a ns1:LatticeAngle ;
+    ns1:hasAngle_alpha "90.0"^^xsd:float ;
+    ns1:hasAngle_beta "90.0"^^xsd:float ;
+    ns1:hasAngle_gamma "90.0"^^xsd:float .
+
+<sample:054ba281-e86e-46a7-ae6c-fa5664b5e601_LatticeParameter> a ns1:LatticeParameter ;
+    ns1:hasLength_x "5.43"^^xsd:float ;
+    ns1:hasLength_y "5.43"^^xsd:float ;
+    ns1:hasLength_z "5.43"^^xsd:float .
+
+<sample:054ba281-e86e-46a7-ae6c-fa5664b5e601_Material> a ns1:CrystallineMaterial ;
+    ns1:hasStructure <sample:054ba281-e86e-46a7-ae6c-fa5664b5e601_CrystalStructure> .
+
+<sample:054ba281-e86e-46a7-ae6c-fa5664b5e601_Position> a ns1:AtomAttribute ;
+    ns1:hasIdentifier "d8af5fe2-b154-48e2-8681-5f840987643c"^^xsd:string ;
+    ns1:hasName "Position"^^xsd:string ;
+    ns1:hasPath "rdf_structure_store/054ba281-e86e-46a7-ae6c-fa5664b5e601.json"^^xsd:string .
+
+<sample:054ba281-e86e-46a7-ae6c-fa5664b5e601_SimulationCell> a ns1:SimulationCell ;
+    ns1:hasAngle <sample:054ba281-e86e-46a7-ae6c-fa5664b5e601_SimulationCellAngle> ;
+    ns1:hasLength <sample:054ba281-e86e-46a7-ae6c-fa5664b5e601_SimulationCellLength> ;
+    ns1:hasVector <sample:054ba281-e86e-46a7-ae6c-fa5664b5e601_SimulationCellVector_1>,
+        <sample:054ba281-e86e-46a7-ae6c-fa5664b5e601_SimulationCellVector_2>,
+        <sample:054ba281-e86e-46a7-ae6c-fa5664b5e601_SimulationCellVector_3> ;
+    ns1:hasVolume "160.1"^^xsd:float .
+
+<sample:054ba281-e86e-46a7-ae6c-fa5664b5e601_SimulationCellAngle> a ns1:SimulationCellAngle ;
+    ns1:hasAngle_alpha "90.0"^^xsd:float ;
+    ns1:hasAngle_beta "90.0"^^xsd:float ;
+    ns1:hasAngle_gamma "90.0"^^xsd:float .
+
+<sample:054ba281-e86e-46a7-ae6c-fa5664b5e601_SimulationCellLength> a ns1:SimulationCellLength ;
+    ns1:hasLength_x "5.43"^^xsd:float ;
+    ns1:hasLength_y "5.43"^^xsd:float ;
+    ns1:hasLength_z "5.43"^^xsd:float .
+
+<sample:054ba281-e86e-46a7-ae6c-fa5664b5e601_SimulationCellVector_1> a ns1:SimulationCellVector ;
+    ns1:hasComponent_x "5.43"^^xsd:float ;
+    ns1:hasComponent_y "0.0"^^xsd:float ;
+    ns1:hasComponent_z "0.0"^^xsd:float .
+
+<sample:054ba281-e86e-46a7-ae6c-fa5664b5e601_SimulationCellVector_2> a ns1:SimulationCellVector ;
+    ns1:hasComponent_x "0.0"^^xsd:float ;
+    ns1:hasComponent_y "5.43"^^xsd:float ;
+    ns1:hasComponent_z "0.0"^^xsd:float .
+
+<sample:054ba281-e86e-46a7-ae6c-fa5664b5e601_SimulationCellVector_3> a ns1:SimulationCellVector ;
+    ns1:hasComponent_x "0.0"^^xsd:float ;
+    ns1:hasComponent_y "0.0"^^xsd:float ;
+    ns1:hasComponent_z "5.43"^^xsd:float .
+
+<sample:054ba281-e86e-46a7-ae6c-fa5664b5e601_Species> a ns1:AtomAttribute ;
+    ns1:hasIdentifier "65485af0-2c36-4fe6-a5ee-c0edad48e7f1"^^xsd:string ;
+    ns1:hasName "Species"^^xsd:string ;
+    ns1:hasPath "rdf_structure_store/054ba281-e86e-46a7-ae6c-fa5664b5e601.json"^^xsd:string .
+
+<sample:054ba281-e86e-46a7-ae6c-fa5664b5e601_UnitCell> a ns1:UnitCell ;
+    ns1:hasAngle <sample:054ba281-e86e-46a7-ae6c-fa5664b5e601_LatticeAngle> ;
+    ns1:hasBravaisLattice <https://www.wikidata.org/wiki/Q3006714> ;
+    ns1:hasLatticeParameter <sample:054ba281-e86e-46a7-ae6c-fa5664b5e601_LatticeParameter> .
+
+<sample:10ffd2cc-9e92-4f04-896d-d6c0fdb9e55f_ChemicalSpecies> a ns1:ChemicalSpecies ;
+    ns1:hasElement <https://www.ebi.ac.uk/chebi/searchId.do?chebiId=CHEBI:28112>,
+        <https://www.ebi.ac.uk/chebi/searchId.do?chebiId=CHEBI:28984> .
+
+<sample:10ffd2cc-9e92-4f04-896d-d6c0fdb9e55f_CrystalStructure> a ns1:CrystalStructure ;
+    ns1:hasAltName "l12"^^xsd:string ;
+    ns1:hasSpaceGroupNumber 221 ;
+    ns1:hasSpaceGroupSymbol "Pm-3m"^^xsd:string ;
+    ns1:hasUnitCell <sample:10ffd2cc-9e92-4f04-896d-d6c0fdb9e55f_UnitCell> .
+
+<sample:10ffd2cc-9e92-4f04-896d-d6c0fdb9e55f_LatticeAngle> a ns1:LatticeAngle ;
+    ns1:hasAngle_alpha "90.0"^^xsd:float ;
+    ns1:hasAngle_beta "90.0"^^xsd:float ;
+    ns1:hasAngle_gamma "90.0"^^xsd:float .
+
+<sample:10ffd2cc-9e92-4f04-896d-d6c0fdb9e55f_LatticeParameter> a ns1:LatticeParameter ;
+    ns1:hasLength_x "3.57"^^xsd:float ;
+    ns1:hasLength_y "3.57"^^xsd:float ;
+    ns1:hasLength_z "3.57"^^xsd:float .
+
+<sample:10ffd2cc-9e92-4f04-896d-d6c0fdb9e55f_Material> a ns1:CrystallineMaterial ;
+    ns1:hasStructure <sample:10ffd2cc-9e92-4f04-896d-d6c0fdb9e55f_CrystalStructure> .
+
+<sample:10ffd2cc-9e92-4f04-896d-d6c0fdb9e55f_Position> a ns1:AtomAttribute ;
+    ns1:hasIdentifier "3cb682c4-487f-4db5-828f-475a9f532896"^^xsd:string ;
+    ns1:hasName "Position"^^xsd:string ;
+    ns1:hasPath "rdf_structure_store/10ffd2cc-9e92-4f04-896d-d6c0fdb9e55f.json"^^xsd:string .
+
+<sample:10ffd2cc-9e92-4f04-896d-d6c0fdb9e55f_SimulationCell> a ns1:SimulationCell ;
+    ns1:hasAngle <sample:10ffd2cc-9e92-4f04-896d-d6c0fdb9e55f_SimulationCellAngle> ;
+    ns1:hasLength <sample:10ffd2cc-9e92-4f04-896d-d6c0fdb9e55f_SimulationCellLength> ;
+    ns1:hasVector <sample:10ffd2cc-9e92-4f04-896d-d6c0fdb9e55f_SimulationCellVector_1>,
+        <sample:10ffd2cc-9e92-4f04-896d-d6c0fdb9e55f_SimulationCellVector_2>,
+        <sample:10ffd2cc-9e92-4f04-896d-d6c0fdb9e55f_SimulationCellVector_3> ;
+    ns1:hasVolume "45.5"^^xsd:float .
+
+<sample:10ffd2cc-9e92-4f04-896d-d6c0fdb9e55f_SimulationCellAngle> a ns1:SimulationCellAngle ;
+    ns1:hasAngle_alpha "90.0"^^xsd:float ;
+    ns1:hasAngle_beta "90.0"^^xsd:float ;
+    ns1:hasAngle_gamma "90.0"^^xsd:float .
+
+<sample:10ffd2cc-9e92-4f04-896d-d6c0fdb9e55f_SimulationCellLength> a ns1:SimulationCellLength ;
+    ns1:hasLength_x "3.57"^^xsd:float ;
+    ns1:hasLength_y "3.57"^^xsd:float ;
+    ns1:hasLength_z "3.57"^^xsd:float .
+
+<sample:10ffd2cc-9e92-4f04-896d-d6c0fdb9e55f_SimulationCellVector_1> a ns1:SimulationCellVector ;
+    ns1:hasComponent_x "3.57"^^xsd:float ;
+    ns1:hasComponent_y "0.0"^^xsd:float ;
+    ns1:hasComponent_z "0.0"^^xsd:float .
+
+<sample:10ffd2cc-9e92-4f04-896d-d6c0fdb9e55f_SimulationCellVector_2> a ns1:SimulationCellVector ;
+    ns1:hasComponent_x "0.0"^^xsd:float ;
+    ns1:hasComponent_y "3.57"^^xsd:float ;
+    ns1:hasComponent_z "0.0"^^xsd:float .
+
+<sample:10ffd2cc-9e92-4f04-896d-d6c0fdb9e55f_SimulationCellVector_3> a ns1:SimulationCellVector ;
+    ns1:hasComponent_x "0.0"^^xsd:float ;
+    ns1:hasComponent_y "0.0"^^xsd:float ;
+    ns1:hasComponent_z "3.57"^^xsd:float .
+
+<sample:10ffd2cc-9e92-4f04-896d-d6c0fdb9e55f_Species> a ns1:AtomAttribute ;
+    ns1:hasIdentifier "d2a488e7-bfa0-4e4d-9e2a-34799bae1421"^^xsd:string ;
+    ns1:hasName "Species"^^xsd:string ;
+    ns1:hasPath "rdf_structure_store/10ffd2cc-9e92-4f04-896d-d6c0fdb9e55f.json"^^xsd:string .
+
+<sample:10ffd2cc-9e92-4f04-896d-d6c0fdb9e55f_UnitCell> a ns1:UnitCell ;
+    ns1:hasAngle <sample:10ffd2cc-9e92-4f04-896d-d6c0fdb9e55f_LatticeAngle> ;
+    ns1:hasBravaisLattice <https://www.wikidata.org/wiki/Q3006714> ;
+    ns1:hasLatticeParameter <sample:10ffd2cc-9e92-4f04-896d-d6c0fdb9e55f_LatticeParameter> .
+
+<sample:1f6b1b0f-446a-4ad8-877e-d2e6176797df> a ns1:AtomicScaleSample ;
+    ns1:hasAttribute <sample:1f6b1b0f-446a-4ad8-877e-d2e6176797df_Position>,
+        <sample:1f6b1b0f-446a-4ad8-877e-d2e6176797df_Species> ;
+    ns1:hasMaterial <sample:1f6b1b0f-446a-4ad8-877e-d2e6176797df_Material> ;
+    ns1:hasNumberOfAtoms 4 ;
+    ns1:hasSimulationCell <sample:1f6b1b0f-446a-4ad8-877e-d2e6176797df_SimulationCell> ;
+    ns1:hasSpecies <sample:1f6b1b0f-446a-4ad8-877e-d2e6176797df_ChemicalSpecies> .
+
+<sample:1f6b1b0f-446a-4ad8-877e-d2e6176797df_ChemicalSpecies> a ns1:ChemicalSpecies ;
+    ns1:hasElement <https://www.ebi.ac.uk/chebi/searchId.do?chebiId=CHEBI:28984> .
+
+<sample:1f6b1b0f-446a-4ad8-877e-d2e6176797df_CrystalStructure> a ns1:CrystalStructure ;
+    ns1:hasAltName "fcc"^^xsd:string ;
+    ns1:hasSpaceGroupNumber 225 ;
+    ns1:hasSpaceGroupSymbol "Fm-3m"^^xsd:string ;
+    ns1:hasUnitCell <sample:1f6b1b0f-446a-4ad8-877e-d2e6176797df_UnitCell> .
+
+<sample:1f6b1b0f-446a-4ad8-877e-d2e6176797df_LatticeAngle> a ns1:LatticeAngle ;
+    ns1:hasAngle_alpha "90.0"^^xsd:float ;
+    ns1:hasAngle_beta "90.0"^^xsd:float ;
+    ns1:hasAngle_gamma "90.0"^^xsd:float .
+
+<sample:1f6b1b0f-446a-4ad8-877e-d2e6176797df_LatticeParameter> a ns1:LatticeParameter ;
+    ns1:hasLength_x "4.05"^^xsd:float ;
+    ns1:hasLength_y "4.05"^^xsd:float ;
+    ns1:hasLength_z "4.05"^^xsd:float .
+
+<sample:1f6b1b0f-446a-4ad8-877e-d2e6176797df_Material> a ns1:CrystallineMaterial ;
+    ns1:hasStructure <sample:1f6b1b0f-446a-4ad8-877e-d2e6176797df_CrystalStructure> .
+
+<sample:1f6b1b0f-446a-4ad8-877e-d2e6176797df_Position> a ns1:AtomAttribute ;
+    ns1:hasIdentifier "9dedd173-c431-4f10-bbaa-1e695c212f86"^^xsd:string ;
+    ns1:hasName "Position"^^xsd:string ;
+    ns1:hasPath "rdf_structure_store/1f6b1b0f-446a-4ad8-877e-d2e6176797df.json"^^xsd:string .
+
+<sample:1f6b1b0f-446a-4ad8-877e-d2e6176797df_SimulationCell> a ns1:SimulationCell ;
+    ns1:hasAngle <sample:1f6b1b0f-446a-4ad8-877e-d2e6176797df_SimulationCellAngle> ;
+    ns1:hasLength <sample:1f6b1b0f-446a-4ad8-877e-d2e6176797df_SimulationCellLength> ;
+    ns1:hasVector <sample:1f6b1b0f-446a-4ad8-877e-d2e6176797df_SimulationCellVector_1>,
+        <sample:1f6b1b0f-446a-4ad8-877e-d2e6176797df_SimulationCellVector_2>,
+        <sample:1f6b1b0f-446a-4ad8-877e-d2e6176797df_SimulationCellVector_3> ;
+    ns1:hasVolume "66.43"^^xsd:float .
+
+<sample:1f6b1b0f-446a-4ad8-877e-d2e6176797df_SimulationCellAngle> a ns1:SimulationCellAngle ;
+    ns1:hasAngle_alpha "90.0"^^xsd:float ;
+    ns1:hasAngle_beta "90.0"^^xsd:float ;
+    ns1:hasAngle_gamma "90.0"^^xsd:float .
+
+<sample:1f6b1b0f-446a-4ad8-877e-d2e6176797df_SimulationCellLength> a ns1:SimulationCellLength ;
+    ns1:hasLength_x "4.05"^^xsd:float ;
+    ns1:hasLength_y "4.05"^^xsd:float ;
+    ns1:hasLength_z "4.05"^^xsd:float .
+
+<sample:1f6b1b0f-446a-4ad8-877e-d2e6176797df_SimulationCellVector_1> a ns1:SimulationCellVector ;
+    ns1:hasComponent_x "4.05"^^xsd:float ;
+    ns1:hasComponent_y "0.0"^^xsd:float ;
+    ns1:hasComponent_z "0.0"^^xsd:float .
+
+<sample:1f6b1b0f-446a-4ad8-877e-d2e6176797df_SimulationCellVector_2> a ns1:SimulationCellVector ;
+    ns1:hasComponent_x "0.0"^^xsd:float ;
+    ns1:hasComponent_y "4.05"^^xsd:float ;
+    ns1:hasComponent_z "0.0"^^xsd:float .
+
+<sample:1f6b1b0f-446a-4ad8-877e-d2e6176797df_SimulationCellVector_3> a ns1:SimulationCellVector ;
+    ns1:hasComponent_x "0.0"^^xsd:float ;
+    ns1:hasComponent_y "0.0"^^xsd:float ;
+    ns1:hasComponent_z "4.05"^^xsd:float .
+
+<sample:1f6b1b0f-446a-4ad8-877e-d2e6176797df_Species> a ns1:AtomAttribute ;
+    ns1:hasIdentifier "add42095-173e-4a02-806a-0e4d95a3eb80"^^xsd:string ;
+    ns1:hasName "Species"^^xsd:string ;
+    ns1:hasPath "rdf_structure_store/1f6b1b0f-446a-4ad8-877e-d2e6176797df.json"^^xsd:string .
+
+<sample:1f6b1b0f-446a-4ad8-877e-d2e6176797df_UnitCell> a ns1:UnitCell ;
+    ns1:hasAngle <sample:1f6b1b0f-446a-4ad8-877e-d2e6176797df_LatticeAngle> ;
+    ns1:hasBravaisLattice <https://www.wikidata.org/wiki/Q3006714> ;
+    ns1:hasLatticeParameter <sample:1f6b1b0f-446a-4ad8-877e-d2e6176797df_LatticeParameter> .
+
+<sample:286c3974-962b-4333-a2bb-d164ae645454_ChemicalSpecies> a ns1:ChemicalSpecies ;
+    ns1:hasElement <https://www.ebi.ac.uk/chebi/searchId.do?chebiId=CHEBI:25107>,
+        <https://www.ebi.ac.uk/chebi/searchId.do?chebiId=CHEBI:28984> .
+
+<sample:286c3974-962b-4333-a2bb-d164ae645454_CrystalStructure> a ns1:CrystalStructure ;
+    ns1:hasAltName "fcc"^^xsd:string ;
+    ns1:hasSpaceGroupNumber 225 ;
+    ns1:hasSpaceGroupSymbol "Fm-3m"^^xsd:string ;
+    ns1:hasUnitCell <sample:286c3974-962b-4333-a2bb-d164ae645454_UnitCell> .
+
+<sample:286c3974-962b-4333-a2bb-d164ae645454_LatticeAngle> a ns1:LatticeAngle ;
+    ns1:hasAngle_alpha "90.0"^^xsd:float ;
+    ns1:hasAngle_beta "90.0"^^xsd:float ;
+    ns1:hasAngle_gamma "90.0"^^xsd:float .
+
+<sample:286c3974-962b-4333-a2bb-d164ae645454_LatticeParameter> a ns1:LatticeParameter ;
+    ns1:hasLength_x "4.05"^^xsd:float ;
+    ns1:hasLength_y "4.05"^^xsd:float ;
+    ns1:hasLength_z "4.05"^^xsd:float .
+
+<sample:286c3974-962b-4333-a2bb-d164ae645454_Material> a ns1:CrystallineMaterial ;
+    ns1:hasDefect <sample:286c3974-962b-4333-a2bb-d164ae645454_SubstitutionalImpurity> ;
+    ns1:hasStructure <sample:286c3974-962b-4333-a2bb-d164ae645454_CrystalStructure> .
+
+<sample:286c3974-962b-4333-a2bb-d164ae645454_Position> a ns1:AtomAttribute ;
+    ns1:hasIdentifier "e3979ae8-4632-423c-8965-f698bb88f0aa"^^xsd:string ;
+    ns1:hasName "Position"^^xsd:string ;
+    ns1:hasPath "rdf_structure_store/286c3974-962b-4333-a2bb-d164ae645454.json"^^xsd:string .
+
+<sample:286c3974-962b-4333-a2bb-d164ae645454_SimulationCell> a ns1:SimulationCell ;
+    ns1:hasAngle <sample:286c3974-962b-4333-a2bb-d164ae645454_SimulationCellAngle> ;
+    ns1:hasLength <sample:286c3974-962b-4333-a2bb-d164ae645454_SimulationCellLength> ;
+    ns1:hasVector <sample:286c3974-962b-4333-a2bb-d164ae645454_SimulationCellVector_1>,
+        <sample:286c3974-962b-4333-a2bb-d164ae645454_SimulationCellVector_2>,
+        <sample:286c3974-962b-4333-a2bb-d164ae645454_SimulationCellVector_3> ;
+    ns1:hasVolume "66.43"^^xsd:float .
+
+<sample:286c3974-962b-4333-a2bb-d164ae645454_SimulationCellAngle> a ns1:SimulationCellAngle ;
+    ns1:hasAngle_alpha "90.0"^^xsd:float ;
+    ns1:hasAngle_beta "90.0"^^xsd:float ;
+    ns1:hasAngle_gamma "90.0"^^xsd:float .
+
+<sample:286c3974-962b-4333-a2bb-d164ae645454_SimulationCellLength> a ns1:SimulationCellLength ;
+    ns1:hasLength_x "4.05"^^xsd:float ;
+    ns1:hasLength_y "4.05"^^xsd:float ;
+    ns1:hasLength_z "4.05"^^xsd:float .
+
+<sample:286c3974-962b-4333-a2bb-d164ae645454_SimulationCellVector_1> a ns1:SimulationCellVector ;
+    ns1:hasComponent_x "4.05"^^xsd:float ;
+    ns1:hasComponent_y "0.0"^^xsd:float ;
+    ns1:hasComponent_z "0.0"^^xsd:float .
+
+<sample:286c3974-962b-4333-a2bb-d164ae645454_SimulationCellVector_2> a ns1:SimulationCellVector ;
+    ns1:hasComponent_x "0.0"^^xsd:float ;
+    ns1:hasComponent_y "4.05"^^xsd:float ;
+    ns1:hasComponent_z "0.0"^^xsd:float .
+
+<sample:286c3974-962b-4333-a2bb-d164ae645454_SimulationCellVector_3> a ns1:SimulationCellVector ;
+    ns1:hasComponent_x "0.0"^^xsd:float ;
+    ns1:hasComponent_y "0.0"^^xsd:float ;
+    ns1:hasComponent_z "4.05"^^xsd:float .
+
+<sample:286c3974-962b-4333-a2bb-d164ae645454_Species> a ns1:AtomAttribute ;
+    ns1:hasIdentifier "ceab5d85-ab24-4747-a70c-59fbd68f5484"^^xsd:string ;
+    ns1:hasName "Species"^^xsd:string ;
+    ns1:hasPath "rdf_structure_store/286c3974-962b-4333-a2bb-d164ae645454.json"^^xsd:string .
+
+<sample:286c3974-962b-4333-a2bb-d164ae645454_SubstitutionalImpurity> a ns5:SubstitutionalImpurity .
+
+<sample:286c3974-962b-4333-a2bb-d164ae645454_UnitCell> a ns1:UnitCell ;
+    ns1:hasAngle <sample:286c3974-962b-4333-a2bb-d164ae645454_LatticeAngle> ;
+    ns1:hasBravaisLattice <https://www.wikidata.org/wiki/Q3006714> ;
+    ns1:hasLatticeParameter <sample:286c3974-962b-4333-a2bb-d164ae645454_LatticeParameter> .
+
+<sample:34672ac1-d37f-48be-84c9-e1baf546472f_ChemicalSpecies> a ns1:ChemicalSpecies ;
+    ns1:hasElement <https://www.ebi.ac.uk/chebi/searchId.do?chebiId=CHEBI:18248> .
+
+<sample:34672ac1-d37f-48be-84c9-e1baf546472f_CrystalStructure> a ns1:CrystalStructure ;
+    ns1:hasAltName "bcc"^^xsd:string ;
+    ns1:hasSpaceGroupNumber 229 ;
+    ns1:hasSpaceGroupSymbol "Im-3m"^^xsd:string ;
+    ns1:hasUnitCell <sample:34672ac1-d37f-48be-84c9-e1baf546472f_UnitCell> .
+
+<sample:34672ac1-d37f-48be-84c9-e1baf546472f_LatticeAngle> a ns1:LatticeAngle ;
+    ns1:hasAngle_alpha "90.0"^^xsd:float ;
+    ns1:hasAngle_beta "90.0"^^xsd:float ;
+    ns1:hasAngle_gamma "90.0"^^xsd:float .
+
+<sample:34672ac1-d37f-48be-84c9-e1baf546472f_LatticeParameter> a ns1:LatticeParameter ;
+    ns1:hasLength_x "2.87"^^xsd:float ;
+    ns1:hasLength_y "2.87"^^xsd:float ;
+    ns1:hasLength_z "2.87"^^xsd:float .
+
+<sample:34672ac1-d37f-48be-84c9-e1baf546472f_Material> a ns1:CrystallineMaterial ;
+    ns1:hasDefect <sample:34672ac1-d37f-48be-84c9-e1baf546472f_Vacancy> ;
+    ns1:hasStructure <sample:34672ac1-d37f-48be-84c9-e1baf546472f_CrystalStructure> .
+
+<sample:34672ac1-d37f-48be-84c9-e1baf546472f_Position> a ns1:AtomAttribute ;
+    ns1:hasIdentifier "a08e173b-c983-4ee3-98eb-1570ac25f6f3"^^xsd:string ;
+    ns1:hasName "Position"^^xsd:string ;
+    ns1:hasPath "rdf_structure_store/34672ac1-d37f-48be-84c9-e1baf546472f.json"^^xsd:string .
+
+<sample:34672ac1-d37f-48be-84c9-e1baf546472f_SimulationCell> a ns1:SimulationCell ;
+    ns1:hasAngle <sample:34672ac1-d37f-48be-84c9-e1baf546472f_SimulationCellAngle> ;
+    ns1:hasLength <sample:34672ac1-d37f-48be-84c9-e1baf546472f_SimulationCellLength> ;
+    ns1:hasVector <sample:34672ac1-d37f-48be-84c9-e1baf546472f_SimulationCellVector_1>,
+        <sample:34672ac1-d37f-48be-84c9-e1baf546472f_SimulationCellVector_2>,
+        <sample:34672ac1-d37f-48be-84c9-e1baf546472f_SimulationCellVector_3> ;
+    ns1:hasVolume "23.64"^^xsd:float .
+
+<sample:34672ac1-d37f-48be-84c9-e1baf546472f_SimulationCellAngle> a ns1:SimulationCellAngle ;
+    ns1:hasAngle_alpha "90.0"^^xsd:float ;
+    ns1:hasAngle_beta "90.0"^^xsd:float ;
+    ns1:hasAngle_gamma "90.0"^^xsd:float .
+
+<sample:34672ac1-d37f-48be-84c9-e1baf546472f_SimulationCellLength> a ns1:SimulationCellLength ;
+    ns1:hasLength_x "2.87"^^xsd:float ;
+    ns1:hasLength_y "2.87"^^xsd:float ;
+    ns1:hasLength_z "2.87"^^xsd:float .
+
+<sample:34672ac1-d37f-48be-84c9-e1baf546472f_SimulationCellVector_1> a ns1:SimulationCellVector ;
+    ns1:hasComponent_x "2.87"^^xsd:float ;
+    ns1:hasComponent_y "0.0"^^xsd:float ;
+    ns1:hasComponent_z "0.0"^^xsd:float .
+
+<sample:34672ac1-d37f-48be-84c9-e1baf546472f_SimulationCellVector_2> a ns1:SimulationCellVector ;
+    ns1:hasComponent_x "0.0"^^xsd:float ;
+    ns1:hasComponent_y "2.87"^^xsd:float ;
+    ns1:hasComponent_z "0.0"^^xsd:float .
+
+<sample:34672ac1-d37f-48be-84c9-e1baf546472f_SimulationCellVector_3> a ns1:SimulationCellVector ;
+    ns1:hasComponent_x "0.0"^^xsd:float ;
+    ns1:hasComponent_y "0.0"^^xsd:float ;
+    ns1:hasComponent_z "2.87"^^xsd:float .
+
+<sample:34672ac1-d37f-48be-84c9-e1baf546472f_Species> a ns1:AtomAttribute ;
+    ns1:hasIdentifier "825423f7-c3f0-4e50-81cb-403645f46103"^^xsd:string ;
+    ns1:hasName "Species"^^xsd:string ;
+    ns1:hasPath "rdf_structure_store/34672ac1-d37f-48be-84c9-e1baf546472f.json"^^xsd:string .
+
+<sample:34672ac1-d37f-48be-84c9-e1baf546472f_UnitCell> a ns1:UnitCell ;
+    ns1:hasAngle <sample:34672ac1-d37f-48be-84c9-e1baf546472f_LatticeAngle> ;
+    ns1:hasBravaisLattice <https://www.wikidata.org/wiki/Q851536> ;
+    ns1:hasLatticeParameter <sample:34672ac1-d37f-48be-84c9-e1baf546472f_LatticeParameter> .
+
+<sample:34672ac1-d37f-48be-84c9-e1baf546472f_Vacancy> a ns5:Vacancy .
+
+<sample:3ec7f8ac-610e-4f08-953c-669f55b809e7_ChemicalSpecies> a ns1:ChemicalSpecies ;
+    ns1:hasElement <https://www.ebi.ac.uk/chebi/searchId.do?chebiId=CHEBI:18248> .
+
+<sample:3ec7f8ac-610e-4f08-953c-669f55b809e7_CrystalStructure> a ns1:CrystalStructure ;
+    ns1:hasAltName "bcc"^^xsd:string ;
+    ns1:hasSpaceGroupNumber 229 ;
+    ns1:hasSpaceGroupSymbol "Im-3m"^^xsd:string ;
+    ns1:hasUnitCell <sample:3ec7f8ac-610e-4f08-953c-669f55b809e7_UnitCell> .
+
+<sample:3ec7f8ac-610e-4f08-953c-669f55b809e7_LatticeAngle> a ns1:LatticeAngle ;
+    ns1:hasAngle_alpha "90.0"^^xsd:float ;
+    ns1:hasAngle_beta "90.0"^^xsd:float ;
+    ns1:hasAngle_gamma "90.0"^^xsd:float .
+
+<sample:3ec7f8ac-610e-4f08-953c-669f55b809e7_LatticeParameter> a ns1:LatticeParameter ;
+    ns1:hasLength_x "2.87"^^xsd:float ;
+    ns1:hasLength_y "2.87"^^xsd:float ;
+    ns1:hasLength_z "2.87"^^xsd:float .
+
+<sample:3ec7f8ac-610e-4f08-953c-669f55b809e7_Material> a ns1:CrystallineMaterial ;
+    ns1:hasStructure <sample:3ec7f8ac-610e-4f08-953c-669f55b809e7_CrystalStructure> .
+
+<sample:3ec7f8ac-610e-4f08-953c-669f55b809e7_Position> a ns1:AtomAttribute ;
+    ns1:hasIdentifier "92fbe2da-6943-4ff4-8fd6-21c115cbbd2a"^^xsd:string ;
+    ns1:hasName "Position"^^xsd:string ;
+    ns1:hasPath "rdf_structure_store/3ec7f8ac-610e-4f08-953c-669f55b809e7.json"^^xsd:string .
+
+<sample:3ec7f8ac-610e-4f08-953c-669f55b809e7_SimulationCell> a ns1:SimulationCell ;
+    ns1:hasAngle <sample:3ec7f8ac-610e-4f08-953c-669f55b809e7_SimulationCellAngle> ;
+    ns1:hasLength <sample:3ec7f8ac-610e-4f08-953c-669f55b809e7_SimulationCellLength> ;
+    ns1:hasVector <sample:3ec7f8ac-610e-4f08-953c-669f55b809e7_SimulationCellVector_1>,
+        <sample:3ec7f8ac-610e-4f08-953c-669f55b809e7_SimulationCellVector_2>,
+        <sample:3ec7f8ac-610e-4f08-953c-669f55b809e7_SimulationCellVector_3> ;
+    ns1:hasVolume "23.64"^^xsd:float .
+
+<sample:3ec7f8ac-610e-4f08-953c-669f55b809e7_SimulationCellAngle> a ns1:SimulationCellAngle ;
+    ns1:hasAngle_alpha "90.0"^^xsd:float ;
+    ns1:hasAngle_beta "90.0"^^xsd:float ;
+    ns1:hasAngle_gamma "90.0"^^xsd:float .
+
+<sample:3ec7f8ac-610e-4f08-953c-669f55b809e7_SimulationCellLength> a ns1:SimulationCellLength ;
+    ns1:hasLength_x "2.87"^^xsd:float ;
+    ns1:hasLength_y "2.87"^^xsd:float ;
+    ns1:hasLength_z "2.87"^^xsd:float .
+
+<sample:3ec7f8ac-610e-4f08-953c-669f55b809e7_SimulationCellVector_1> a ns1:SimulationCellVector ;
+    ns1:hasComponent_x "2.87"^^xsd:float ;
+    ns1:hasComponent_y "0.0"^^xsd:float ;
+    ns1:hasComponent_z "0.0"^^xsd:float .
+
+<sample:3ec7f8ac-610e-4f08-953c-669f55b809e7_SimulationCellVector_2> a ns1:SimulationCellVector ;
+    ns1:hasComponent_x "0.0"^^xsd:float ;
+    ns1:hasComponent_y "2.87"^^xsd:float ;
+    ns1:hasComponent_z "0.0"^^xsd:float .
+
+<sample:3ec7f8ac-610e-4f08-953c-669f55b809e7_SimulationCellVector_3> a ns1:SimulationCellVector ;
+    ns1:hasComponent_x "0.0"^^xsd:float ;
+    ns1:hasComponent_y "0.0"^^xsd:float ;
+    ns1:hasComponent_z "2.87"^^xsd:float .
+
+<sample:3ec7f8ac-610e-4f08-953c-669f55b809e7_Species> a ns1:AtomAttribute ;
+    ns1:hasIdentifier "0aec7f87-3317-440f-ae2e-f45de287993c"^^xsd:string ;
+    ns1:hasName "Species"^^xsd:string ;
+    ns1:hasPath "rdf_structure_store/3ec7f8ac-610e-4f08-953c-669f55b809e7.json"^^xsd:string .
+
+<sample:3ec7f8ac-610e-4f08-953c-669f55b809e7_UnitCell> a ns1:UnitCell ;
+    ns1:hasAngle <sample:3ec7f8ac-610e-4f08-953c-669f55b809e7_LatticeAngle> ;
+    ns1:hasBravaisLattice <https://www.wikidata.org/wiki/Q851536> ;
+    ns1:hasLatticeParameter <sample:3ec7f8ac-610e-4f08-953c-669f55b809e7_LatticeParameter> .
+
+<sample:67be61c7-f9c7-4d46-a61d-5350fd0ee246> a ns1:AtomicScaleSample,
+        prov:Entity ;
+    ns1:hasAttribute <sample:67be61c7-f9c7-4d46-a61d-5350fd0ee246_Position>,
+        <sample:67be61c7-f9c7-4d46-a61d-5350fd0ee246_Species> ;
+    ns1:hasMaterial <sample:67be61c7-f9c7-4d46-a61d-5350fd0ee246_Material> ;
+    ns1:hasNumberOfAtoms 4 ;
+    ns1:hasSimulationCell <sample:67be61c7-f9c7-4d46-a61d-5350fd0ee246_SimulationCell> ;
+    ns1:hasSpecies <sample:67be61c7-f9c7-4d46-a61d-5350fd0ee246_ChemicalSpecies> .
+
+<sample:67be61c7-f9c7-4d46-a61d-5350fd0ee246_ChemicalSpecies> a ns1:ChemicalSpecies ;
+    ns1:hasElement <https://www.ebi.ac.uk/chebi/searchId.do?chebiId=CHEBI:28694> .
+
+<sample:67be61c7-f9c7-4d46-a61d-5350fd0ee246_CrystalStructure> a ns1:CrystalStructure ;
+    ns1:hasAltName "fcc"^^xsd:string ;
+    ns1:hasSpaceGroupNumber 225 ;
+    ns1:hasSpaceGroupSymbol "Fm-3m"^^xsd:string ;
+    ns1:hasUnitCell <sample:67be61c7-f9c7-4d46-a61d-5350fd0ee246_UnitCell> .
+
+<sample:67be61c7-f9c7-4d46-a61d-5350fd0ee246_LatticeAngle> a ns1:LatticeAngle ;
+    ns1:hasAngle_alpha "90.0"^^xsd:float ;
+    ns1:hasAngle_beta "90.0"^^xsd:float ;
+    ns1:hasAngle_gamma "90.0"^^xsd:float .
+
+<sample:67be61c7-f9c7-4d46-a61d-5350fd0ee246_LatticeParameter> a ns1:LatticeParameter ;
+    ns1:hasLength_x "3.61"^^xsd:float ;
+    ns1:hasLength_y "3.61"^^xsd:float ;
+    ns1:hasLength_z "3.61"^^xsd:float .
+
+<sample:67be61c7-f9c7-4d46-a61d-5350fd0ee246_Material> a ns1:CrystallineMaterial ;
+    ns1:hasStructure <sample:67be61c7-f9c7-4d46-a61d-5350fd0ee246_CrystalStructure> .
+
+<sample:67be61c7-f9c7-4d46-a61d-5350fd0ee246_Position> a ns1:AtomAttribute ;
+    ns1:hasIdentifier "17cebefc-d92b-4bf2-9ce3-ab16fe832076"^^xsd:string ;
+    ns1:hasName "Position"^^xsd:string ;
+    ns1:hasPath "rdf_structure_store/67be61c7-f9c7-4d46-a61d-5350fd0ee246.json"^^xsd:string .
+
+<sample:67be61c7-f9c7-4d46-a61d-5350fd0ee246_SimulationCell> a ns1:SimulationCell ;
+    ns1:hasAngle <sample:67be61c7-f9c7-4d46-a61d-5350fd0ee246_SimulationCellAngle> ;
+    ns1:hasLength <sample:67be61c7-f9c7-4d46-a61d-5350fd0ee246_SimulationCellLength> ;
+    ns1:hasVector <sample:67be61c7-f9c7-4d46-a61d-5350fd0ee246_SimulationCellVector_1>,
+        <sample:67be61c7-f9c7-4d46-a61d-5350fd0ee246_SimulationCellVector_2>,
+        <sample:67be61c7-f9c7-4d46-a61d-5350fd0ee246_SimulationCellVector_3> ;
+    ns1:hasVolume "47.05"^^xsd:float .
+
+<sample:67be61c7-f9c7-4d46-a61d-5350fd0ee246_SimulationCellAngle> a ns1:SimulationCellAngle ;
+    ns1:hasAngle_alpha "90.0"^^xsd:float ;
+    ns1:hasAngle_beta "90.0"^^xsd:float ;
+    ns1:hasAngle_gamma "90.0"^^xsd:float .
+
+<sample:67be61c7-f9c7-4d46-a61d-5350fd0ee246_SimulationCellLength> a ns1:SimulationCellLength ;
+    ns1:hasLength_x "3.61"^^xsd:float ;
+    ns1:hasLength_y "3.61"^^xsd:float ;
+    ns1:hasLength_z "3.61"^^xsd:float .
+
+<sample:67be61c7-f9c7-4d46-a61d-5350fd0ee246_SimulationCellVector_1> a ns1:SimulationCellVector ;
+    ns1:hasComponent_x "3.61"^^xsd:float ;
+    ns1:hasComponent_y "0.0"^^xsd:float ;
+    ns1:hasComponent_z "0.0"^^xsd:float .
+
+<sample:67be61c7-f9c7-4d46-a61d-5350fd0ee246_SimulationCellVector_2> a ns1:SimulationCellVector ;
+    ns1:hasComponent_x "0.0"^^xsd:float ;
+    ns1:hasComponent_y "3.61"^^xsd:float ;
+    ns1:hasComponent_z "0.0"^^xsd:float .
+
+<sample:67be61c7-f9c7-4d46-a61d-5350fd0ee246_SimulationCellVector_3> a ns1:SimulationCellVector ;
+    ns1:hasComponent_x "0.0"^^xsd:float ;
+    ns1:hasComponent_y "0.0"^^xsd:float ;
+    ns1:hasComponent_z "3.61"^^xsd:float .
+
+<sample:67be61c7-f9c7-4d46-a61d-5350fd0ee246_Species> a ns1:AtomAttribute ;
+    ns1:hasIdentifier "0172287a-abae-4394-882c-cf3dad84df39"^^xsd:string ;
+    ns1:hasName "Species"^^xsd:string ;
+    ns1:hasPath "rdf_structure_store/67be61c7-f9c7-4d46-a61d-5350fd0ee246.json"^^xsd:string .
+
+<sample:67be61c7-f9c7-4d46-a61d-5350fd0ee246_UnitCell> a ns1:UnitCell ;
+    ns1:hasAngle <sample:67be61c7-f9c7-4d46-a61d-5350fd0ee246_LatticeAngle> ;
+    ns1:hasBravaisLattice <https://www.wikidata.org/wiki/Q3006714> ;
+    ns1:hasLatticeParameter <sample:67be61c7-f9c7-4d46-a61d-5350fd0ee246_LatticeParameter> .
+
+<sample:721b7447-8363-4e65-9515-9da2581d7124> a ns1:AtomicScaleSample,
+        prov:Entity ;
+    rdfs:label "sample:721b7447-8363-4e65-9515-9da2581d7124_from_sample:aef7472e-7577-4256-8422-6ba77a954ce1"^^xsd:string ;
+    ns1:hasAttribute <sample:721b7447-8363-4e65-9515-9da2581d7124_Position>,
+        <sample:721b7447-8363-4e65-9515-9da2581d7124_Species> ;
+    ns1:hasCalculatedProperty <activity:0848b931-d647-41c7-a6dc-8150989e36c7_TotalEnergy>,
+        <activity:0848b931-d647-41c7-a6dc-8150989e36c7_TotalVolume> ;
+    ns1:hasMaterial <sample:721b7447-8363-4e65-9515-9da2581d7124_Material> ;
+    ns1:hasNumberOfAtoms 4 ;
+    ns1:hasSimulationCell <sample:721b7447-8363-4e65-9515-9da2581d7124_SimulationCell> ;
+    ns1:hasSpecies <sample:721b7447-8363-4e65-9515-9da2581d7124_ChemicalSpecies> ;
+    prov:wasDerivedFrom <sample:aef7472e-7577-4256-8422-6ba77a954ce1> ;
+    prov:wasGeneratedBy <activity:0848b931-d647-41c7-a6dc-8150989e36c7> .
+
+<sample:721b7447-8363-4e65-9515-9da2581d7124_ChemicalSpecies> a ns1:ChemicalSpecies ;
+    ns1:hasElement <https://www.ebi.ac.uk/chebi/searchId.do?chebiId=CHEBI:28694> .
+
+<sample:721b7447-8363-4e65-9515-9da2581d7124_CrystalStructure> a ns1:CrystalStructure ;
+    ns1:hasAltName "fcc"^^xsd:string ;
+    ns1:hasSpaceGroupNumber 225 ;
+    ns1:hasSpaceGroupSymbol "Fm-3m"^^xsd:string ;
+    ns1:hasUnitCell <sample:721b7447-8363-4e65-9515-9da2581d7124_UnitCell> .
+
+<sample:721b7447-8363-4e65-9515-9da2581d7124_LatticeAngle> a ns1:LatticeAngle ;
+    ns1:hasAngle_alpha "90.0"^^xsd:float ;
+    ns1:hasAngle_beta "90.0"^^xsd:float ;
+    ns1:hasAngle_gamma "90.0"^^xsd:float .
+
+<sample:721b7447-8363-4e65-9515-9da2581d7124_LatticeParameter> a ns1:LatticeParameter ;
+    ns1:hasLength_x "3.61"^^xsd:float ;
+    ns1:hasLength_y "3.61"^^xsd:float ;
+    ns1:hasLength_z "3.61"^^xsd:float .
+
+<sample:721b7447-8363-4e65-9515-9da2581d7124_Material> a ns1:CrystallineMaterial ;
+    ns1:hasStructure <sample:721b7447-8363-4e65-9515-9da2581d7124_CrystalStructure> .
+
+<sample:721b7447-8363-4e65-9515-9da2581d7124_Position> a ns1:AtomAttribute ;
+    ns1:hasIdentifier "502f5294-16df-4bda-83aa-9d771f7623b6"^^xsd:string ;
+    ns1:hasName "Position"^^xsd:string ;
+    ns1:hasPath "rdf_structure_store/721b7447-8363-4e65-9515-9da2581d7124.json"^^xsd:string .
+
+<sample:721b7447-8363-4e65-9515-9da2581d7124_SimulationCell> a ns1:SimulationCell ;
+    ns1:hasAngle <sample:721b7447-8363-4e65-9515-9da2581d7124_SimulationCellAngle> ;
+    ns1:hasLength <sample:721b7447-8363-4e65-9515-9da2581d7124_SimulationCellLength> ;
+    ns1:hasVector <sample:721b7447-8363-4e65-9515-9da2581d7124_SimulationCellVector_1>,
+        <sample:721b7447-8363-4e65-9515-9da2581d7124_SimulationCellVector_2>,
+        <sample:721b7447-8363-4e65-9515-9da2581d7124_SimulationCellVector_3> ;
+    ns1:hasVolume "51.75"^^xsd:float .
+
+<sample:721b7447-8363-4e65-9515-9da2581d7124_SimulationCellAngle> a ns1:SimulationCellAngle ;
+    ns1:hasAngle_alpha "90.0"^^xsd:float ;
+    ns1:hasAngle_beta "90.0"^^xsd:float ;
+    ns1:hasAngle_gamma "90.0"^^xsd:float .
+
+<sample:721b7447-8363-4e65-9515-9da2581d7124_SimulationCellLength> a ns1:SimulationCellLength ;
+    ns1:hasLength_x "3.726531216797485"^^xsd:float ;
+    ns1:hasLength_y "3.7265312167"^^xsd:float ;
+    ns1:hasLength_z "3.7265312167"^^xsd:float .
+
+<sample:721b7447-8363-4e65-9515-9da2581d7124_SimulationCellVector_1> a ns1:SimulationCellVector ;
+    ns1:hasComponent_x "3.726531216797485"^^xsd:float ;
+    ns1:hasComponent_y "2.281842263286866e-16"^^xsd:float ;
+    ns1:hasComponent_z "2.281842263286866e-16"^^xsd:float .
+
+<sample:721b7447-8363-4e65-9515-9da2581d7124_SimulationCellVector_2> a ns1:SimulationCellVector ;
+    ns1:hasComponent_x "0.0"^^xsd:float ;
+    ns1:hasComponent_y "3.7265312167"^^xsd:float ;
+    ns1:hasComponent_z "2.2818422632271737e-16"^^xsd:float .
+
+<sample:721b7447-8363-4e65-9515-9da2581d7124_SimulationCellVector_3> a ns1:SimulationCellVector ;
+    ns1:hasComponent_x "0.0"^^xsd:float ;
+    ns1:hasComponent_y "0.0"^^xsd:float ;
+    ns1:hasComponent_z "3.7265312167"^^xsd:float .
+
+<sample:721b7447-8363-4e65-9515-9da2581d7124_Species> a ns1:AtomAttribute ;
+    ns1:hasIdentifier "5823cc7c-ee41-4cac-8223-bd1c7f027993"^^xsd:string ;
+    ns1:hasName "Species"^^xsd:string ;
+    ns1:hasPath "rdf_structure_store/721b7447-8363-4e65-9515-9da2581d7124.json"^^xsd:string .
+
+<sample:721b7447-8363-4e65-9515-9da2581d7124_UnitCell> a ns1:UnitCell ;
+    ns1:hasAngle <sample:721b7447-8363-4e65-9515-9da2581d7124_LatticeAngle> ;
+    ns1:hasBravaisLattice <https://www.wikidata.org/wiki/Q3006714> ;
+    ns1:hasLatticeParameter <sample:721b7447-8363-4e65-9515-9da2581d7124_LatticeParameter> .
+
+<sample:8fc8e47b-acee-40f8-bcbf-fc298cc31f05_ChemicalSpecies> a ns1:ChemicalSpecies ;
+    ns1:hasElement <https://www.ebi.ac.uk/chebi/searchId.do?chebiId=CHEBI:28694> .
+
+<sample:8fc8e47b-acee-40f8-bcbf-fc298cc31f05_CrystalStructure> a ns1:CrystalStructure ;
+    ns1:hasAltName "fcc"^^xsd:string ;
+    ns1:hasSpaceGroupNumber 225 ;
+    ns1:hasSpaceGroupSymbol "Fm-3m"^^xsd:string ;
+    ns1:hasUnitCell <sample:8fc8e47b-acee-40f8-bcbf-fc298cc31f05_UnitCell> .
+
+<sample:8fc8e47b-acee-40f8-bcbf-fc298cc31f05_LatticeAngle> a ns1:LatticeAngle ;
+    ns1:hasAngle_alpha "90.0"^^xsd:float ;
+    ns1:hasAngle_beta "90.0"^^xsd:float ;
+    ns1:hasAngle_gamma "90.0"^^xsd:float .
+
+<sample:8fc8e47b-acee-40f8-bcbf-fc298cc31f05_LatticeParameter> a ns1:LatticeParameter ;
+    ns1:hasLength_x "3.61"^^xsd:float ;
+    ns1:hasLength_y "3.61"^^xsd:float ;
+    ns1:hasLength_z "3.61"^^xsd:float .
+
+<sample:8fc8e47b-acee-40f8-bcbf-fc298cc31f05_Material> a ns1:CrystallineMaterial ;
+    ns1:hasStructure <sample:8fc8e47b-acee-40f8-bcbf-fc298cc31f05_CrystalStructure> .
+
+<sample:8fc8e47b-acee-40f8-bcbf-fc298cc31f05_Position> a ns1:AtomAttribute ;
+    ns1:hasIdentifier "6ba682af-cb00-4638-8757-5198bd255857"^^xsd:string ;
+    ns1:hasName "Position"^^xsd:string ;
+    ns1:hasPath "rdf_structure_store/8fc8e47b-acee-40f8-bcbf-fc298cc31f05.json"^^xsd:string .
+
+<sample:8fc8e47b-acee-40f8-bcbf-fc298cc31f05_SimulationCell> a ns1:SimulationCell ;
+    ns1:hasAngle <sample:8fc8e47b-acee-40f8-bcbf-fc298cc31f05_SimulationCellAngle> ;
+    ns1:hasLength <sample:8fc8e47b-acee-40f8-bcbf-fc298cc31f05_SimulationCellLength> ;
+    ns1:hasVector <sample:8fc8e47b-acee-40f8-bcbf-fc298cc31f05_SimulationCellVector_1>,
+        <sample:8fc8e47b-acee-40f8-bcbf-fc298cc31f05_SimulationCellVector_2>,
+        <sample:8fc8e47b-acee-40f8-bcbf-fc298cc31f05_SimulationCellVector_3> ;
+    ns1:hasVolume "47.22"^^xsd:float .
+
+<sample:8fc8e47b-acee-40f8-bcbf-fc298cc31f05_SimulationCellAngle> a ns1:SimulationCellAngle ;
+    ns1:hasAngle_alpha "90.0"^^xsd:float ;
+    ns1:hasAngle_beta "90.0"^^xsd:float ;
+    ns1:hasAngle_gamma "90.0"^^xsd:float .
+
+<sample:8fc8e47b-acee-40f8-bcbf-fc298cc31f05_SimulationCellLength> a ns1:SimulationCellLength ;
+    ns1:hasLength_x "3.6145556893186033"^^xsd:float ;
+    ns1:hasLength_y "3.6145556893186033"^^xsd:float ;
+    ns1:hasLength_z "3.6145556893186033"^^xsd:float .
+
+<sample:8fc8e47b-acee-40f8-bcbf-fc298cc31f05_SimulationCellVector_1> a ns1:SimulationCellVector ;
+    ns1:hasComponent_x "3.6145556893186033"^^xsd:float ;
+    ns1:hasComponent_y "0.0"^^xsd:float ;
+    ns1:hasComponent_z "0.0"^^xsd:float .
+
+<sample:8fc8e47b-acee-40f8-bcbf-fc298cc31f05_SimulationCellVector_2> a ns1:SimulationCellVector ;
+    ns1:hasComponent_x "0.0"^^xsd:float ;
+    ns1:hasComponent_y "3.6145556893186033"^^xsd:float ;
+    ns1:hasComponent_z "0.0"^^xsd:float .
+
+<sample:8fc8e47b-acee-40f8-bcbf-fc298cc31f05_SimulationCellVector_3> a ns1:SimulationCellVector ;
+    ns1:hasComponent_x "0.0"^^xsd:float ;
+    ns1:hasComponent_y "0.0"^^xsd:float ;
+    ns1:hasComponent_z "3.6145556893186033"^^xsd:float .
+
+<sample:8fc8e47b-acee-40f8-bcbf-fc298cc31f05_Species> a ns1:AtomAttribute ;
+    ns1:hasIdentifier "5daf35d0-764f-4b94-99bf-1fd37225fa19"^^xsd:string ;
+    ns1:hasName "Species"^^xsd:string ;
+    ns1:hasPath "rdf_structure_store/8fc8e47b-acee-40f8-bcbf-fc298cc31f05.json"^^xsd:string .
+
+<sample:8fc8e47b-acee-40f8-bcbf-fc298cc31f05_UnitCell> a ns1:UnitCell ;
+    ns1:hasAngle <sample:8fc8e47b-acee-40f8-bcbf-fc298cc31f05_LatticeAngle> ;
+    ns1:hasBravaisLattice <https://www.wikidata.org/wiki/Q3006714> ;
+    ns1:hasLatticeParameter <sample:8fc8e47b-acee-40f8-bcbf-fc298cc31f05_LatticeParameter> .
+
+<sample:92247b7f-f2a1-43aa-abe9-6774b3064503_ChemicalSpecies> a ns1:ChemicalSpecies ;
+    ns1:hasElement <https://www.ebi.ac.uk/chebi/searchId.do?chebiId=CHEBI:27594> .
+
+<sample:92247b7f-f2a1-43aa-abe9-6774b3064503_Dislocation> a ns3:ScrewDislocation ;
+    ns3:hasBurgersVector <sample:92247b7f-f2a1-43aa-abe9-6774b3064503_DislocationBurgersVector> ;
+    ns3:hasCharacterAngle "1.2074182697257333e-06"^^xsd:float ;
+    ns3:hasLineDirection <sample:92247b7f-f2a1-43aa-abe9-6774b3064503_DislocationLineDirection> ;
+    ns3:movesOn <sample:92247b7f-f2a1-43aa-abe9-6774b3064503_DislocationSlipSystem> .
+
+<sample:92247b7f-f2a1-43aa-abe9-6774b3064503_DislocationBurgersVector> a ns3:BurgersVector ;
+    ns1:hasComponent_x "0.5"^^xsd:float ;
+    ns1:hasComponent_y "0.0"^^xsd:float ;
+    ns1:hasComponent_z "-0.5"^^xsd:float .
+
+<sample:92247b7f-f2a1-43aa-abe9-6774b3064503_DislocationLineDirection> a ns3:LineDirection ;
+    ns1:hasComponent_x "1.0"^^xsd:float ;
+    ns1:hasComponent_y "0.0"^^xsd:float ;
+    ns1:hasComponent_z "-1.0"^^xsd:float .
+
+<sample:92247b7f-f2a1-43aa-abe9-6774b3064503_DislocationNormalVector> a ns3:NormalVector ;
+    ns1:hasComponent_x "1.0"^^xsd:float ;
+    ns1:hasComponent_y "1.0"^^xsd:float ;
+    ns1:hasComponent_z "1.0"^^xsd:float .
+
+<sample:92247b7f-f2a1-43aa-abe9-6774b3064503_Material> a ns1:CrystallineMaterial ;
+    ns1:hasDefect <sample:92247b7f-f2a1-43aa-abe9-6774b3064503_Dislocation> .
+
+<sample:92247b7f-f2a1-43aa-abe9-6774b3064503_Position> a ns1:AtomAttribute ;
+    ns1:hasIdentifier "01797d28-68a3-4201-9df2-c73a58ad47a0"^^xsd:string ;
+    ns1:hasName "Position"^^xsd:string ;
+    ns1:hasPath "rdf_structure_store/92247b7f-f2a1-43aa-abe9-6774b3064503.json"^^xsd:string .
+
+<sample:92247b7f-f2a1-43aa-abe9-6774b3064503_SimulationCell> a ns1:SimulationCell ;
+    ns1:hasAngle <sample:92247b7f-f2a1-43aa-abe9-6774b3064503_SimulationCellAngle> ;
+    ns1:hasLength <sample:92247b7f-f2a1-43aa-abe9-6774b3064503_SimulationCellLength> ;
+    ns1:hasVector <sample:92247b7f-f2a1-43aa-abe9-6774b3064503_SimulationCellVector_1>,
+        <sample:92247b7f-f2a1-43aa-abe9-6774b3064503_SimulationCellVector_2>,
+        <sample:92247b7f-f2a1-43aa-abe9-6774b3064503_SimulationCellVector_3> ;
+    ns1:hasVolume "1129.1"^^xsd:float .
+
+<sample:92247b7f-f2a1-43aa-abe9-6774b3064503_SimulationCellAngle> a ns1:SimulationCellAngle ;
+    ns1:hasAngle_alpha "90.0"^^xsd:float ;
+    ns1:hasAngle_beta "90.0"^^xsd:float ;
+    ns1:hasAngle_gamma "90.0"^^xsd:float .
+
+<sample:92247b7f-f2a1-43aa-abe9-6774b3064503_SimulationCellLength> a ns1:SimulationCellLength ;
+    ns1:hasLength_x "5.105310960166873"^^xsd:float ;
+    ns1:hasLength_y "17.685315942894547"^^xsd:float ;
+    ns1:hasLength_z "12.505406830647294"^^xsd:float .
+
+<sample:92247b7f-f2a1-43aa-abe9-6774b3064503_SimulationCellVector_1> a ns1:SimulationCellVector ;
+    ns1:hasComponent_x "5.105310960166873"^^xsd:float ;
+    ns1:hasComponent_y "0.0"^^xsd:float ;
+    ns1:hasComponent_z "0.0"^^xsd:float .
+
+<sample:92247b7f-f2a1-43aa-abe9-6774b3064503_SimulationCellVector_2> a ns1:SimulationCellVector ;
+    ns1:hasComponent_x "0.0"^^xsd:float ;
+    ns1:hasComponent_y "17.685315942894547"^^xsd:float ;
+    ns1:hasComponent_z "0.0"^^xsd:float .
+
+<sample:92247b7f-f2a1-43aa-abe9-6774b3064503_SimulationCellVector_3> a ns1:SimulationCellVector ;
+    ns1:hasComponent_x "0.0"^^xsd:float ;
+    ns1:hasComponent_y "0.0"^^xsd:float ;
+    ns1:hasComponent_z "12.505406830647294"^^xsd:float .
+
+<sample:92247b7f-f2a1-43aa-abe9-6774b3064503_Species> a ns1:AtomAttribute ;
+    ns1:hasIdentifier "861b1a40-679c-4151-b651-4a02311737a7"^^xsd:string ;
+    ns1:hasName "Species"^^xsd:string ;
+    ns1:hasPath "rdf_structure_store/92247b7f-f2a1-43aa-abe9-6774b3064503.json"^^xsd:string .
+
+<sample:9f0f48d1-5ebf-4f7a-b241-5e7aa273f5a0_ChemicalSpecies> a ns1:ChemicalSpecies ;
+    ns1:hasElement <https://www.ebi.ac.uk/chebi/searchId.do?chebiId=CHEBI:28694> .
+
+<sample:9f0f48d1-5ebf-4f7a-b241-5e7aa273f5a0_CrystalStructure> a ns1:CrystalStructure ;
+    ns1:hasAltName "fcc"^^xsd:string ;
+    ns1:hasSpaceGroupNumber 225 ;
+    ns1:hasSpaceGroupSymbol "Fm-3m"^^xsd:string ;
+    ns1:hasUnitCell <sample:9f0f48d1-5ebf-4f7a-b241-5e7aa273f5a0_UnitCell> .
+
+<sample:9f0f48d1-5ebf-4f7a-b241-5e7aa273f5a0_LatticeAngle> a ns1:LatticeAngle ;
+    ns1:hasAngle_alpha "90.0"^^xsd:float ;
+    ns1:hasAngle_beta "90.0"^^xsd:float ;
+    ns1:hasAngle_gamma "90.0"^^xsd:float .
+
+<sample:9f0f48d1-5ebf-4f7a-b241-5e7aa273f5a0_LatticeParameter> a ns1:LatticeParameter ;
+    ns1:hasLength_x "3.61"^^xsd:float ;
+    ns1:hasLength_y "3.61"^^xsd:float ;
+    ns1:hasLength_z "3.61"^^xsd:float .
+
+<sample:9f0f48d1-5ebf-4f7a-b241-5e7aa273f5a0_Material> a ns1:CrystallineMaterial ;
+    ns1:hasStructure <sample:9f0f48d1-5ebf-4f7a-b241-5e7aa273f5a0_CrystalStructure> .
+
+<sample:9f0f48d1-5ebf-4f7a-b241-5e7aa273f5a0_Position> a ns1:AtomAttribute ;
+    ns1:hasIdentifier "cf667a5f-576c-47e3-820b-55b9188e2502"^^xsd:string ;
+    ns1:hasName "Position"^^xsd:string ;
+    ns1:hasPath "rdf_structure_store/9f0f48d1-5ebf-4f7a-b241-5e7aa273f5a0.json"^^xsd:string .
+
+<sample:9f0f48d1-5ebf-4f7a-b241-5e7aa273f5a0_SimulationCell> a ns1:SimulationCell ;
+    ns1:hasAngle <sample:9f0f48d1-5ebf-4f7a-b241-5e7aa273f5a0_SimulationCellAngle> ;
+    ns1:hasLength <sample:9f0f48d1-5ebf-4f7a-b241-5e7aa273f5a0_SimulationCellLength> ;
+    ns1:hasVector <sample:9f0f48d1-5ebf-4f7a-b241-5e7aa273f5a0_SimulationCellVector_1>,
+        <sample:9f0f48d1-5ebf-4f7a-b241-5e7aa273f5a0_SimulationCellVector_2>,
+        <sample:9f0f48d1-5ebf-4f7a-b241-5e7aa273f5a0_SimulationCellVector_3> ;
+    ns1:hasVolume "47.05"^^xsd:float .
+
+<sample:9f0f48d1-5ebf-4f7a-b241-5e7aa273f5a0_SimulationCellAngle> a ns1:SimulationCellAngle ;
+    ns1:hasAngle_alpha "90.0"^^xsd:float ;
+    ns1:hasAngle_beta "90.0"^^xsd:float ;
+    ns1:hasAngle_gamma "90.0"^^xsd:float .
+
+<sample:9f0f48d1-5ebf-4f7a-b241-5e7aa273f5a0_SimulationCellLength> a ns1:SimulationCellLength ;
+    ns1:hasLength_x "3.61"^^xsd:float ;
+    ns1:hasLength_y "3.61"^^xsd:float ;
+    ns1:hasLength_z "3.61"^^xsd:float .
+
+<sample:9f0f48d1-5ebf-4f7a-b241-5e7aa273f5a0_SimulationCellVector_1> a ns1:SimulationCellVector ;
+    ns1:hasComponent_x "3.61"^^xsd:float ;
+    ns1:hasComponent_y "0.0"^^xsd:float ;
+    ns1:hasComponent_z "0.0"^^xsd:float .
+
+<sample:9f0f48d1-5ebf-4f7a-b241-5e7aa273f5a0_SimulationCellVector_2> a ns1:SimulationCellVector ;
+    ns1:hasComponent_x "0.0"^^xsd:float ;
+    ns1:hasComponent_y "3.61"^^xsd:float ;
+    ns1:hasComponent_z "0.0"^^xsd:float .
+
+<sample:9f0f48d1-5ebf-4f7a-b241-5e7aa273f5a0_SimulationCellVector_3> a ns1:SimulationCellVector ;
+    ns1:hasComponent_x "0.0"^^xsd:float ;
+    ns1:hasComponent_y "0.0"^^xsd:float ;
+    ns1:hasComponent_z "3.61"^^xsd:float .
+
+<sample:9f0f48d1-5ebf-4f7a-b241-5e7aa273f5a0_Species> a ns1:AtomAttribute ;
+    ns1:hasIdentifier "1e17ac17-35d6-4ccd-aafa-4ed8d19e2f7a"^^xsd:string ;
+    ns1:hasName "Species"^^xsd:string ;
+    ns1:hasPath "rdf_structure_store/9f0f48d1-5ebf-4f7a-b241-5e7aa273f5a0.json"^^xsd:string .
+
+<sample:9f0f48d1-5ebf-4f7a-b241-5e7aa273f5a0_UnitCell> a ns1:UnitCell ;
+    ns1:hasAngle <sample:9f0f48d1-5ebf-4f7a-b241-5e7aa273f5a0_LatticeAngle> ;
+    ns1:hasBravaisLattice <https://www.wikidata.org/wiki/Q3006714> ;
+    ns1:hasLatticeParameter <sample:9f0f48d1-5ebf-4f7a-b241-5e7aa273f5a0_LatticeParameter> .
+
+<sample:a0e3d71b-6ffd-4e60-bfd4-3178215f4080_ChemicalSpecies> a ns1:ChemicalSpecies ;
+    ns1:hasElement <https://www.ebi.ac.uk/chebi/searchId.do?chebiId=CHEBI:18248> .
+
+<sample:a0e3d71b-6ffd-4e60-bfd4-3178215f4080_CrystalStructure> a ns1:CrystalStructure ;
+    ns1:hasSpaceGroupNumber 229 ;
+    ns1:hasSpaceGroupSymbol "Im-3m"^^xsd:string ;
+    ns1:hasUnitCell <sample:a0e3d71b-6ffd-4e60-bfd4-3178215f4080_UnitCell> .
+
+<sample:a0e3d71b-6ffd-4e60-bfd4-3178215f4080_LatticeAngle> a ns1:LatticeAngle ;
+    ns1:hasAngle_alpha "90.0"^^xsd:float ;
+    ns1:hasAngle_beta "90.0"^^xsd:float ;
+    ns1:hasAngle_gamma "90.0"^^xsd:float .
+
+<sample:a0e3d71b-6ffd-4e60-bfd4-3178215f4080_LatticeParameter> a ns1:LatticeParameter ;
+    ns1:hasLength_x "1.0"^^xsd:float ;
+    ns1:hasLength_y "1.0"^^xsd:float ;
+    ns1:hasLength_z "1.0"^^xsd:float .
+
+<sample:a0e3d71b-6ffd-4e60-bfd4-3178215f4080_Material> a ns1:CrystallineMaterial ;
+    ns1:hasDefect <sample:a0e3d71b-6ffd-4e60-bfd4-3178215f4080_SymmetricalTiltGrainBoundary> ;
+    ns1:hasStructure <sample:a0e3d71b-6ffd-4e60-bfd4-3178215f4080_CrystalStructure> .
+
+<sample:a0e3d71b-6ffd-4e60-bfd4-3178215f4080_Position> a ns1:AtomAttribute ;
+    ns1:hasIdentifier "b7b1a464-2184-4274-b72c-2b6351b73a6e"^^xsd:string ;
+    ns1:hasName "Position"^^xsd:string ;
+    ns1:hasPath "rdf_structure_store/a0e3d71b-6ffd-4e60-bfd4-3178215f4080.json"^^xsd:string .
+
+<sample:a0e3d71b-6ffd-4e60-bfd4-3178215f4080_SimulationCell> a ns1:SimulationCell ;
+    ns1:hasAngle <sample:a0e3d71b-6ffd-4e60-bfd4-3178215f4080_SimulationCellAngle> ;
+    ns1:hasLength <sample:a0e3d71b-6ffd-4e60-bfd4-3178215f4080_SimulationCellLength> ;
+    ns1:hasVector <sample:a0e3d71b-6ffd-4e60-bfd4-3178215f4080_SimulationCellVector_1>,
+        <sample:a0e3d71b-6ffd-4e60-bfd4-3178215f4080_SimulationCellVector_2>,
+        <sample:a0e3d71b-6ffd-4e60-bfd4-3178215f4080_SimulationCellVector_3> ;
+    ns1:hasVolume "472.8"^^xsd:float .
+
+<sample:a0e3d71b-6ffd-4e60-bfd4-3178215f4080_SimulationCellAngle> a ns1:SimulationCellAngle ;
+    ns1:hasAngle_alpha "90.0"^^xsd:float ;
+    ns1:hasAngle_beta "90.0"^^xsd:float ;
+    ns1:hasAngle_gamma "90.0"^^xsd:float .
+
+<sample:a0e3d71b-6ffd-4e60-bfd4-3178215f4080_SimulationCellLength> a ns1:SimulationCellLength ;
+    ns1:hasLength_x "18.15147376"^^xsd:float ;
+    ns1:hasLength_y "2.87"^^xsd:float ;
+    ns1:hasLength_z "9.07573688"^^xsd:float .
+
+<sample:a0e3d71b-6ffd-4e60-bfd4-3178215f4080_SimulationCellVector_1> a ns1:SimulationCellVector ;
+    ns1:hasComponent_x "18.15147376"^^xsd:float ;
+    ns1:hasComponent_y "0.0"^^xsd:float ;
+    ns1:hasComponent_z "0.0"^^xsd:float .
+
+<sample:a0e3d71b-6ffd-4e60-bfd4-3178215f4080_SimulationCellVector_2> a ns1:SimulationCellVector ;
+    ns1:hasComponent_x "0.0"^^xsd:float ;
+    ns1:hasComponent_y "2.87"^^xsd:float ;
+    ns1:hasComponent_z "0.0"^^xsd:float .
+
+<sample:a0e3d71b-6ffd-4e60-bfd4-3178215f4080_SimulationCellVector_3> a ns1:SimulationCellVector ;
+    ns1:hasComponent_x "0.0"^^xsd:float ;
+    ns1:hasComponent_y "0.0"^^xsd:float ;
+    ns1:hasComponent_z "9.07573688"^^xsd:float .
+
+<sample:a0e3d71b-6ffd-4e60-bfd4-3178215f4080_Species> a ns1:AtomAttribute ;
+    ns1:hasIdentifier "33e9e260-9a5e-4d0d-9f60-8655565380ea"^^xsd:string ;
+    ns1:hasName "Species"^^xsd:string ;
+    ns1:hasPath "rdf_structure_store/a0e3d71b-6ffd-4e60-bfd4-3178215f4080.json"^^xsd:string .
+
+<sample:a0e3d71b-6ffd-4e60-bfd4-3178215f4080_SymmetricalTiltGrainBoundary> a ns2:SymmetricalTiltGrainBoundary ;
+    ns2:hasGBplane "3 -1 0"^^xsd:string ;
+    ns2:hasMisorientationAngle "36.86989764584402"^^xsd:float ;
+    ns2:hasRotationAxis "[0, 0, 1]"^^xsd:string ;
+    ns2:hasSigmaValue 5 .
+
+<sample:a0e3d71b-6ffd-4e60-bfd4-3178215f4080_UnitCell> a ns1:UnitCell ;
+    ns1:hasAngle <sample:a0e3d71b-6ffd-4e60-bfd4-3178215f4080_LatticeAngle> ;
+    ns1:hasLatticeParameter <sample:a0e3d71b-6ffd-4e60-bfd4-3178215f4080_LatticeParameter> .
+
+<sample:a3cf6d97-c922-4c4d-8517-e784df83b71e> a ns1:AtomicScaleSample,
+        prov:Entity ;
+    ns1:hasAttribute <sample:a3cf6d97-c922-4c4d-8517-e784df83b71e_Position>,
+        <sample:a3cf6d97-c922-4c4d-8517-e784df83b71e_Species> ;
+    ns1:hasMaterial <sample:a3cf6d97-c922-4c4d-8517-e784df83b71e_Material> ;
+    ns1:hasNumberOfAtoms 4 ;
+    ns1:hasSimulationCell <sample:a3cf6d97-c922-4c4d-8517-e784df83b71e_SimulationCell> ;
+    ns1:hasSpecies <sample:a3cf6d97-c922-4c4d-8517-e784df83b71e_ChemicalSpecies> .
+
+<sample:a3cf6d97-c922-4c4d-8517-e784df83b71e_ChemicalSpecies> a ns1:ChemicalSpecies ;
+    ns1:hasElement <https://www.ebi.ac.uk/chebi/searchId.do?chebiId=CHEBI:28694> .
+
+<sample:a3cf6d97-c922-4c4d-8517-e784df83b71e_CrystalStructure> a ns1:CrystalStructure ;
+    ns1:hasAltName "fcc"^^xsd:string ;
+    ns1:hasSpaceGroupNumber 225 ;
+    ns1:hasSpaceGroupSymbol "Fm-3m"^^xsd:string ;
+    ns1:hasUnitCell <sample:a3cf6d97-c922-4c4d-8517-e784df83b71e_UnitCell> .
+
+<sample:a3cf6d97-c922-4c4d-8517-e784df83b71e_LatticeAngle> a ns1:LatticeAngle ;
+    ns1:hasAngle_alpha "90.0"^^xsd:float ;
+    ns1:hasAngle_beta "90.0"^^xsd:float ;
+    ns1:hasAngle_gamma "90.0"^^xsd:float .
+
+<sample:a3cf6d97-c922-4c4d-8517-e784df83b71e_LatticeParameter> a ns1:LatticeParameter ;
+    ns1:hasLength_x "3.61"^^xsd:float ;
+    ns1:hasLength_y "3.61"^^xsd:float ;
+    ns1:hasLength_z "3.61"^^xsd:float .
+
+<sample:a3cf6d97-c922-4c4d-8517-e784df83b71e_Material> a ns1:CrystallineMaterial ;
+    ns1:hasStructure <sample:a3cf6d97-c922-4c4d-8517-e784df83b71e_CrystalStructure> .
+
+<sample:a3cf6d97-c922-4c4d-8517-e784df83b71e_Position> a ns1:AtomAttribute ;
+    ns1:hasIdentifier "2b0577c8-29ce-455e-af44-4da127bf1781"^^xsd:string ;
+    ns1:hasName "Position"^^xsd:string ;
+    ns1:hasPath "rdf_structure_store/a3cf6d97-c922-4c4d-8517-e784df83b71e.json"^^xsd:string .
+
+<sample:a3cf6d97-c922-4c4d-8517-e784df83b71e_SimulationCell> a ns1:SimulationCell ;
+    ns1:hasAngle <sample:a3cf6d97-c922-4c4d-8517-e784df83b71e_SimulationCellAngle> ;
+    ns1:hasLength <sample:a3cf6d97-c922-4c4d-8517-e784df83b71e_SimulationCellLength> ;
+    ns1:hasVector <sample:a3cf6d97-c922-4c4d-8517-e784df83b71e_SimulationCellVector_1>,
+        <sample:a3cf6d97-c922-4c4d-8517-e784df83b71e_SimulationCellVector_2>,
+        <sample:a3cf6d97-c922-4c4d-8517-e784df83b71e_SimulationCellVector_3> ;
+    ns1:hasVolume "47.05"^^xsd:float .
+
+<sample:a3cf6d97-c922-4c4d-8517-e784df83b71e_SimulationCellAngle> a ns1:SimulationCellAngle ;
+    ns1:hasAngle_alpha "90.0"^^xsd:float ;
+    ns1:hasAngle_beta "90.0"^^xsd:float ;
+    ns1:hasAngle_gamma "90.0"^^xsd:float .
+
+<sample:a3cf6d97-c922-4c4d-8517-e784df83b71e_SimulationCellLength> a ns1:SimulationCellLength ;
+    ns1:hasLength_x "3.61"^^xsd:float ;
+    ns1:hasLength_y "3.61"^^xsd:float ;
+    ns1:hasLength_z "3.61"^^xsd:float .
+
+<sample:a3cf6d97-c922-4c4d-8517-e784df83b71e_SimulationCellVector_1> a ns1:SimulationCellVector ;
+    ns1:hasComponent_x "3.61"^^xsd:float ;
+    ns1:hasComponent_y "0.0"^^xsd:float ;
+    ns1:hasComponent_z "0.0"^^xsd:float .
+
+<sample:a3cf6d97-c922-4c4d-8517-e784df83b71e_SimulationCellVector_2> a ns1:SimulationCellVector ;
+    ns1:hasComponent_x "0.0"^^xsd:float ;
+    ns1:hasComponent_y "3.61"^^xsd:float ;
+    ns1:hasComponent_z "0.0"^^xsd:float .
+
+<sample:a3cf6d97-c922-4c4d-8517-e784df83b71e_SimulationCellVector_3> a ns1:SimulationCellVector ;
+    ns1:hasComponent_x "0.0"^^xsd:float ;
+    ns1:hasComponent_y "0.0"^^xsd:float ;
+    ns1:hasComponent_z "3.61"^^xsd:float .
+
+<sample:a3cf6d97-c922-4c4d-8517-e784df83b71e_Species> a ns1:AtomAttribute ;
+    ns1:hasIdentifier "588867dc-6ad8-414d-bb27-cfc9a361fc8f"^^xsd:string ;
+    ns1:hasName "Species"^^xsd:string ;
+    ns1:hasPath "rdf_structure_store/a3cf6d97-c922-4c4d-8517-e784df83b71e.json"^^xsd:string .
+
+<sample:a3cf6d97-c922-4c4d-8517-e784df83b71e_UnitCell> a ns1:UnitCell ;
+    ns1:hasAngle <sample:a3cf6d97-c922-4c4d-8517-e784df83b71e_LatticeAngle> ;
+    ns1:hasBravaisLattice <https://www.wikidata.org/wiki/Q3006714> ;
+    ns1:hasLatticeParameter <sample:a3cf6d97-c922-4c4d-8517-e784df83b71e_LatticeParameter> .
+
+<sample:a3f1d0ea-de5a-48ff-80c4-ff34f2721e76_ChemicalSpecies> a ns1:ChemicalSpecies ;
+    ns1:hasElement <https://www.ebi.ac.uk/chebi/searchId.do?chebiId=CHEBI:18248> .
+
+<sample:a3f1d0ea-de5a-48ff-80c4-ff34f2721e76_CrystalStructure> a ns1:CrystalStructure ;
+    ns1:hasSpaceGroupNumber 229 ;
+    ns1:hasSpaceGroupSymbol "Im-3m"^^xsd:string ;
+    ns1:hasUnitCell <sample:a3f1d0ea-de5a-48ff-80c4-ff34f2721e76_UnitCell> .
+
+<sample:a3f1d0ea-de5a-48ff-80c4-ff34f2721e76_LatticeAngle> a ns1:LatticeAngle ;
+    ns1:hasAngle_alpha "90.0"^^xsd:float ;
+    ns1:hasAngle_beta "90.0"^^xsd:float ;
+    ns1:hasAngle_gamma "90.0"^^xsd:float .
+
+<sample:a3f1d0ea-de5a-48ff-80c4-ff34f2721e76_LatticeParameter> a ns1:LatticeParameter ;
+    ns1:hasLength_x "1.0"^^xsd:float ;
+    ns1:hasLength_y "1.0"^^xsd:float ;
+    ns1:hasLength_z "1.0"^^xsd:float .
+
+<sample:a3f1d0ea-de5a-48ff-80c4-ff34f2721e76_Material> a ns1:CrystallineMaterial ;
+    ns1:hasDefect <sample:a3f1d0ea-de5a-48ff-80c4-ff34f2721e76_MixedGrainBoundary> ;
+    ns1:hasStructure <sample:a3f1d0ea-de5a-48ff-80c4-ff34f2721e76_CrystalStructure> .
+
+<sample:a3f1d0ea-de5a-48ff-80c4-ff34f2721e76_MixedGrainBoundary> a ns2:MixedGrainBoundary ;
+    ns2:hasGBplane "-3 2 0"^^xsd:string ;
+    ns2:hasMisorientationAngle "46.82644889274108"^^xsd:float ;
+    ns2:hasRotationAxis "[1, 1, 1]"^^xsd:string ;
+    ns2:hasSigmaValue 19 .
+
+<sample:a3f1d0ea-de5a-48ff-80c4-ff34f2721e76_Position> a ns1:AtomAttribute ;
+    ns1:hasIdentifier "02b9917e-a50c-4fe4-a197-a5adbcf30ae9"^^xsd:string ;
+    ns1:hasName "Position"^^xsd:string ;
+    ns1:hasPath "rdf_structure_store/a3f1d0ea-de5a-48ff-80c4-ff34f2721e76.json"^^xsd:string .
+
+<sample:a3f1d0ea-de5a-48ff-80c4-ff34f2721e76_SimulationCell> a ns1:SimulationCell ;
+    ns1:hasAngle <sample:a3f1d0ea-de5a-48ff-80c4-ff34f2721e76_SimulationCellAngle> ;
+    ns1:hasLength <sample:a3f1d0ea-de5a-48ff-80c4-ff34f2721e76_SimulationCellLength> ;
+    ns1:hasVector <sample:a3f1d0ea-de5a-48ff-80c4-ff34f2721e76_SimulationCellVector_1>,
+        <sample:a3f1d0ea-de5a-48ff-80c4-ff34f2721e76_SimulationCellVector_2>,
+        <sample:a3f1d0ea-de5a-48ff-80c4-ff34f2721e76_SimulationCellVector_3> ;
+    ns1:hasVolume "23356.22"^^xsd:float .
+
+<sample:a3f1d0ea-de5a-48ff-80c4-ff34f2721e76_SimulationCellAngle> a ns1:SimulationCellAngle ;
+    ns1:hasAngle_alpha "90.0"^^xsd:float ;
+    ns1:hasAngle_beta "90.0"^^xsd:float ;
+    ns1:hasAngle_gamma "90.0"^^xsd:float .
+
+<sample:a3f1d0ea-de5a-48ff-80c4-ff34f2721e76_SimulationCellLength> a ns1:SimulationCellLength ;
+    ns1:hasLength_x "20.69586432"^^xsd:float ;
+    ns1:hasLength_y "17.69186819"^^xsd:float ;
+    ns1:hasLength_z "63.78893791"^^xsd:float .
+
+<sample:a3f1d0ea-de5a-48ff-80c4-ff34f2721e76_SimulationCellVector_1> a ns1:SimulationCellVector ;
+    ns1:hasComponent_x "20.69586432"^^xsd:float ;
+    ns1:hasComponent_y "0.0"^^xsd:float ;
+    ns1:hasComponent_z "0.0"^^xsd:float .
+
+<sample:a3f1d0ea-de5a-48ff-80c4-ff34f2721e76_SimulationCellVector_2> a ns1:SimulationCellVector ;
+    ns1:hasComponent_x "0.0"^^xsd:float ;
+    ns1:hasComponent_y "17.69186819"^^xsd:float ;
+    ns1:hasComponent_z "0.0"^^xsd:float .
+
+<sample:a3f1d0ea-de5a-48ff-80c4-ff34f2721e76_SimulationCellVector_3> a ns1:SimulationCellVector ;
+    ns1:hasComponent_x "0.0"^^xsd:float ;
+    ns1:hasComponent_y "0.0"^^xsd:float ;
+    ns1:hasComponent_z "63.78893791"^^xsd:float .
+
+<sample:a3f1d0ea-de5a-48ff-80c4-ff34f2721e76_Species> a ns1:AtomAttribute ;
+    ns1:hasIdentifier "6e4b5fa6-8110-41f5-92e7-d6796b3bceb1"^^xsd:string ;
+    ns1:hasName "Species"^^xsd:string ;
+    ns1:hasPath "rdf_structure_store/a3f1d0ea-de5a-48ff-80c4-ff34f2721e76.json"^^xsd:string .
+
+<sample:a3f1d0ea-de5a-48ff-80c4-ff34f2721e76_UnitCell> a ns1:UnitCell ;
+    ns1:hasAngle <sample:a3f1d0ea-de5a-48ff-80c4-ff34f2721e76_LatticeAngle> ;
+    ns1:hasLatticeParameter <sample:a3f1d0ea-de5a-48ff-80c4-ff34f2721e76_LatticeParameter> .
+
+<sample:ab2bea57-39ea-49ea-ad3f-c1c40b013154> a ns1:AtomicScaleSample,
+        prov:Entity ;
+    rdfs:label "sample:ab2bea57-39ea-49ea-ad3f-c1c40b013154_from_sample:aef7472e-7577-4256-8422-6ba77a954ce1"^^xsd:string ;
+    ns1:hasAttribute <sample:ab2bea57-39ea-49ea-ad3f-c1c40b013154_Position>,
+        <sample:ab2bea57-39ea-49ea-ad3f-c1c40b013154_Species> ;
+    ns1:hasCalculatedProperty <activity:8a680cb2-c7f1-4747-95b0-a4ce71fab87f_TotalEnergy>,
+        <activity:8a680cb2-c7f1-4747-95b0-a4ce71fab87f_TotalVolume> ;
+    ns1:hasMaterial <sample:ab2bea57-39ea-49ea-ad3f-c1c40b013154_Material> ;
+    ns1:hasNumberOfAtoms 4 ;
+    ns1:hasSimulationCell <sample:ab2bea57-39ea-49ea-ad3f-c1c40b013154_SimulationCell> ;
+    ns1:hasSpecies <sample:ab2bea57-39ea-49ea-ad3f-c1c40b013154_ChemicalSpecies> ;
+    prov:wasDerivedFrom <sample:aef7472e-7577-4256-8422-6ba77a954ce1> ;
+    prov:wasGeneratedBy <activity:8a680cb2-c7f1-4747-95b0-a4ce71fab87f> .
+
+<sample:ab2bea57-39ea-49ea-ad3f-c1c40b013154_ChemicalSpecies> a ns1:ChemicalSpecies ;
+    ns1:hasElement <https://www.ebi.ac.uk/chebi/searchId.do?chebiId=CHEBI:28694> .
+
+<sample:ab2bea57-39ea-49ea-ad3f-c1c40b013154_CrystalStructure> a ns1:CrystalStructure ;
+    ns1:hasAltName "fcc"^^xsd:string ;
+    ns1:hasSpaceGroupNumber 225 ;
+    ns1:hasSpaceGroupSymbol "Fm-3m"^^xsd:string ;
+    ns1:hasUnitCell <sample:ab2bea57-39ea-49ea-ad3f-c1c40b013154_UnitCell> .
+
+<sample:ab2bea57-39ea-49ea-ad3f-c1c40b013154_LatticeAngle> a ns1:LatticeAngle ;
+    ns1:hasAngle_alpha "90.0"^^xsd:float ;
+    ns1:hasAngle_beta "90.0"^^xsd:float ;
+    ns1:hasAngle_gamma "90.0"^^xsd:float .
+
+<sample:ab2bea57-39ea-49ea-ad3f-c1c40b013154_LatticeParameter> a ns1:LatticeParameter ;
+    ns1:hasLength_x "3.61"^^xsd:float ;
+    ns1:hasLength_y "3.61"^^xsd:float ;
+    ns1:hasLength_z "3.61"^^xsd:float .
+
+<sample:ab2bea57-39ea-49ea-ad3f-c1c40b013154_Material> a ns1:CrystallineMaterial ;
+    ns1:hasStructure <sample:ab2bea57-39ea-49ea-ad3f-c1c40b013154_CrystalStructure> .
+
+<sample:ab2bea57-39ea-49ea-ad3f-c1c40b013154_Position> a ns1:AtomAttribute ;
+    ns1:hasIdentifier "0c6c6560-7399-4541-935b-061f05d72f1e"^^xsd:string ;
+    ns1:hasName "Position"^^xsd:string ;
+    ns1:hasPath "rdf_structure_store/ab2bea57-39ea-49ea-ad3f-c1c40b013154.json"^^xsd:string .
+
+<sample:ab2bea57-39ea-49ea-ad3f-c1c40b013154_SimulationCell> a ns1:SimulationCell ;
+    ns1:hasAngle <sample:ab2bea57-39ea-49ea-ad3f-c1c40b013154_SimulationCellAngle> ;
+    ns1:hasLength <sample:ab2bea57-39ea-49ea-ad3f-c1c40b013154_SimulationCellLength> ;
+    ns1:hasVector <sample:ab2bea57-39ea-49ea-ad3f-c1c40b013154_SimulationCellVector_1>,
+        <sample:ab2bea57-39ea-49ea-ad3f-c1c40b013154_SimulationCellVector_2>,
+        <sample:ab2bea57-39ea-49ea-ad3f-c1c40b013154_SimulationCellVector_3> ;
+    ns1:hasVolume "44.69"^^xsd:float .
+
+<sample:ab2bea57-39ea-49ea-ad3f-c1c40b013154_SimulationCellAngle> a ns1:SimulationCellAngle ;
+    ns1:hasAngle_alpha "90.0"^^xsd:float ;
+    ns1:hasAngle_beta "90.0"^^xsd:float ;
+    ns1:hasAngle_gamma "90.0"^^xsd:float .
+
+<sample:ab2bea57-39ea-49ea-ad3f-c1c40b013154_SimulationCellLength> a ns1:SimulationCellLength ;
+    ns1:hasLength_x "3.5488017366945255"^^xsd:float ;
+    ns1:hasLength_y "3.5488017365999998"^^xsd:float ;
+    ns1:hasLength_z "3.5488017365999998"^^xsd:float .
+
+<sample:ab2bea57-39ea-49ea-ad3f-c1c40b013154_SimulationCellVector_1> a ns1:SimulationCellVector ;
+    ns1:hasComponent_x "3.5488017366945255"^^xsd:float ;
+    ns1:hasComponent_y "2.1730143438257591e-16"^^xsd:float ;
+    ns1:hasComponent_z "2.1730143438257591e-16"^^xsd:float .
+
+<sample:ab2bea57-39ea-49ea-ad3f-c1c40b013154_SimulationCellVector_2> a ns1:SimulationCellVector ;
+    ns1:hasComponent_x "0.0"^^xsd:float ;
+    ns1:hasComponent_y "3.5488017365999998"^^xsd:float ;
+    ns1:hasComponent_z "2.173014343767879e-16"^^xsd:float .
+
+<sample:ab2bea57-39ea-49ea-ad3f-c1c40b013154_SimulationCellVector_3> a ns1:SimulationCellVector ;
+    ns1:hasComponent_x "0.0"^^xsd:float ;
+    ns1:hasComponent_y "0.0"^^xsd:float ;
+    ns1:hasComponent_z "3.5488017365999998"^^xsd:float .
+
+<sample:ab2bea57-39ea-49ea-ad3f-c1c40b013154_Species> a ns1:AtomAttribute ;
+    ns1:hasIdentifier "b15792c6-95dd-4472-838b-98e1fbbf5536"^^xsd:string ;
+    ns1:hasName "Species"^^xsd:string ;
+    ns1:hasPath "rdf_structure_store/ab2bea57-39ea-49ea-ad3f-c1c40b013154.json"^^xsd:string .
+
+<sample:ab2bea57-39ea-49ea-ad3f-c1c40b013154_UnitCell> a ns1:UnitCell ;
+    ns1:hasAngle <sample:ab2bea57-39ea-49ea-ad3f-c1c40b013154_LatticeAngle> ;
+    ns1:hasBravaisLattice <https://www.wikidata.org/wiki/Q3006714> ;
+    ns1:hasLatticeParameter <sample:ab2bea57-39ea-49ea-ad3f-c1c40b013154_LatticeParameter> .
+
+<sample:aef7472e-7577-4256-8422-6ba77a954ce1_ChemicalSpecies> a ns1:ChemicalSpecies ;
+    ns1:hasElement <https://www.ebi.ac.uk/chebi/searchId.do?chebiId=CHEBI:28694> .
+
+<sample:aef7472e-7577-4256-8422-6ba77a954ce1_CrystalStructure> a ns1:CrystalStructure ;
+    ns1:hasAltName "fcc"^^xsd:string ;
+    ns1:hasSpaceGroupNumber 225 ;
+    ns1:hasSpaceGroupSymbol "Fm-3m"^^xsd:string ;
+    ns1:hasUnitCell <sample:aef7472e-7577-4256-8422-6ba77a954ce1_UnitCell> .
+
+<sample:aef7472e-7577-4256-8422-6ba77a954ce1_LatticeAngle> a ns1:LatticeAngle ;
+    ns1:hasAngle_alpha "90.0"^^xsd:float ;
+    ns1:hasAngle_beta "90.0"^^xsd:float ;
+    ns1:hasAngle_gamma "90.0"^^xsd:float .
+
+<sample:aef7472e-7577-4256-8422-6ba77a954ce1_LatticeParameter> a ns1:LatticeParameter ;
+    ns1:hasLength_x "3.61"^^xsd:float ;
+    ns1:hasLength_y "3.61"^^xsd:float ;
+    ns1:hasLength_z "3.61"^^xsd:float .
+
+<sample:aef7472e-7577-4256-8422-6ba77a954ce1_Material> a ns1:CrystallineMaterial ;
+    ns1:hasStructure <sample:aef7472e-7577-4256-8422-6ba77a954ce1_CrystalStructure> .
+
+<sample:aef7472e-7577-4256-8422-6ba77a954ce1_Position> a ns1:AtomAttribute ;
+    ns1:hasIdentifier "4cad024a-2775-40a0-9e7d-cb8205a6fa6c"^^xsd:string ;
+    ns1:hasName "Position"^^xsd:string ;
+    ns1:hasPath "rdf_structure_store/aef7472e-7577-4256-8422-6ba77a954ce1.json"^^xsd:string .
+
+<sample:aef7472e-7577-4256-8422-6ba77a954ce1_SimulationCell> a ns1:SimulationCell ;
+    ns1:hasAngle <sample:aef7472e-7577-4256-8422-6ba77a954ce1_SimulationCellAngle> ;
+    ns1:hasLength <sample:aef7472e-7577-4256-8422-6ba77a954ce1_SimulationCellLength> ;
+    ns1:hasVector <sample:aef7472e-7577-4256-8422-6ba77a954ce1_SimulationCellVector_1>,
+        <sample:aef7472e-7577-4256-8422-6ba77a954ce1_SimulationCellVector_2>,
+        <sample:aef7472e-7577-4256-8422-6ba77a954ce1_SimulationCellVector_3> ;
+    ns1:hasVolume "47.05"^^xsd:float .
+
+<sample:aef7472e-7577-4256-8422-6ba77a954ce1_SimulationCellAngle> a ns1:SimulationCellAngle ;
+    ns1:hasAngle_alpha "90.0"^^xsd:float ;
+    ns1:hasAngle_beta "90.0"^^xsd:float ;
+    ns1:hasAngle_gamma "90.0"^^xsd:float .
+
+<sample:aef7472e-7577-4256-8422-6ba77a954ce1_SimulationCellLength> a ns1:SimulationCellLength ;
+    ns1:hasLength_x "3.61"^^xsd:float ;
+    ns1:hasLength_y "3.61"^^xsd:float ;
+    ns1:hasLength_z "3.61"^^xsd:float .
+
+<sample:aef7472e-7577-4256-8422-6ba77a954ce1_SimulationCellVector_1> a ns1:SimulationCellVector ;
+    ns1:hasComponent_x "3.61"^^xsd:float ;
+    ns1:hasComponent_y "0.0"^^xsd:float ;
+    ns1:hasComponent_z "0.0"^^xsd:float .
+
+<sample:aef7472e-7577-4256-8422-6ba77a954ce1_SimulationCellVector_2> a ns1:SimulationCellVector ;
+    ns1:hasComponent_x "0.0"^^xsd:float ;
+    ns1:hasComponent_y "3.61"^^xsd:float ;
+    ns1:hasComponent_z "0.0"^^xsd:float .
+
+<sample:aef7472e-7577-4256-8422-6ba77a954ce1_SimulationCellVector_3> a ns1:SimulationCellVector ;
+    ns1:hasComponent_x "0.0"^^xsd:float ;
+    ns1:hasComponent_y "0.0"^^xsd:float ;
+    ns1:hasComponent_z "3.61"^^xsd:float .
+
+<sample:aef7472e-7577-4256-8422-6ba77a954ce1_Species> a ns1:AtomAttribute ;
+    ns1:hasIdentifier "a91c2de5-dcca-4cf0-84fd-29995273e0e1"^^xsd:string ;
+    ns1:hasName "Species"^^xsd:string ;
+    ns1:hasPath "rdf_structure_store/aef7472e-7577-4256-8422-6ba77a954ce1.json"^^xsd:string .
+
+<sample:aef7472e-7577-4256-8422-6ba77a954ce1_UnitCell> a ns1:UnitCell ;
+    ns1:hasAngle <sample:aef7472e-7577-4256-8422-6ba77a954ce1_LatticeAngle> ;
+    ns1:hasBravaisLattice <https://www.wikidata.org/wiki/Q3006714> ;
+    ns1:hasLatticeParameter <sample:aef7472e-7577-4256-8422-6ba77a954ce1_LatticeParameter> .
+
+<sample:b1f52dc6-5c92-428f-8f7a-78794fd0544c> a ns1:AtomicScaleSample,
+        prov:Entity ;
+    rdfs:label "sample:b1f52dc6-5c92-428f-8f7a-78794fd0544c_from_sample:aef7472e-7577-4256-8422-6ba77a954ce1"^^xsd:string ;
+    ns1:hasAttribute <sample:b1f52dc6-5c92-428f-8f7a-78794fd0544c_Position>,
+        <sample:b1f52dc6-5c92-428f-8f7a-78794fd0544c_Species> ;
+    ns1:hasCalculatedProperty <activity:2e461195-15a4-45ba-b369-5a2429ded084_TotalEnergy>,
+        <activity:2e461195-15a4-45ba-b369-5a2429ded084_TotalVolume> ;
+    ns1:hasMaterial <sample:b1f52dc6-5c92-428f-8f7a-78794fd0544c_Material> ;
+    ns1:hasNumberOfAtoms 4 ;
+    ns1:hasSimulationCell <sample:b1f52dc6-5c92-428f-8f7a-78794fd0544c_SimulationCell> ;
+    ns1:hasSpecies <sample:b1f52dc6-5c92-428f-8f7a-78794fd0544c_ChemicalSpecies> ;
+    prov:wasDerivedFrom <sample:aef7472e-7577-4256-8422-6ba77a954ce1> ;
+    prov:wasGeneratedBy <activity:2e461195-15a4-45ba-b369-5a2429ded084> .
+
+<sample:b1f52dc6-5c92-428f-8f7a-78794fd0544c_ChemicalSpecies> a ns1:ChemicalSpecies ;
+    ns1:hasElement <https://www.ebi.ac.uk/chebi/searchId.do?chebiId=CHEBI:28694> .
+
+<sample:b1f52dc6-5c92-428f-8f7a-78794fd0544c_CrystalStructure> a ns1:CrystalStructure ;
+    ns1:hasAltName "fcc"^^xsd:string ;
+    ns1:hasSpaceGroupNumber 225 ;
+    ns1:hasSpaceGroupSymbol "Fm-3m"^^xsd:string ;
+    ns1:hasUnitCell <sample:b1f52dc6-5c92-428f-8f7a-78794fd0544c_UnitCell> .
+
+<sample:b1f52dc6-5c92-428f-8f7a-78794fd0544c_LatticeAngle> a ns1:LatticeAngle ;
+    ns1:hasAngle_alpha "90.0"^^xsd:float ;
+    ns1:hasAngle_beta "90.0"^^xsd:float ;
+    ns1:hasAngle_gamma "90.0"^^xsd:float .
+
+<sample:b1f52dc6-5c92-428f-8f7a-78794fd0544c_LatticeParameter> a ns1:LatticeParameter ;
+    ns1:hasLength_x "3.61"^^xsd:float ;
+    ns1:hasLength_y "3.61"^^xsd:float ;
+    ns1:hasLength_z "3.61"^^xsd:float .
+
+<sample:b1f52dc6-5c92-428f-8f7a-78794fd0544c_Material> a ns1:CrystallineMaterial ;
+    ns1:hasStructure <sample:b1f52dc6-5c92-428f-8f7a-78794fd0544c_CrystalStructure> .
+
+<sample:b1f52dc6-5c92-428f-8f7a-78794fd0544c_Position> a ns1:AtomAttribute ;
+    ns1:hasIdentifier "dcc9579c-60f6-4a52-abe7-fb513f98f47c"^^xsd:string ;
+    ns1:hasName "Position"^^xsd:string ;
+    ns1:hasPath "rdf_structure_store/b1f52dc6-5c92-428f-8f7a-78794fd0544c.json"^^xsd:string .
+
+<sample:b1f52dc6-5c92-428f-8f7a-78794fd0544c_SimulationCell> a ns1:SimulationCell ;
+    ns1:hasAngle <sample:b1f52dc6-5c92-428f-8f7a-78794fd0544c_SimulationCellAngle> ;
+    ns1:hasLength <sample:b1f52dc6-5c92-428f-8f7a-78794fd0544c_SimulationCellLength> ;
+    ns1:hasVector <sample:b1f52dc6-5c92-428f-8f7a-78794fd0544c_SimulationCellVector_1>,
+        <sample:b1f52dc6-5c92-428f-8f7a-78794fd0544c_SimulationCellVector_2>,
+        <sample:b1f52dc6-5c92-428f-8f7a-78794fd0544c_SimulationCellVector_3> ;
+    ns1:hasVolume "47.05"^^xsd:float .
+
+<sample:b1f52dc6-5c92-428f-8f7a-78794fd0544c_SimulationCellAngle> a ns1:SimulationCellAngle ;
+    ns1:hasAngle_alpha "90.0"^^xsd:float ;
+    ns1:hasAngle_beta "90.0"^^xsd:float ;
+    ns1:hasAngle_gamma "90.0"^^xsd:float .
+
+<sample:b1f52dc6-5c92-428f-8f7a-78794fd0544c_SimulationCellLength> a ns1:SimulationCellLength ;
+    ns1:hasLength_x "3.61"^^xsd:float ;
+    ns1:hasLength_y "3.61"^^xsd:float ;
+    ns1:hasLength_z "3.61"^^xsd:float .
+
+<sample:b1f52dc6-5c92-428f-8f7a-78794fd0544c_SimulationCellVector_1> a ns1:SimulationCellVector ;
+    ns1:hasComponent_x "3.61"^^xsd:float ;
+    ns1:hasComponent_y "2.2104874724609725e-16"^^xsd:float ;
+    ns1:hasComponent_z "2.2104874724609725e-16"^^xsd:float .
+
+<sample:b1f52dc6-5c92-428f-8f7a-78794fd0544c_SimulationCellVector_2> a ns1:SimulationCellVector ;
+    ns1:hasComponent_x "0.0"^^xsd:float ;
+    ns1:hasComponent_y "3.61"^^xsd:float ;
+    ns1:hasComponent_z "2.210487472460973e-16"^^xsd:float .
+
+<sample:b1f52dc6-5c92-428f-8f7a-78794fd0544c_SimulationCellVector_3> a ns1:SimulationCellVector ;
+    ns1:hasComponent_x "0.0"^^xsd:float ;
+    ns1:hasComponent_y "0.0"^^xsd:float ;
+    ns1:hasComponent_z "3.61"^^xsd:float .
+
+<sample:b1f52dc6-5c92-428f-8f7a-78794fd0544c_Species> a ns1:AtomAttribute ;
+    ns1:hasIdentifier "e236cae5-d6e6-4512-b4ce-4bcf63ed262f"^^xsd:string ;
+    ns1:hasName "Species"^^xsd:string ;
+    ns1:hasPath "rdf_structure_store/b1f52dc6-5c92-428f-8f7a-78794fd0544c.json"^^xsd:string .
+
+<sample:b1f52dc6-5c92-428f-8f7a-78794fd0544c_UnitCell> a ns1:UnitCell ;
+    ns1:hasAngle <sample:b1f52dc6-5c92-428f-8f7a-78794fd0544c_LatticeAngle> ;
+    ns1:hasBravaisLattice <https://www.wikidata.org/wiki/Q3006714> ;
+    ns1:hasLatticeParameter <sample:b1f52dc6-5c92-428f-8f7a-78794fd0544c_LatticeParameter> .
+
+<sample:c8d9d88f-57fe-462b-bf1e-c4dbbd4e93e9> a ns1:AtomicScaleSample ;
+    ns1:hasAttribute <sample:c8d9d88f-57fe-462b-bf1e-c4dbbd4e93e9_Position>,
+        <sample:c8d9d88f-57fe-462b-bf1e-c4dbbd4e93e9_Species> ;
+    ns1:hasMaterial <sample:c8d9d88f-57fe-462b-bf1e-c4dbbd4e93e9_Material> ;
+    ns1:hasNumberOfAtoms 2 ;
+    ns1:hasSimulationCell <sample:c8d9d88f-57fe-462b-bf1e-c4dbbd4e93e9_SimulationCell> ;
+    ns1:hasSpecies <sample:c8d9d88f-57fe-462b-bf1e-c4dbbd4e93e9_ChemicalSpecies> .
+
+<sample:c8d9d88f-57fe-462b-bf1e-c4dbbd4e93e9_ChemicalSpecies> a ns1:ChemicalSpecies ;
+    ns1:hasElement <https://www.ebi.ac.uk/chebi/searchId.do?chebiId=CHEBI:18248> .
+
+<sample:c8d9d88f-57fe-462b-bf1e-c4dbbd4e93e9_CrystalStructure> a ns1:CrystalStructure ;
+    ns1:hasAltName "bcc"^^xsd:string ;
+    ns1:hasSpaceGroupNumber 229 ;
+    ns1:hasSpaceGroupSymbol "Im-3m"^^xsd:string ;
+    ns1:hasUnitCell <sample:c8d9d88f-57fe-462b-bf1e-c4dbbd4e93e9_UnitCell> .
+
+<sample:c8d9d88f-57fe-462b-bf1e-c4dbbd4e93e9_LatticeAngle> a ns1:LatticeAngle ;
+    ns1:hasAngle_alpha "90.0"^^xsd:float ;
+    ns1:hasAngle_beta "90.0"^^xsd:float ;
+    ns1:hasAngle_gamma "90.0"^^xsd:float .
+
+<sample:c8d9d88f-57fe-462b-bf1e-c4dbbd4e93e9_LatticeParameter> a ns1:LatticeParameter ;
+    ns1:hasLength_x "2.87"^^xsd:float ;
+    ns1:hasLength_y "2.87"^^xsd:float ;
+    ns1:hasLength_z "2.87"^^xsd:float .
+
+<sample:c8d9d88f-57fe-462b-bf1e-c4dbbd4e93e9_Material> a ns1:CrystallineMaterial ;
+    ns1:hasStructure <sample:c8d9d88f-57fe-462b-bf1e-c4dbbd4e93e9_CrystalStructure> .
+
+<sample:c8d9d88f-57fe-462b-bf1e-c4dbbd4e93e9_Position> a ns1:AtomAttribute ;
+    ns1:hasIdentifier "a39b64be-5a98-434a-9cf9-08af861c4f6d"^^xsd:string ;
+    ns1:hasName "Position"^^xsd:string ;
+    ns1:hasPath "rdf_structure_store/c8d9d88f-57fe-462b-bf1e-c4dbbd4e93e9.json"^^xsd:string .
+
+<sample:c8d9d88f-57fe-462b-bf1e-c4dbbd4e93e9_SimulationCell> a ns1:SimulationCell ;
+    ns1:hasAngle <sample:c8d9d88f-57fe-462b-bf1e-c4dbbd4e93e9_SimulationCellAngle> ;
+    ns1:hasLength <sample:c8d9d88f-57fe-462b-bf1e-c4dbbd4e93e9_SimulationCellLength> ;
+    ns1:hasVector <sample:c8d9d88f-57fe-462b-bf1e-c4dbbd4e93e9_SimulationCellVector_1>,
+        <sample:c8d9d88f-57fe-462b-bf1e-c4dbbd4e93e9_SimulationCellVector_2>,
+        <sample:c8d9d88f-57fe-462b-bf1e-c4dbbd4e93e9_SimulationCellVector_3> ;
+    ns1:hasVolume "23.64"^^xsd:float .
+
+<sample:c8d9d88f-57fe-462b-bf1e-c4dbbd4e93e9_SimulationCellAngle> a ns1:SimulationCellAngle ;
+    ns1:hasAngle_alpha "90.0"^^xsd:float ;
+    ns1:hasAngle_beta "90.0"^^xsd:float ;
+    ns1:hasAngle_gamma "90.0"^^xsd:float .
+
+<sample:c8d9d88f-57fe-462b-bf1e-c4dbbd4e93e9_SimulationCellLength> a ns1:SimulationCellLength ;
+    ns1:hasLength_x "2.87"^^xsd:float ;
+    ns1:hasLength_y "2.87"^^xsd:float ;
+    ns1:hasLength_z "2.87"^^xsd:float .
+
+<sample:c8d9d88f-57fe-462b-bf1e-c4dbbd4e93e9_SimulationCellVector_1> a ns1:SimulationCellVector ;
+    ns1:hasComponent_x "2.87"^^xsd:float ;
+    ns1:hasComponent_y "0.0"^^xsd:float ;
+    ns1:hasComponent_z "0.0"^^xsd:float .
+
+<sample:c8d9d88f-57fe-462b-bf1e-c4dbbd4e93e9_SimulationCellVector_2> a ns1:SimulationCellVector ;
+    ns1:hasComponent_x "0.0"^^xsd:float ;
+    ns1:hasComponent_y "2.87"^^xsd:float ;
+    ns1:hasComponent_z "0.0"^^xsd:float .
+
+<sample:c8d9d88f-57fe-462b-bf1e-c4dbbd4e93e9_SimulationCellVector_3> a ns1:SimulationCellVector ;
+    ns1:hasComponent_x "0.0"^^xsd:float ;
+    ns1:hasComponent_y "0.0"^^xsd:float ;
+    ns1:hasComponent_z "2.87"^^xsd:float .
+
+<sample:c8d9d88f-57fe-462b-bf1e-c4dbbd4e93e9_Species> a ns1:AtomAttribute ;
+    ns1:hasIdentifier "655520bc-8d94-4bdb-95ff-1ae6328dc091"^^xsd:string ;
+    ns1:hasName "Species"^^xsd:string ;
+    ns1:hasPath "rdf_structure_store/c8d9d88f-57fe-462b-bf1e-c4dbbd4e93e9.json"^^xsd:string .
+
+<sample:c8d9d88f-57fe-462b-bf1e-c4dbbd4e93e9_UnitCell> a ns1:UnitCell ;
+    ns1:hasAngle <sample:c8d9d88f-57fe-462b-bf1e-c4dbbd4e93e9_LatticeAngle> ;
+    ns1:hasBravaisLattice <https://www.wikidata.org/wiki/Q851536> ;
+    ns1:hasLatticeParameter <sample:c8d9d88f-57fe-462b-bf1e-c4dbbd4e93e9_LatticeParameter> .
+
+<sample:d015cfca-e047-40bc-baab-423e87fa2618> a ns1:AtomicScaleSample,
+        prov:Entity ;
+    rdfs:label "sample:d015cfca-e047-40bc-baab-423e87fa2618_from_sample:aef7472e-7577-4256-8422-6ba77a954ce1"^^xsd:string ;
+    ns1:hasAttribute <sample:d015cfca-e047-40bc-baab-423e87fa2618_Position>,
+        <sample:d015cfca-e047-40bc-baab-423e87fa2618_Species> ;
+    ns1:hasCalculatedProperty <activity:1e081e86-73fd-45e5-8341-cab787b9ff0c_TotalEnergy>,
+        <activity:1e081e86-73fd-45e5-8341-cab787b9ff0c_TotalVolume> ;
+    ns1:hasMaterial <sample:d015cfca-e047-40bc-baab-423e87fa2618_Material> ;
+    ns1:hasNumberOfAtoms 4 ;
+    ns1:hasSimulationCell <sample:d015cfca-e047-40bc-baab-423e87fa2618_SimulationCell> ;
+    ns1:hasSpecies <sample:d015cfca-e047-40bc-baab-423e87fa2618_ChemicalSpecies> ;
+    prov:wasDerivedFrom <sample:aef7472e-7577-4256-8422-6ba77a954ce1> ;
+    prov:wasGeneratedBy <activity:1e081e86-73fd-45e5-8341-cab787b9ff0c> .
+
+<sample:d015cfca-e047-40bc-baab-423e87fa2618_ChemicalSpecies> a ns1:ChemicalSpecies ;
+    ns1:hasElement <https://www.ebi.ac.uk/chebi/searchId.do?chebiId=CHEBI:28694> .
+
+<sample:d015cfca-e047-40bc-baab-423e87fa2618_CrystalStructure> a ns1:CrystalStructure ;
+    ns1:hasAltName "fcc"^^xsd:string ;
+    ns1:hasSpaceGroupNumber 225 ;
+    ns1:hasSpaceGroupSymbol "Fm-3m"^^xsd:string ;
+    ns1:hasUnitCell <sample:d015cfca-e047-40bc-baab-423e87fa2618_UnitCell> .
+
+<sample:d015cfca-e047-40bc-baab-423e87fa2618_LatticeAngle> a ns1:LatticeAngle ;
+    ns1:hasAngle_alpha "90.0"^^xsd:float ;
+    ns1:hasAngle_beta "90.0"^^xsd:float ;
+    ns1:hasAngle_gamma "90.0"^^xsd:float .
+
+<sample:d015cfca-e047-40bc-baab-423e87fa2618_LatticeParameter> a ns1:LatticeParameter ;
+    ns1:hasLength_x "3.61"^^xsd:float ;
+    ns1:hasLength_y "3.61"^^xsd:float ;
+    ns1:hasLength_z "3.61"^^xsd:float .
+
+<sample:d015cfca-e047-40bc-baab-423e87fa2618_Material> a ns1:CrystallineMaterial ;
+    ns1:hasStructure <sample:d015cfca-e047-40bc-baab-423e87fa2618_CrystalStructure> .
+
+<sample:d015cfca-e047-40bc-baab-423e87fa2618_Position> a ns1:AtomAttribute ;
+    ns1:hasIdentifier "f69c80cf-c5b0-4352-a9e8-7b63057c8832"^^xsd:string ;
+    ns1:hasName "Position"^^xsd:string ;
+    ns1:hasPath "rdf_structure_store/d015cfca-e047-40bc-baab-423e87fa2618.json"^^xsd:string .
+
+<sample:d015cfca-e047-40bc-baab-423e87fa2618_SimulationCell> a ns1:SimulationCell ;
+    ns1:hasAngle <sample:d015cfca-e047-40bc-baab-423e87fa2618_SimulationCellAngle> ;
+    ns1:hasLength <sample:d015cfca-e047-40bc-baab-423e87fa2618_SimulationCellLength> ;
+    ns1:hasVector <sample:d015cfca-e047-40bc-baab-423e87fa2618_SimulationCellVector_1>,
+        <sample:d015cfca-e047-40bc-baab-423e87fa2618_SimulationCellVector_2>,
+        <sample:d015cfca-e047-40bc-baab-423e87fa2618_SimulationCellVector_3> ;
+    ns1:hasVolume "49.4"^^xsd:float .
+
+<sample:d015cfca-e047-40bc-baab-423e87fa2618_SimulationCellAngle> a ns1:SimulationCellAngle ;
+    ns1:hasAngle_alpha "90.0"^^xsd:float ;
+    ns1:hasAngle_beta "90.0"^^xsd:float ;
+    ns1:hasAngle_gamma "90.0"^^xsd:float .
+
+<sample:d015cfca-e047-40bc-baab-423e87fa2618_SimulationCellLength> a ns1:SimulationCellLength ;
+    ns1:hasLength_x "3.669190848101621"^^xsd:float ;
+    ns1:hasLength_y "3.6691908481"^^xsd:float ;
+    ns1:hasLength_z "3.6691908481"^^xsd:float .
+
+<sample:d015cfca-e047-40bc-baab-423e87fa2618_SimulationCellVector_1> a ns1:SimulationCellVector ;
+    ns1:hasComponent_x "3.669190848101621"^^xsd:float ;
+    ns1:hasComponent_y "2.246731413794206e-16"^^xsd:float ;
+    ns1:hasComponent_z "2.246731413794206e-16"^^xsd:float .
+
+<sample:d015cfca-e047-40bc-baab-423e87fa2618_SimulationCellVector_2> a ns1:SimulationCellVector ;
+    ns1:hasComponent_x "0.0"^^xsd:float ;
+    ns1:hasComponent_y "3.6691908481"^^xsd:float ;
+    ns1:hasComponent_z "2.2467314137932136e-16"^^xsd:float .
+
+<sample:d015cfca-e047-40bc-baab-423e87fa2618_SimulationCellVector_3> a ns1:SimulationCellVector ;
+    ns1:hasComponent_x "0.0"^^xsd:float ;
+    ns1:hasComponent_y "0.0"^^xsd:float ;
+    ns1:hasComponent_z "3.6691908481"^^xsd:float .
+
+<sample:d015cfca-e047-40bc-baab-423e87fa2618_Species> a ns1:AtomAttribute ;
+    ns1:hasIdentifier "b614fd77-1337-4dca-8716-8566a1bd7956"^^xsd:string ;
+    ns1:hasName "Species"^^xsd:string ;
+    ns1:hasPath "rdf_structure_store/d015cfca-e047-40bc-baab-423e87fa2618.json"^^xsd:string .
+
+<sample:d015cfca-e047-40bc-baab-423e87fa2618_UnitCell> a ns1:UnitCell ;
+    ns1:hasAngle <sample:d015cfca-e047-40bc-baab-423e87fa2618_LatticeAngle> ;
+    ns1:hasBravaisLattice <https://www.wikidata.org/wiki/Q3006714> ;
+    ns1:hasLatticeParameter <sample:d015cfca-e047-40bc-baab-423e87fa2618_LatticeParameter> .
+
+<sample:e4be66c5-1c88-4507-a33d-ab54ed7f39c7_ChemicalSpecies> a ns1:ChemicalSpecies ;
+    ns1:hasElement <https://www.ebi.ac.uk/chebi/searchId.do?chebiId=CHEBI:18248> .
+
+<sample:e4be66c5-1c88-4507-a33d-ab54ed7f39c7_CrystalStructure> a ns1:CrystalStructure ;
+    ns1:hasSpaceGroupNumber 229 ;
+    ns1:hasSpaceGroupSymbol "Im-3m"^^xsd:string ;
+    ns1:hasUnitCell <sample:e4be66c5-1c88-4507-a33d-ab54ed7f39c7_UnitCell> .
+
+<sample:e4be66c5-1c88-4507-a33d-ab54ed7f39c7_LatticeAngle> a ns1:LatticeAngle ;
+    ns1:hasAngle_alpha "90.0"^^xsd:float ;
+    ns1:hasAngle_beta "90.0"^^xsd:float ;
+    ns1:hasAngle_gamma "90.0"^^xsd:float .
+
+<sample:e4be66c5-1c88-4507-a33d-ab54ed7f39c7_LatticeParameter> a ns1:LatticeParameter ;
+    ns1:hasLength_x "1.0"^^xsd:float ;
+    ns1:hasLength_y "1.0"^^xsd:float ;
+    ns1:hasLength_z "1.0"^^xsd:float .
+
+<sample:e4be66c5-1c88-4507-a33d-ab54ed7f39c7_Material> a ns1:CrystallineMaterial ;
+    ns1:hasDefect <sample:e4be66c5-1c88-4507-a33d-ab54ed7f39c7_TwistGrainBoundary> ;
+    ns1:hasStructure <sample:e4be66c5-1c88-4507-a33d-ab54ed7f39c7_CrystalStructure> .
+
+<sample:e4be66c5-1c88-4507-a33d-ab54ed7f39c7_Position> a ns1:AtomAttribute ;
+    ns1:hasIdentifier "13b75f40-708a-4b74-8804-1b2212799b7b"^^xsd:string ;
+    ns1:hasName "Position"^^xsd:string ;
+    ns1:hasPath "rdf_structure_store/e4be66c5-1c88-4507-a33d-ab54ed7f39c7.json"^^xsd:string .
+
+<sample:e4be66c5-1c88-4507-a33d-ab54ed7f39c7_SimulationCell> a ns1:SimulationCell ;
+    ns1:hasAngle <sample:e4be66c5-1c88-4507-a33d-ab54ed7f39c7_SimulationCellAngle> ;
+    ns1:hasLength <sample:e4be66c5-1c88-4507-a33d-ab54ed7f39c7_SimulationCellLength> ;
+    ns1:hasVector <sample:e4be66c5-1c88-4507-a33d-ab54ed7f39c7_SimulationCellVector_1>,
+        <sample:e4be66c5-1c88-4507-a33d-ab54ed7f39c7_SimulationCellVector_2>,
+        <sample:e4be66c5-1c88-4507-a33d-ab54ed7f39c7_SimulationCellVector_3> ;
+    ns1:hasVolume "5389.9"^^xsd:float .
+
+<sample:e4be66c5-1c88-4507-a33d-ab54ed7f39c7_SimulationCellAngle> a ns1:SimulationCellAngle ;
+    ns1:hasAngle_alpha "90.0"^^xsd:float ;
+    ns1:hasAngle_beta "90.0"^^xsd:float ;
+    ns1:hasAngle_gamma "90.0"^^xsd:float .
+
+<sample:e4be66c5-1c88-4507-a33d-ab54ed7f39c7_SimulationCellLength> a ns1:SimulationCellLength ;
+    ns1:hasLength_x "9.94197164"^^xsd:float ;
+    ns1:hasLength_y "17.69186819"^^xsd:float ;
+    ns1:hasLength_z "30.64321458"^^xsd:float .
+
+<sample:e4be66c5-1c88-4507-a33d-ab54ed7f39c7_SimulationCellVector_1> a ns1:SimulationCellVector ;
+    ns1:hasComponent_x "9.94197164"^^xsd:float ;
+    ns1:hasComponent_y "0.0"^^xsd:float ;
+    ns1:hasComponent_z "0.0"^^xsd:float .
+
+<sample:e4be66c5-1c88-4507-a33d-ab54ed7f39c7_SimulationCellVector_2> a ns1:SimulationCellVector ;
+    ns1:hasComponent_x "0.0"^^xsd:float ;
+    ns1:hasComponent_y "17.69186819"^^xsd:float ;
+    ns1:hasComponent_z "0.0"^^xsd:float .
+
+<sample:e4be66c5-1c88-4507-a33d-ab54ed7f39c7_SimulationCellVector_3> a ns1:SimulationCellVector ;
+    ns1:hasComponent_x "0.0"^^xsd:float ;
+    ns1:hasComponent_y "0.0"^^xsd:float ;
+    ns1:hasComponent_z "30.64321458"^^xsd:float .
+
+<sample:e4be66c5-1c88-4507-a33d-ab54ed7f39c7_Species> a ns1:AtomAttribute ;
+    ns1:hasIdentifier "033f98ae-4472-4761-8c9c-546a9da83663"^^xsd:string ;
+    ns1:hasName "Species"^^xsd:string ;
+    ns1:hasPath "rdf_structure_store/e4be66c5-1c88-4507-a33d-ab54ed7f39c7.json"^^xsd:string .
+
+<sample:e4be66c5-1c88-4507-a33d-ab54ed7f39c7_TwistGrainBoundary> a ns2:TwistGrainBoundary ;
+    ns2:hasGBplane "-1 -1 -1"^^xsd:string ;
+    ns2:hasMisorientationAngle "46.82644889274108"^^xsd:float ;
+    ns2:hasRotationAxis "[1, 1, 1]"^^xsd:string ;
+    ns2:hasSigmaValue 19 .
+
+<sample:e4be66c5-1c88-4507-a33d-ab54ed7f39c7_UnitCell> a ns1:UnitCell ;
+    ns1:hasAngle <sample:e4be66c5-1c88-4507-a33d-ab54ed7f39c7_LatticeAngle> ;
+    ns1:hasLatticeParameter <sample:e4be66c5-1c88-4507-a33d-ab54ed7f39c7_LatticeParameter> .
+
+<sample:e54c0e91-52ec-4c47-8ba3-43979a1ebe2e_ChemicalSpecies> a ns1:ChemicalSpecies ;
+    ns1:hasElement <https://www.ebi.ac.uk/chebi/searchId.do?chebiId=CHEBI:28694> .
+
+<sample:e54c0e91-52ec-4c47-8ba3-43979a1ebe2e_CrystalStructure> a ns1:CrystalStructure ;
+    ns1:hasAltName "fcc"^^xsd:string ;
+    ns1:hasSpaceGroupNumber 225 ;
+    ns1:hasSpaceGroupSymbol "Fm-3m"^^xsd:string ;
+    ns1:hasUnitCell <sample:e54c0e91-52ec-4c47-8ba3-43979a1ebe2e_UnitCell> .
+
+<sample:e54c0e91-52ec-4c47-8ba3-43979a1ebe2e_LatticeAngle> a ns1:LatticeAngle ;
+    ns1:hasAngle_alpha "90.0"^^xsd:float ;
+    ns1:hasAngle_beta "90.0"^^xsd:float ;
+    ns1:hasAngle_gamma "90.0"^^xsd:float .
+
+<sample:e54c0e91-52ec-4c47-8ba3-43979a1ebe2e_LatticeParameter> a ns1:LatticeParameter ;
+    ns1:hasLength_x "3.61"^^xsd:float ;
+    ns1:hasLength_y "3.61"^^xsd:float ;
+    ns1:hasLength_z "3.61"^^xsd:float .
+
+<sample:e54c0e91-52ec-4c47-8ba3-43979a1ebe2e_Material> a ns1:CrystallineMaterial ;
+    ns1:hasStructure <sample:e54c0e91-52ec-4c47-8ba3-43979a1ebe2e_CrystalStructure> .
+
+<sample:e54c0e91-52ec-4c47-8ba3-43979a1ebe2e_Position> a ns1:AtomAttribute ;
+    ns1:hasIdentifier "ef2efdf0-655e-4dd3-87b1-b0f280702796"^^xsd:string ;
+    ns1:hasName "Position"^^xsd:string ;
+    ns1:hasPath "rdf_structure_store/e54c0e91-52ec-4c47-8ba3-43979a1ebe2e.json"^^xsd:string .
+
+<sample:e54c0e91-52ec-4c47-8ba3-43979a1ebe2e_SimulationCell> a ns1:SimulationCell ;
+    ns1:hasAngle <sample:e54c0e91-52ec-4c47-8ba3-43979a1ebe2e_SimulationCellAngle> ;
+    ns1:hasLength <sample:e54c0e91-52ec-4c47-8ba3-43979a1ebe2e_SimulationCellLength> ;
+    ns1:hasVector <sample:e54c0e91-52ec-4c47-8ba3-43979a1ebe2e_SimulationCellVector_1>,
+        <sample:e54c0e91-52ec-4c47-8ba3-43979a1ebe2e_SimulationCellVector_2>,
+        <sample:e54c0e91-52ec-4c47-8ba3-43979a1ebe2e_SimulationCellVector_3> ;
+    ns1:hasVolume "47.54"^^xsd:float .
+
+<sample:e54c0e91-52ec-4c47-8ba3-43979a1ebe2e_SimulationCellAngle> a ns1:SimulationCellAngle ;
+    ns1:hasAngle_alpha "90.0"^^xsd:float ;
+    ns1:hasAngle_beta "90.0"^^xsd:float ;
+    ns1:hasAngle_gamma "90.0"^^xsd:float .
+
+<sample:e54c0e91-52ec-4c47-8ba3-43979a1ebe2e_SimulationCellLength> a ns1:SimulationCellLength ;
+    ns1:hasLength_x "3.6226603215912503"^^xsd:float ;
+    ns1:hasLength_y "3.6226603215912503"^^xsd:float ;
+    ns1:hasLength_z "3.6226603215912503"^^xsd:float .
+
+<sample:e54c0e91-52ec-4c47-8ba3-43979a1ebe2e_SimulationCellVector_1> a ns1:SimulationCellVector ;
+    ns1:hasComponent_x "3.6226603215912503"^^xsd:float ;
+    ns1:hasComponent_y "2.2182396836174228e-16"^^xsd:float ;
+    ns1:hasComponent_z "2.2182396836174228e-16"^^xsd:float .
+
+<sample:e54c0e91-52ec-4c47-8ba3-43979a1ebe2e_SimulationCellVector_2> a ns1:SimulationCellVector ;
+    ns1:hasComponent_x "0.0"^^xsd:float ;
+    ns1:hasComponent_y "3.6226603215912503"^^xsd:float ;
+    ns1:hasComponent_z "2.2182396836174233e-16"^^xsd:float .
+
+<sample:e54c0e91-52ec-4c47-8ba3-43979a1ebe2e_SimulationCellVector_3> a ns1:SimulationCellVector ;
+    ns1:hasComponent_x "0.0"^^xsd:float ;
+    ns1:hasComponent_y "0.0"^^xsd:float ;
+    ns1:hasComponent_z "3.6226603215912503"^^xsd:float .
+
+<sample:e54c0e91-52ec-4c47-8ba3-43979a1ebe2e_Species> a ns1:AtomAttribute ;
+    ns1:hasIdentifier "b8e9ad71-2089-4757-a1cb-609a0e0f0cb8"^^xsd:string ;
+    ns1:hasName "Species"^^xsd:string ;
+    ns1:hasPath "rdf_structure_store/e54c0e91-52ec-4c47-8ba3-43979a1ebe2e.json"^^xsd:string .
+
+<sample:e54c0e91-52ec-4c47-8ba3-43979a1ebe2e_UnitCell> a ns1:UnitCell ;
+    ns1:hasAngle <sample:e54c0e91-52ec-4c47-8ba3-43979a1ebe2e_LatticeAngle> ;
+    ns1:hasBravaisLattice <https://www.wikidata.org/wiki/Q3006714> ;
+    ns1:hasLatticeParameter <sample:e54c0e91-52ec-4c47-8ba3-43979a1ebe2e_LatticeParameter> .
+
+<sample:fb01a7f2-8984-442b-a32e-15321c4fa99b> a ns1:AtomicScaleSample,
+        prov:Entity ;
+    rdfs:label "sample:fb01a7f2-8984-442b-a32e-15321c4fa99b_from_sample:aef7472e-7577-4256-8422-6ba77a954ce1"^^xsd:string ;
+    ns1:hasAttribute <sample:fb01a7f2-8984-442b-a32e-15321c4fa99b_Position>,
+        <sample:fb01a7f2-8984-442b-a32e-15321c4fa99b_Species> ;
+    ns1:hasCalculatedProperty <activity:923e1808-efdf-4a6a-a5de-9e0a64cb198c_TotalEnergy>,
+        <activity:923e1808-efdf-4a6a-a5de-9e0a64cb198c_TotalVolume> ;
+    ns1:hasMaterial <sample:fb01a7f2-8984-442b-a32e-15321c4fa99b_Material> ;
+    ns1:hasNumberOfAtoms 4 ;
+    ns1:hasSimulationCell <sample:fb01a7f2-8984-442b-a32e-15321c4fa99b_SimulationCell> ;
+    ns1:hasSpecies <sample:fb01a7f2-8984-442b-a32e-15321c4fa99b_ChemicalSpecies> ;
+    prov:wasDerivedFrom <sample:aef7472e-7577-4256-8422-6ba77a954ce1> ;
+    prov:wasGeneratedBy <activity:923e1808-efdf-4a6a-a5de-9e0a64cb198c> .
+
+<sample:fb01a7f2-8984-442b-a32e-15321c4fa99b_ChemicalSpecies> a ns1:ChemicalSpecies ;
+    ns1:hasElement <https://www.ebi.ac.uk/chebi/searchId.do?chebiId=CHEBI:28694> .
+
+<sample:fb01a7f2-8984-442b-a32e-15321c4fa99b_CrystalStructure> a ns1:CrystalStructure ;
+    ns1:hasAltName "fcc"^^xsd:string ;
+    ns1:hasSpaceGroupNumber 225 ;
+    ns1:hasSpaceGroupSymbol "Fm-3m"^^xsd:string ;
+    ns1:hasUnitCell <sample:fb01a7f2-8984-442b-a32e-15321c4fa99b_UnitCell> .
+
+<sample:fb01a7f2-8984-442b-a32e-15321c4fa99b_LatticeAngle> a ns1:LatticeAngle ;
+    ns1:hasAngle_alpha "90.0"^^xsd:float ;
+    ns1:hasAngle_beta "90.0"^^xsd:float ;
+    ns1:hasAngle_gamma "90.0"^^xsd:float .
+
+<sample:fb01a7f2-8984-442b-a32e-15321c4fa99b_LatticeParameter> a ns1:LatticeParameter ;
+    ns1:hasLength_x "3.61"^^xsd:float ;
+    ns1:hasLength_y "3.61"^^xsd:float ;
+    ns1:hasLength_z "3.61"^^xsd:float .
+
+<sample:fb01a7f2-8984-442b-a32e-15321c4fa99b_Material> a ns1:CrystallineMaterial ;
+    ns1:hasStructure <sample:fb01a7f2-8984-442b-a32e-15321c4fa99b_CrystalStructure> .
+
+<sample:fb01a7f2-8984-442b-a32e-15321c4fa99b_Position> a ns1:AtomAttribute ;
+    ns1:hasIdentifier "52fc0553-899b-4bca-bb8d-462b5aa33905"^^xsd:string ;
+    ns1:hasName "Position"^^xsd:string ;
+    ns1:hasPath "rdf_structure_store/fb01a7f2-8984-442b-a32e-15321c4fa99b.json"^^xsd:string .
+
+<sample:fb01a7f2-8984-442b-a32e-15321c4fa99b_SimulationCell> a ns1:SimulationCell ;
+    ns1:hasAngle <sample:fb01a7f2-8984-442b-a32e-15321c4fa99b_SimulationCellAngle> ;
+    ns1:hasLength <sample:fb01a7f2-8984-442b-a32e-15321c4fa99b_SimulationCellLength> ;
+    ns1:hasVector <sample:fb01a7f2-8984-442b-a32e-15321c4fa99b_SimulationCellVector_1>,
+        <sample:fb01a7f2-8984-442b-a32e-15321c4fa99b_SimulationCellVector_2>,
+        <sample:fb01a7f2-8984-442b-a32e-15321c4fa99b_SimulationCellVector_3> ;
+    ns1:hasVolume "42.34"^^xsd:float .
+
+<sample:fb01a7f2-8984-442b-a32e-15321c4fa99b_SimulationCellAngle> a ns1:SimulationCellAngle ;
+    ns1:hasAngle_alpha "90.0"^^xsd:float ;
+    ns1:hasAngle_beta "90.0"^^xsd:float ;
+    ns1:hasAngle_gamma "90.0"^^xsd:float .
+
+<sample:fb01a7f2-8984-442b-a32e-15321c4fa99b_SimulationCellLength> a ns1:SimulationCellLength ;
+    ns1:hasLength_x "3.485416678426323"^^xsd:float ;
+    ns1:hasLength_y "3.4854166784"^^xsd:float ;
+    ns1:hasLength_z "3.4854166784"^^xsd:float .
+
+<sample:fb01a7f2-8984-442b-a32e-15321c4fa99b_SimulationCellVector_1> a ns1:SimulationCellVector ;
+    ns1:hasComponent_x "3.485416678426323"^^xsd:float ;
+    ns1:hasComponent_y "2.134202189464798e-16"^^xsd:float ;
+    ns1:hasComponent_z "2.134202189464798e-16"^^xsd:float .
+
+<sample:fb01a7f2-8984-442b-a32e-15321c4fa99b_SimulationCellVector_2> a ns1:SimulationCellVector ;
+    ns1:hasComponent_x "0.0"^^xsd:float ;
+    ns1:hasComponent_y "3.4854166784"^^xsd:float ;
+    ns1:hasComponent_z "2.1342021894486796e-16"^^xsd:float .
+
+<sample:fb01a7f2-8984-442b-a32e-15321c4fa99b_SimulationCellVector_3> a ns1:SimulationCellVector ;
+    ns1:hasComponent_x "0.0"^^xsd:float ;
+    ns1:hasComponent_y "0.0"^^xsd:float ;
+    ns1:hasComponent_z "3.4854166784"^^xsd:float .
+
+<sample:fb01a7f2-8984-442b-a32e-15321c4fa99b_Species> a ns1:AtomAttribute ;
+    ns1:hasIdentifier "2af31b9c-a66b-46ad-9559-d8e881de76ea"^^xsd:string ;
+    ns1:hasName "Species"^^xsd:string ;
+    ns1:hasPath "rdf_structure_store/fb01a7f2-8984-442b-a32e-15321c4fa99b.json"^^xsd:string .
+
+<sample:fb01a7f2-8984-442b-a32e-15321c4fa99b_UnitCell> a ns1:UnitCell ;
+    ns1:hasAngle <sample:fb01a7f2-8984-442b-a32e-15321c4fa99b_LatticeAngle> ;
+    ns1:hasBravaisLattice <https://www.wikidata.org/wiki/Q3006714> ;
+    ns1:hasLatticeParameter <sample:fb01a7f2-8984-442b-a32e-15321c4fa99b_LatticeParameter> .
+
+ns1:Angle ns1:hasUnit <http://qudt.org/vocab/unit/DEG> .
+
+ns1:Length ns1:hasUnit <http://qudt.org/vocab/unit/ANGSTROM> .
+
+ns1:Vector ns1:hasUnit <http://qudt.org/vocab/unit/ANGSTROM> .
+
+<activity:0848b931-d647-41c7-a6dc-8150989e36c7> a ns4:EnergyCalculation,
+        prov:Activity ;
+    ns4:hasComputationalMethod <activity:0848b931-d647-41c7-a6dc-8150989e36c7_method> ;
+    ns4:hasInteratomicPotential <activity:0848b931-d647-41c7-a6dc-8150989e36c7_potential> ;
+    ns4:hasRelaxationDOF ns4:AtomicPositionRelaxation,
+        ns4:CellVolumeRelaxation ;
+    ns1:hasPath "/mnt/c/Users/menon/Documents/repos/projects-iuc17/atomRDF/notebooks/generate_sample_data/data_gen_1/murn_job_hdf5/murn_job_1_1_hdf5"^^xsd:string .
+
+<activity:1e081e86-73fd-45e5-8341-cab787b9ff0c> a ns4:EnergyCalculation,
+        prov:Activity ;
+    ns4:hasComputationalMethod <activity:1e081e86-73fd-45e5-8341-cab787b9ff0c_method> ;
+    ns4:hasInteratomicPotential <activity:1e081e86-73fd-45e5-8341-cab787b9ff0c_potential> ;
+    ns4:hasRelaxationDOF ns4:AtomicPositionRelaxation,
+        ns4:CellVolumeRelaxation ;
+    ns1:hasPath "/mnt/c/Users/menon/Documents/repos/projects-iuc17/atomRDF/notebooks/generate_sample_data/data_gen_1/murn_job_hdf5/murn_job_1_05_hdf5"^^xsd:string .
+
+<activity:2e461195-15a4-45ba-b369-5a2429ded084> a ns4:EnergyCalculation,
+        prov:Activity ;
+    ns4:hasComputationalMethod <activity:2e461195-15a4-45ba-b369-5a2429ded084_method> ;
+    ns4:hasInteratomicPotential <activity:2e461195-15a4-45ba-b369-5a2429ded084_potential> ;
+    ns4:hasRelaxationDOF ns4:AtomicPositionRelaxation,
+        ns4:CellVolumeRelaxation ;
+    ns1:hasPath "/mnt/c/Users/menon/Documents/repos/projects-iuc17/atomRDF/notebooks/generate_sample_data/data_gen_1/murn_job_hdf5/murn_job_1_0_hdf5"^^xsd:string .
+
+<activity:8a680cb2-c7f1-4747-95b0-a4ce71fab87f> a ns4:EnergyCalculation,
+        prov:Activity ;
+    ns4:hasComputationalMethod <activity:8a680cb2-c7f1-4747-95b0-a4ce71fab87f_method> ;
+    ns4:hasInteratomicPotential <activity:8a680cb2-c7f1-4747-95b0-a4ce71fab87f_potential> ;
+    ns4:hasRelaxationDOF ns4:AtomicPositionRelaxation,
+        ns4:CellVolumeRelaxation ;
+    ns1:hasPath "/mnt/c/Users/menon/Documents/repos/projects-iuc17/atomRDF/notebooks/generate_sample_data/data_gen_1/murn_job_hdf5/murn_job_0_95_hdf5"^^xsd:string .
+
+<activity:923e1808-efdf-4a6a-a5de-9e0a64cb198c> a ns4:EnergyCalculation,
+        prov:Activity ;
+    ns4:hasComputationalMethod <activity:923e1808-efdf-4a6a-a5de-9e0a64cb198c_method> ;
+    ns4:hasInteratomicPotential <activity:923e1808-efdf-4a6a-a5de-9e0a64cb198c_potential> ;
+    ns4:hasRelaxationDOF ns4:AtomicPositionRelaxation,
+        ns4:CellVolumeRelaxation ;
+    ns1:hasPath "/mnt/c/Users/menon/Documents/repos/projects-iuc17/atomRDF/notebooks/generate_sample_data/data_gen_1/murn_job_hdf5/murn_job_0_9_hdf5"^^xsd:string .
+
+<activity:f61a2139-2dae-4aab-954e-73d34d7bc042> a ns4:EnergyCalculation,
+        prov:Activity ;
+    ns4:hasComputationalMethod <activity:f61a2139-2dae-4aab-954e-73d34d7bc042_method> ;
+    ns4:hasInputParameter <activity:f61a2139-2dae-4aab-954e-73d34d7bc042_pressure>,
+        <activity:f61a2139-2dae-4aab-954e-73d34d7bc042_temperature> ;
+    ns4:hasInteratomicPotential <activity:f61a2139-2dae-4aab-954e-73d34d7bc042_potential> ;
+    ns4:hasRelaxationDOF ns4:AtomicPositionRelaxation,
+        ns4:CellVolumeRelaxation ;
+    ns4:hasStatisticalEnsemble ns4:IsothermalIsobaricEnsemble ;
+    ns1:hasPath "/mnt/c/Users/menon/Documents/repos/projects-iuc17/atomRDF/notebooks/generate_sample_data/data_gen_1/j1_hdf5"^^xsd:string .
+
+<https://www.ebi.ac.uk/chebi/searchId.do?chebiId=CHEBI:28984> a ns1:ChemicalElement ;
+    ns1:hasChemicalSymbol "Al"^^xsd:string ;
+    ns1:hasElementRatio "0.75"^^xsd:float .
+
+<sample:92247b7f-f2a1-43aa-abe9-6774b3064503_DislocationSlipSystem> a ns3:SlipSystem .
+
+<activity:4a7eb321-b41b-4487-97e8-afff4f38ebad> a ns4:QuasiHarmonicModel,
+        prov:Activity ;
+    ns4:hasComputationalMethod <activity:4a7eb321-b41b-4487-97e8-afff4f38ebad_method> ;
+    ns1:hasPath "/mnt/c/Users/menon/Documents/repos/projects-iuc17/atomRDF/notebooks/generate_sample_data/data_gen_1/quasi_hdf5"^^xsd:string .
+
+<activity:e537aad6-967f-48aa-8337-11bdaf6a80c1> a ns4:EquationOfStateFit,
+        prov:Activity ;
+    ns4:hasComputationalMethod <activity:e537aad6-967f-48aa-8337-11bdaf6a80c1_method> ;
+    ns1:hasPath "/mnt/c/Users/menon/Documents/repos/projects-iuc17/atomRDF/notebooks/generate_sample_data/data_gen_1/murn_job_hdf5"^^xsd:string .
+
+<https://www.ebi.ac.uk/chebi/searchId.do?chebiId=CHEBI:18248> a ns1:ChemicalElement ;
+    ns1:hasChemicalSymbol "Fe"^^xsd:string ;
+    ns1:hasElementRatio "1.0"^^xsd:float .
+
+<sample:aef7472e-7577-4256-8422-6ba77a954ce1> a ns1:AtomicScaleSample,
+        prov:Entity ;
+    ns1:hasAttribute <sample:aef7472e-7577-4256-8422-6ba77a954ce1_Position>,
+        <sample:aef7472e-7577-4256-8422-6ba77a954ce1_Species> ;
+    ns1:hasMaterial <sample:aef7472e-7577-4256-8422-6ba77a954ce1_Material> ;
+    ns1:hasNumberOfAtoms 4 ;
+    ns1:hasSimulationCell <sample:aef7472e-7577-4256-8422-6ba77a954ce1_SimulationCell> ;
+    ns1:hasSpecies <sample:aef7472e-7577-4256-8422-6ba77a954ce1_ChemicalSpecies> .
+
+<http://demo.fiz-karlsruhe.de/matwerk/E457491> a prov:SoftwareAgent ;
+    rdfs:label "pyiron" ;
+    prov:actedOnBehalfOf <http://demo.fiz-karlsruhe.de/matwerk/E447986> .
+
+<https://www.ebi.ac.uk/chebi/searchId.do?chebiId=CHEBI:28694> a ns1:ChemicalElement ;
+    ns1:hasChemicalSymbol "Cu"^^xsd:string ;
+    ns1:hasElementRatio "1.0"^^xsd:float .
+
+ns1:LatticeAngle rdfs:subClassOf ns1:Angle .
+
+ns1:LatticeParameter rdfs:subClassOf ns1:Length .
+
+ns1:SimulationCellAngle rdfs:subClassOf ns1:Angle .
+
+ns1:SimulationCellLength rdfs:subClassOf ns1:Length .
+
+ns1:SimulationCellVector rdfs:subClassOf ns1:Vector .
+
