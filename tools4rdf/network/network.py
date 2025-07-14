@@ -294,8 +294,7 @@ class Network:
                 modified_destinations.append(destination)
         return modified_destinations
 
-    @staticmethod
-    def _is_already_in_destinations(object_property, destinations):
+    def _is_already_in_destinations(self,object_property, destinations):
         if object_property in destinations:
             return True
         for d in destinations:
@@ -396,7 +395,7 @@ class Network:
         if destinations is not None:
             destinations = self._modify_destinations(destinations)
             for object_property in object_properties:
-                if not _is_already_in_destinations(object_property, destinations):
+                if not self._is_already_in_destinations(object_property, destinations):
                     destinations.append(object_property)
         elif len(object_properties) > 0:
             destinations = object_properties
