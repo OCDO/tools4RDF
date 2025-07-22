@@ -414,7 +414,7 @@ class Network:
             return queries[0]
         return queries
 
-    def _prepare_destinations(self, destinations=None):
+    def _prepare_destinations(self, destinations=None, source=None):
         """
         Prepares and validates the list of destination objects.
 
@@ -440,6 +440,7 @@ class Network:
         ValueError
             If more than one destination has an associated condition.
         """
+        # if destinations is None, we need to check if source.any is used
         if destinations is None and not source._enforce_type:
             raise ValueError(
                 "If no destinations are provided, source.any cannot be used!."
@@ -732,7 +733,7 @@ class Network:
         - Filters and type information are added to the query to refine the results.
         """
 
-        destinations = self._prepare_destinations(destinations=destinations)
+        destinations = self._prepare_destinations(destinations=destinations, source=source)
         query_header = self._create_query_prefix(source, destinations)
 
         namespaces_used = []
