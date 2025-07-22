@@ -831,7 +831,9 @@ class Network:
             created_queries.append("\n".join(query))
         return created_queries
 
-    def query(self, kg, source, destinations=None, return_df=True, num_paths=1):
+    def query(
+        self, kg, source, destinations=None, return_df=True, num_paths=1, limit=None
+    ):
         """
         Executes queries on a knowledge graph (KG) to retrieve data from a SPARQL query.
 
@@ -847,6 +849,8 @@ class Network:
             If True, the results will be returned as a concatenated pandas DataFrame. Otherwise, results will be returned as a list.
         num_paths : int, default=1
             The number of paths to retrieve for each query.
+        limit : int, optional
+            The maximum number of results to return. If None, no limit is applied.
 
         Returns
         -------
@@ -861,6 +865,7 @@ class Network:
             destinations=destinations,
             return_list=True,
             num_paths=num_paths,
+            limit=limit,
         )
         res = []
         for query_string in query_strings:
