@@ -228,6 +228,10 @@ class Network:
         paths = []
         if len(target._parents) > 0:
             # this needs a stepped query
+            if num_paths > 1:
+                raise ValueError(
+                    "Stepped queries do not support multiple paths. Please set num_paths=1."
+                )
             complete_list = [source, *target._parents, target]
             # get path for first two terms
             path = self._get_shortest_path(complete_list[0], complete_list[1])
@@ -235,10 +239,11 @@ class Network:
                 temp_source = complete_list[x - 1]
                 temp_dest = complete_list[x]
                 temp_path = self._get_shortest_path(temp_source, temp_dest)
-                if len(temp_path) == 2:
-                    # this means that they are next to each other, so we cannot form a full path
-                    # so we need to add the last item of the previous path
-                    path[-1] = temp_path[-1]
+                if len(temp_path) == 1:
+                    if len(temp_path[0]) == 2:
+                        # this means that they are next to each other, so we cannot form a full path
+                        # so we need to add the last item of the previous path
+                        path[-1][-1] = temp_path[0][-1]
                 else:
                     path.extend(temp_path[1:])
             paths.extend(path)
