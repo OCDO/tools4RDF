@@ -308,7 +308,9 @@ class Network:
                 return True
         return False
 
-    def create_query(self, source, destinations=None, return_list=False, num_paths=1):
+    def create_query(
+        self, source, destinations=None, return_list=False, num_paths=1, limit=None
+    ):
         """
         Creates a query based on the given source and destination nodes.
 
@@ -325,6 +327,8 @@ class Network:
             if only one query is generated. Default is False.
         num_paths : int, optional
             The number of paths to consider in the query. Default is 1.
+        limit : int, optional
+            The maximum number of results to return. Default is None (no limit).
 
         Raises
         ------
@@ -430,7 +434,9 @@ class Network:
         # done, now run the query
         queries = []
         for s in classes:
-            qx = self._create_query(s, destinations=destinations, num_paths=num_paths)
+            qx = self._create_query(
+                s, destinations=destinations, num_paths=num_paths, limit=limit
+            )
             queries.extend(
                 qx,
             )
@@ -728,7 +734,24 @@ class Network:
             destination.refresh()
         return query
 
-    def _create_query(self, source, destinations=None, num_paths=1):
+    def _add_limit(self, limit=None):
+        """
+        Adds a LIMIT clause to a SPARQL query if a limit is specified.
+
+        Parameters
+        ----------
+        limit : int or None
+            The maximum number of results to return. If None, no LIMIT clause is added.
+
+        Returns
+        -------
+        str
+            The modified SPARQL query with the LIMIT clause added if applicable.
+        """
+        if limit is not None:
+            return f"LIMIT {limit}"
+
+    def _create_query(self, source, destinations=None, num_paths=1, limit=None):
         """
         Creates SPARQL queries based on the given source, destinations, and number of paths.
 
@@ -745,6 +768,8 @@ class Network:
             A list of destination nodes for the query. If not provided, defaults to None.
         num_paths : int, optional
             The number of paths to include in the query. Defaults to 1.
+        limit : int, optional
+            The maximum number of results to return. Default is None (no limit).
 
         Returns
         -------
@@ -801,6 +826,7 @@ class Network:
                 + query_footer_source_types
                 + query_footer_dest_types
                 + query_filter
+                + self._add_limit(limit)
             )
             created_queries.append("\n".join(query))
         return created_queries
