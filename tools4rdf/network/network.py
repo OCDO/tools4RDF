@@ -750,6 +750,7 @@ class Network:
         """
         if limit is not None:
             return f"LIMIT {limit}"
+        return ""
 
     def _create_query(self, source, destinations=None, num_paths=1, limit=None):
         """
