@@ -17,6 +17,7 @@ import itertools
 from rdflib import URIRef, Literal, RDF, OWL
 from tools4rdf.network.attrsetter import AttrSetter
 from tools4rdf.network.parser import parse_ontology, OntoParser
+from tools4rdf.network.term import OntoTerm
 
 
 def _replace_name(name):
@@ -299,7 +300,7 @@ class Network:
                 modified_destinations.append(destination)
         return modified_destinations
 
-    def _is_already_in_destinations(self,object_property, destinations):
+    def _is_already_in_destinations(self, object_property, destinations):
         if object_property in destinations:
             return True
         for d in destinations:
@@ -353,7 +354,7 @@ class Network:
               starts the query from there.
 
         >>> create_query(source,  [destA, destB])
-        
+
         - find paths from `source` to `destA`, and `source` to `destB`.
 
         >>> create_query(source,  [[destA, destB]])
@@ -398,21 +399,40 @@ class Network:
                 classes.append(common_class.any)
 
         if destinations is not None:
+            # now we can handle specific cases - object properties =1, destinations =1
+            if (
+                (len(object_properties) == 1)
+                and (len(destinations) == 1)
+                and (isinstance(destinations[0], OntoTerm))
+            ):
+                destinations = [[object_properties[0], destinations[0]]]
+            else:
+                for object_property in object_properties:
+                    if not self._is_already_in_destinations(
+                        object_property, *destinations
+                    ):
+                        destinations.append(object_property)
             destinations = self._modify_destinations(destinations)
-            for object_property in object_properties:
-                if not self._is_already_in_destinations(object_property, destinations):
-                    destinations.append(object_property)
+
         elif len(object_properties) > 0:
             destinations = object_properties
 
         if destinations is None:
             destinations = []
 
+        if len(destinations) > 1:
+            if num_paths > 1:
+                raise TypeError(
+                    "Multiple destinations are not supported with multiple paths. Please use stepped queries instead!"
+                    "Please set num_paths=1."
+                )
+
         # done, now run the query
         queries = []
         for s in classes:
+            qx = self._create_query(s, destinations=destinations, num_paths=num_paths)
             queries.extend(
-                self._create_query(s, destinations=destinations, num_paths=num_paths)
+                qx,
             )
 
         if (len(queries) == 1) and not return_list:
@@ -738,7 +758,9 @@ class Network:
         - Filters and type information are added to the query to refine the results.
         """
 
-        destinations = self._prepare_destinations(destinations=destinations, source=source)
+        destinations = self._prepare_destinations(
+            destinations=destinations, source=source
+        )
         query_header = self._create_query_prefix(source, destinations)
 
         namespaces_used = []
