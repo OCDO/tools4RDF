@@ -309,7 +309,13 @@ class Network:
         return False
 
     def create_query(
-        self, source, destinations=None, return_list=False, num_paths=1, limit=None
+        self,
+        source,
+        destinations=None,
+        return_list=False,
+        num_paths=1,
+        limit=None,
+        remote_source=None,
     ):
         """
         Creates a query based on the given source and destination nodes.
@@ -329,6 +335,8 @@ class Network:
             The number of paths to consider in the query. Default is 1.
         limit : int, optional
             The maximum number of results to return. Default is None (no limit).
+        remote_source : str, optional
+            If provided, this will be used as the source for remote queries. Default is None.
 
         Raises
         ------
@@ -435,7 +443,11 @@ class Network:
         queries = []
         for s in classes:
             qx = self._create_query(
-                s, destinations=destinations, num_paths=num_paths, limit=limit
+                s,
+                destinations=destinations,
+                num_paths=num_paths,
+                limit=limit,
+                remote_source=remote_source,
             )
             queries.extend(
                 qx,
@@ -492,7 +504,7 @@ class Network:
                     destinations.append(parent)
         return destinations
 
-    def _create_query_prefix(self, source, destinations):
+    def _create_query_prefix(self, source, destinations, remote_source=None):
         """
         Constructs the prefix of a SPARQL query with a SELECT DISTINCT clause.
 
@@ -509,6 +521,9 @@ class Network:
         destinations : list of objects
             A list of destination objects, each of which must have a
             `variable_name` attribute representing its SPARQL variable name.
+        remote_source : str, optional
+            If provided, this will be used as the source for remote queries.
+            Default is None.
 
         Returns
         -------
@@ -529,6 +544,9 @@ class Network:
         select_destinations = ["?" + source.variable_name] + select_destinations
         query.append(f'SELECT DISTINCT {" ".join(select_destinations)}')
         query.append("WHERE {")
+        # if remote_source is provided, use it as the source
+        if remote_source is not None:
+            query.append(f"  SERVICE <{remote_source}> {{")
         return query
 
     def _get_triples(self, source, destinations, num_paths=1):
@@ -690,7 +708,7 @@ class Network:
                 )
         return query, namespaces_used
 
-    def _add_filters(self, destinations):
+    def _add_filters(self, destinations, remote_source=None):
         """
         Adds filter conditions to a SPARQL query based on the provided destinations.
 
@@ -727,6 +745,8 @@ class Network:
                     destination.query_name, destination.variable_name
                 )
             query.append(f"FILTER {filter_text}")
+        if remote_source is not None:
+            query.append("  }")
         query.append("}")
 
         # finished, clean up the terms;
@@ -752,7 +772,14 @@ class Network:
             return [f"LIMIT {limit}"]
         return []
 
-    def _create_query(self, source, destinations=None, num_paths=1, limit=None):
+    def _create_query(
+        self,
+        source,
+        destinations=None,
+        num_paths=1,
+        limit=None,
+        remote_source=None,
+    ):
         """
         Creates SPARQL queries based on the given source, destinations, and number of paths.
 
@@ -771,6 +798,8 @@ class Network:
             The number of paths to include in the query. Defaults to 1.
         limit : int, optional
             The maximum number of results to return. Default is None (no limit).
+        remote_source : str, optional
+            If provided, this will be used as the source for remote queries. Default is None.
 
         Returns
         -------
@@ -787,7 +816,9 @@ class Network:
         destinations = self._prepare_destinations(
             destinations=destinations, source=source
         )
-        query_header = self._create_query_prefix(source, destinations)
+        query_header = self._create_query_prefix(
+            source, destinations, remote_source=remote_source
+        )
 
         namespaces_used = []
         # add the source to the namespaces
@@ -806,7 +837,7 @@ class Network:
             destinations
         )
 
-        query_filter = self._add_filters(destinations)
+        query_filter = self._add_filters(destinations, remote_source=remote_source)
 
         created_queries = []
         for query in queries:
@@ -867,6 +898,7 @@ class Network:
             return_list=True,
             num_paths=num_paths,
             limit=limit,
+            remote_source=None,
         )
         res = []
         for query_string in query_strings:
@@ -878,6 +910,11 @@ class Network:
         if return_df:
             res = pd.concat(res)
         return res
+
+    def remote_query(
+        self, kg, source, destinations=None, return_df=True, num_paths=1, limit=None
+    ):
+        pass
 
     def _query(self, kg, query_string, return_df=True):
         """
