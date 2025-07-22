@@ -749,8 +749,8 @@ class Network:
             The modified SPARQL query with the LIMIT clause added if applicable.
         """
         if limit is not None:
-            return f"LIMIT {limit}"
-        return ""
+            return [f"LIMIT {limit}"]
+        return []
 
     def _create_query(self, source, destinations=None, num_paths=1, limit=None):
         """
