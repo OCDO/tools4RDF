@@ -704,20 +704,14 @@ class OntoParser:
         """
         for key, cls in self.attributes["class"].items():
             for equivalent in self.graph.objects(cls.target, OWL.equivalentClass):
-                if (
-                    strip_name(equivalent, namespace=self._lookup_namespace(equivalent))
-                    in self.attributes["class"]
-                ):
-                    self.attributes["class"][
-                        strip_name(
-                            equivalent, namespace=self._lookup_namespace(equivalent)
-                        )
-                    ].equivalent_classes.append(cls.name)
-                    cls.equivalent_classes.append(
-                        strip_name(
-                            equivalent, namespace=self._lookup_namespace(equivalent)
-                        )
+                stripped_name = strip_name(
+                    equivalent, namespace=self._lookup_namespace(equivalent)
+                )
+                if stripped_name in self.attributes["class"]:
+                    self.attributes["class"][stripped_name].equivalent_classes.append(
+                        cls.name
                     )
+                    cls.equivalent_classes.append(stripped_name)
 
     def recursively_add_equivalents(self):
         """
