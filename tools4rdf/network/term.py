@@ -22,6 +22,12 @@ from rdflib import URIRef
 import numbers
 import copy
 import warnings
+from urllib.parse import urlparse
+
+
+def is_url(string):
+    parsed = urlparse(string)
+    return bool(parsed.netloc) and bool(parsed.scheme)
 
 
 def _get_namespace_and_name(uri):
@@ -375,7 +381,7 @@ class OntoTerm:
         # this indicates that type enforcing is not needed
         item = copy.deepcopy(self)
         item._enforce_type = False
-        #but subclasses need not be added anymore
+        # but subclasses need not be added anymore
         item._add_subclass = False
         return item
 
@@ -383,7 +389,7 @@ class OntoTerm:
     def all_subtypes(self):
         # this indicates that type enforcing is not needed
         item = copy.deepcopy(self)
-        #this means no need to enforce type
+        # this means no need to enforce type
         item._enforce_type = False
         item._add_subclass = True
         return item
