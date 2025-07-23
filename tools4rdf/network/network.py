@@ -913,7 +913,6 @@ class Network:
 
     def remote_query(
         self,
-        kg,
         source,
         destinations=None,
         return_df=True,
