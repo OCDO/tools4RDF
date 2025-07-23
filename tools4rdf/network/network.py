@@ -17,7 +17,7 @@ import itertools
 from rdflib import URIRef, Literal, RDF, OWL, Graph
 from tools4rdf.network.attrsetter import AttrSetter
 from tools4rdf.network.parser import parse_ontology, OntoParser
-from tools4rdf.network.term import OntoTerm
+from tools4rdf.network.term import OntoTerm, is_url
 
 
 def _replace_name(name):
@@ -871,8 +871,9 @@ class Network:
 
         Parameters
         ----------
-        kg : object
+        kg : object, or SPARQL endpoint
             The knowledge graph object to query.
+            Or a remote SPARQL url for endpoint
         source : OntoTerm
             The source node from which paths are to be queried.
         destinations : list of OntoTerm, optional
@@ -892,35 +893,12 @@ class Network:
             Returns None if no results are found.
         """
 
-        query_strings = self.create_query(
-            source,
-            destinations=destinations,
-            return_list=True,
-            num_paths=num_paths,
-            limit=limit,
-            remote_source=None,
-        )
-        res = []
-        for query_string in query_strings:
-            r = self._query(kg, query_string, return_df=return_df)
-            if r is not None:
-                res.append(r)
-        if len(res) == 0:
-            return None
-        if return_df:
-            res = pd.concat(res)
-        return res
+        remote_source = None
+        if isinstance(kg, str):
+            if is_url(kg):
+                remote_source = kg
+                kg = Graph()
 
-    def remote_query(
-        self,
-        source,
-        destinations=None,
-        return_df=True,
-        num_paths=1,
-        limit=None,
-        remote_source=None,
-    ):
-        g = Graph()
         query_strings = self.create_query(
             source,
             destinations=destinations,
@@ -931,7 +909,7 @@ class Network:
         )
         res = []
         for query_string in query_strings:
-            r = self._query(g, query_string, return_df=return_df)
+            r = self._query(kg, query_string, return_df=return_df)
             if r is not None:
                 res.append(r)
         if len(res) == 0:
