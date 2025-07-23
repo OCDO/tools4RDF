@@ -276,7 +276,10 @@ class OntoParser:
                 for top_prop in top_props:
                     if top_prop not in top_most_properties:
                         # get the name of the subproperty
-                        toppropname = strip_name(top_prop.toPython())
+                        toppropname = strip_name(
+                            top_prop.toPython(),
+                            namespace=self._lookup_namespace(top_prop.toPython()),
+                        )
                         # add it to the object property
                         if toppropname in self.attributes[prop_type]:
                             self.attributes[prop_type][toppropname].subclasses.append(
@@ -336,7 +339,11 @@ class OntoParser:
                         self.mappings[term.toPython()] = {
                             "type": relation_type,
                             "items": [
-                                strip_name(item.toPython()) for item in unravel_list
+                                strip_name(
+                                    item.toPython(),
+                                    namespace=self._lookup_namespace(item.toPython()),
+                                )
+                                for item in unravel_list
                             ],
                         }
             else:
@@ -415,7 +422,11 @@ class OntoParser:
             else:
                 terms = [strip_name(term.toPython())]
         else:
-            terms = [strip_name(term.toPython())]
+            terms = [
+                strip_name(
+                    term.toPython(), namespace=self._lookup_namespace(term.toPython())
+                )
+            ]
         # so here we map the domain and range wrt to other heirarchies
         additional_terms = []
         # first get subclasses which will share the domain and range
@@ -454,8 +465,9 @@ class OntoParser:
         if isinstance(term, BNode):
             term = term.toPython()
         else:
-            term = strip_name(term.toPython())
-        # print(term)
+            term = strip_name(
+                term.toPython(), namespace=self._lookup_namespace(term.toPython())
+            )
         if term in self.attributes["class"]:
             return [self.attributes["class"][term].name]
         elif term in self.mappings:
@@ -692,11 +704,20 @@ class OntoParser:
         """
         for key, cls in self.attributes["class"].items():
             for equivalent in self.graph.objects(cls.target, OWL.equivalentClass):
-                if strip_name(equivalent) in self.attributes["class"]:
+                if (
+                    strip_name(equivalent, namespace=self._lookup_namespace(equivalent))
+                    in self.attributes["class"]
+                ):
                     self.attributes["class"][
-                        strip_name(equivalent)
+                        strip_name(
+                            equivalent, namespace=self._lookup_namespace(equivalent)
+                        )
                     ].equivalent_classes.append(cls.name)
-                    cls.equivalent_classes.append(strip_name(equivalent))
+                    cls.equivalent_classes.append(
+                        strip_name(
+                            equivalent, namespace=self._lookup_namespace(equivalent)
+                        )
+                    )
 
     def recursively_add_equivalents(self):
         """
@@ -756,7 +777,10 @@ class OntoParser:
             for parent in parents:
                 if parent not in [OWL.NamedIndividual, OWL.Class]:
                     self.attributes["class"][
-                        strip_name(parent.toPython())
+                        strip_name(
+                            parent.toPython(),
+                            namespace=self._lookup_namespace(parent.toPython()),
+                        )
                     ].named_individuals.append(term.name)
 
     def get_attributes(self):

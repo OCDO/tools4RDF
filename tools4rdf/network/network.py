@@ -14,7 +14,7 @@ import graphviz
 import pandas as pd
 import itertools
 
-from rdflib import URIRef, Literal, RDF, OWL
+from rdflib import URIRef, Literal, RDF, OWL, Graph
 from tools4rdf.network.attrsetter import AttrSetter
 from tools4rdf.network.parser import parse_ontology, OntoParser
 from tools4rdf.network.term import OntoTerm
@@ -912,9 +912,34 @@ class Network:
         return res
 
     def remote_query(
-        self, kg, source, destinations=None, return_df=True, num_paths=1, limit=None
+        self,
+        kg,
+        source,
+        destinations=None,
+        return_df=True,
+        num_paths=1,
+        limit=None,
+        remote_source=None,
     ):
-        pass
+        g = Graph()
+        query_strings = self.create_query(
+            source,
+            destinations=destinations,
+            return_list=True,
+            num_paths=num_paths,
+            limit=limit,
+            remote_source=remote_source,
+        )
+        res = []
+        for query_string in query_strings:
+            r = self._query(g, query_string, return_df=return_df)
+            if r is not None:
+                res.append(r)
+        if len(res) == 0:
+            return None
+        if return_df:
+            res = pd.concat(res)
+        return res
 
     def _query(self, kg, query_string, return_df=True):
         """
