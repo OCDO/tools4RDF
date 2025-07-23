@@ -4,6 +4,7 @@
 
 -   [Sarath Menon](http://sarathmenon.me)  
 -   [Abril Azócar Guzmán](https://www.fz-juelich.de/profile/guzman_a.azocar)
+-   [Osamu Waseda](https://www.mpie.de/person/51628/3079071)
 
 
 ## Contributers
