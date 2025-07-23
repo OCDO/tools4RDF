@@ -546,6 +546,8 @@ class Network:
         query.append("WHERE {")
         # if remote_source is provided, use it as the source
         if remote_source is not None:
+            if not is_url(remote_source):
+                raise ValueError(f"{remote_source} is not a valid url")
             query.append(f"  SERVICE <{remote_source}> {{")
         return query
 
