@@ -639,6 +639,8 @@ class Network:
                 "   { ?%s rdf:type %s . }"
                 % (_strip_name(source.variable_name), source.query_name)
             )
+            if source.name.split(":")[0] not in namespaces_used:
+                namespaces_used.append(source.name.split(":")[0])
             for cls_name in source.subclasses:
                 if cls_name.split(":")[0] not in namespaces_used:
                     namespaces_used.append(cls_name.split(":")[0])
@@ -654,6 +656,8 @@ class Network:
                 "    ?%s rdf:type %s ."
                 % (_strip_name(source.variable_name), source.query_name)
             )
+            if source.name.split(":")[0] not in namespaces_used:
+                namespaces_used.append(source.name.split(":")[0])
         return query, namespaces_used
 
     def _add_types_for_destination(self, destinations):
@@ -689,6 +693,8 @@ class Network:
                     "   { ?%s rdf:type %s . }"
                     % (_strip_name(destination.variable_name), destination.query_name)
                 )
+                if destination.name.split(":")[0] not in namespaces_used:
+                    namespaces_used.append(destination.name.split(":")[0])
                 for cls_name in destination.subclasses:
                     if cls_name.split(":")[0] not in namespaces_used:
                         namespaces_used.append(cls_name.split(":")[0])
@@ -708,6 +714,8 @@ class Network:
                         destination.query_name,
                     )
                 )
+                if destination.name.split(":")[0] not in namespaces_used:
+                    namespaces_used.append(destination.name.split(":")[0])
         return query, namespaces_used
 
     def _add_filters(self, destinations, remote_source=None):
