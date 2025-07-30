@@ -25,12 +25,10 @@ web technologies.
 pip install tools4rdf
 ```
 
-Or clone the repo:
+Or:
 
 ```bash
-git clone https://github.com/OCDO/tools4RDF.git
-cd tools4RDF
-pip install -e .
+conda install -c conda-forge tools4rdf
 ```
 
 ---
@@ -48,7 +46,7 @@ df = onto.query(
 )
 ```
 
-More examples available in the [examples/](examples/) folder.
+More examples available in the [docs](https://tools4rdf.readthedocs.io/en/latest/).
 
 ---
 
@@ -62,7 +60,7 @@ MIT License
 
 Issues and pull requests are welcome! Feel free to suggest new utilities or improvements.
 
-## Acknowledgements
+## 📌 Acknowledgement
 This work is supported by the [NFDI-Matwerk](https://nfdi-matwerk.de/) consortia.
 
 Funded by the Deutsche Forschungsgemeinschaft (DFG, German Research Foundation) under the National Research Data Infrastructure – NFDI 38/1 – project number 460247524
