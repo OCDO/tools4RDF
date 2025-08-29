@@ -5,7 +5,6 @@ rdf_structure_store/
 *.db
 wf*
 *.data
-*.ipynb
 *.dump
 *POSCAR*
 *.tar.gz
