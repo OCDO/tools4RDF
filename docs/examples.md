@@ -15,6 +15,15 @@ Getting started with tools4rdf
 Learn about simple SPARQL queries
 :::
 
+:::{grid-item-card}
+:link: ../examples/02_advanced_query_building
+:link-type: doc
+:class-header: bg-light
+Advanced query building with operators
+^^^
+Learn about comparison and logical operators
+:::
+
 ::::
 
 
