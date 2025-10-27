@@ -6,7 +6,7 @@ with open('README.md') as readme_file:
 
 setup(
     name='tools4rdf',
-    version='0.3.5',
+    version='0.3.6',
     author='Abril Azocar Guzman, Sarath Menon',
     author_email='sarath.menon@pyscal.org',
     description='python tool for working with ontologies and data models',

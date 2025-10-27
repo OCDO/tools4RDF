@@ -1,114 +1,113 @@
 @prefix ns1: <https://example.org/pizza#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<American:3775bb76> a ns1:American ;
-    ns1:hasBase <PizzaBase:d86b5534> ;
+<American:245aa2f1> a ns1:American ;
+    ns1:hasBase <PizzaBase:b2589f4c> ;
+    ns1:hasCalorificContentValue "1292.0"^^xsd:float ;
     ns1:hasPrice "10.0"^^xsd:float ;
-    ns1:hasTopping <MozzarellaTopping:a51ba02f>,
-        <PeperoniSausageTopping:f3a39bb8>,
-        <TomatoTopping:5844c5ec> .
+    ns1:hasTopping <MozzarellaTopping:bf036cbf>,
+        <PeperoniSausageTopping:e80908d1>,
+        <TomatoTopping:ac38aa0b> .
 
-<AmericanHot:b3f8f95b> a ns1:AmericanHot ;
-    ns1:hasBase <PizzaBase:d86b5534> ;
+<AmericanHot:81efd537> a ns1:AmericanHot ;
+    ns1:hasBase <PizzaBase:b2589f4c> ;
+    ns1:hasCalorificContentValue "1321.0"^^xsd:float ;
     ns1:hasPrice "11.5"^^xsd:float ;
-    ns1:hasSpiciness <Hot:e4e5cd8e> ;
-    ns1:hasTopping <JalapenoPepperTopping:99f9c94a>,
-        <MozzarellaTopping:a51ba02f>,
-        <PeperoniSausageTopping:f3a39bb8>,
-        <TomatoTopping:5844c5ec> .
+    ns1:hasSpiciness <Hot:3ba60921> ;
+    ns1:hasTopping <JalapenoPepperTopping:6a6399fd>,
+        <MozzarellaTopping:bf036cbf>,
+        <PeperoniSausageTopping:e80908d1>,
+        <TomatoTopping:ac38aa0b> .
 
-<IceCream:58e21cdd> a ns1:IceCream ;
-    ns1:hasIngredient <Milk:27888ede> ;
+<IceCream:b992bbd1> a ns1:IceCream ;
+    ns1:hasIngredient <Milk:dd9cf92b> ;
     ns1:hasPrice "7.0"^^xsd:float .
 
-<Margherita:52ceb1ed> a ns1:Margherita ;
-    ns1:hasBase <ThinAndCrispyBase:63175e30> ;
+<Margherita:3cfeae45> a ns1:Margherita ;
+    ns1:hasBase <ThinAndCrispyBase:b0fca1d2> ;
+    ns1:hasCalorificContentValue "848.0"^^xsd:float ;
     ns1:hasPrice "8.99"^^xsd:float ;
-    ns1:hasTopping <MozzarellaTopping:a51ba02f>,
-        <TomatoTopping:5844c5ec> .
+    ns1:hasTopping <MozzarellaTopping:bf036cbf>,
+        <TomatoTopping:ac38aa0b> .
 
-<Margherita:fed8acfc> a ns1:Margherita ;
-    ns1:hasBase <DeepPanBase:57ba76e0> ;
+<Margherita:e424656a> a ns1:Margherita ;
+    ns1:hasBase <DeepPanBase:bea0fa63> ;
+    ns1:hasCalorificContentValue "898.0"^^xsd:float ;
     ns1:hasPrice "9.5"^^xsd:float ;
-    ns1:hasTopping <MozzarellaTopping:a51ba02f>,
-        <TomatoTopping:5844c5ec> .
+    ns1:hasTopping <MozzarellaTopping:bf036cbf>,
+        <TomatoTopping:ac38aa0b> .
 
-<Mushroom:1e428ac1> a ns1:Mushroom ;
-    ns1:hasBase <PizzaBase:d86b5534> ;
+<Mushroom:b6b736c9> a ns1:Mushroom ;
+    ns1:hasBase <PizzaBase:b2589f4c> ;
+    ns1:hasCalorificContentValue "820.0"^^xsd:float ;
     ns1:hasPrice "11.0"^^xsd:float ;
-    ns1:hasTopping <MozzarellaTopping:a51ba02f>,
-        <MushroomTopping:9dd0938c>,
-        <TomatoTopping:5844c5ec> .
+    ns1:hasTopping <MozzarellaTopping:bf036cbf>,
+        <MushroomTopping:fb6270b6>,
+        <TomatoTopping:ac38aa0b> .
 
-<SpicyPizza:2a9eb8e8> a ns1:SpicyPizza ;
-    ns1:hasBase <PizzaBase:d86b5534> ;
+<Pizza:71307a5a> a ns1:Pizza ;
+    ns1:hasBase <PizzaBase:b2589f4c> ;
+    ns1:hasCalorificContentValue "838.0"^^xsd:float ;
     ns1:hasPrice "11.0"^^xsd:float ;
-    ns1:hasSpiciness <Hot:e4e5cd8e> ;
-    ns1:hasTopping <HotGreenPepperTopping:48af7664>,
-        <MozzarellaTopping:a51ba02f>,
-        <TomatoTopping:5844c5ec> .
+    ns1:hasSpiciness <Hot:3ba60921> ;
+    ns1:hasTopping <HotGreenPepperTopping:a3bf93c6>,
+        <MozzarellaTopping:bf036cbf>,
+        <TomatoTopping:ac38aa0b> .
 
-<SpicyPizza:8864a1fc> a ns1:SpicyPizza ;
-    ns1:hasBase <PizzaBase:d86b5534> ;
-    ns1:hasPrice "12.99"^^xsd:float ;
-    ns1:hasSpiciness <Mild:c1b0d470> ;
-    ns1:hasTopping <MozzarellaTopping:a51ba02f>,
-        <SweetPepperTopping:a92683f9>,
-        <TomatoTopping:5844c5ec> .
-
-<VegetarianPizza:48687fff> a ns1:VegetarianPizza ;
-    ns1:hasBase <PizzaBase:d86b5534> ;
+<Pizza:bec7e5f2> a ns1:Pizza ;
+    ns1:hasBase <PizzaBase:b2589f4c> ;
+    ns1:hasCalorificContentValue "960.0"^^xsd:float ;
     ns1:hasPrice "11.5"^^xsd:float ;
-    ns1:hasTopping <ArtichokeTopping:98b6114e>,
-        <MozzarellaTopping:a51ba02f>,
-        <OliveTopping:d335c04e>,
-        <TomatoTopping:5844c5ec> .
+    ns1:hasTopping <ArtichokeTopping:9ac24a8f>,
+        <MozzarellaTopping:bf036cbf>,
+        <OliveTopping:be9df07d>,
+        <TomatoTopping:ac38aa0b> .
 
-<ArtichokeTopping:98b6114e> a ns1:ArtichokeTopping .
+<Pizza:f9f81adc> a ns1:Pizza ;
+    ns1:hasBase <PizzaBase:b2589f4c> ;
+    ns1:hasCalorificContentValue "824.0"^^xsd:float ;
+    ns1:hasPrice "12.99"^^xsd:float ;
+    ns1:hasSpiciness <Mild:0bf38aee> ;
+    ns1:hasTopping <MozzarellaTopping:bf036cbf>,
+        <SweetPepperTopping:65fd884d>,
+        <TomatoTopping:ac38aa0b> .
 
-<DeepPanBase:57ba76e0> a ns1:DeepPanBase .
+<ArtichokeTopping:9ac24a8f> a ns1:ArtichokeTopping ;
+    ns1:hasCalorificContentValue "47.0"^^xsd:float .
 
-<HotGreenPepperTopping:48af7664> a ns1:HotGreenPepperTopping .
+<DeepPanBase:bea0fa63> a ns1:DeepPanBase .
 
-<JalapenoPepperTopping:99f9c94a> a ns1:JalapenoPepperTopping .
+<HotGreenPepperTopping:a3bf93c6> a ns1:HotGreenPepperTopping ;
+    ns1:hasCalorificContentValue "40.0"^^xsd:float .
 
-<Mild:c1b0d470> a ns1:Mild .
+<JalapenoPepperTopping:6a6399fd> a ns1:JalapenoPepperTopping ;
+    ns1:hasCalorificContentValue "29.0"^^xsd:float .
 
-<Milk:27888ede> a ns1:Milk .
+<Mild:0bf38aee> a ns1:Mild .
 
-<MushroomTopping:9dd0938c> a ns1:MushroomTopping .
+<Milk:dd9cf92b> a ns1:Milk .
 
-<OliveTopping:d335c04e> a ns1:OliveTopping .
+<MushroomTopping:fb6270b6> a ns1:MushroomTopping ;
+    ns1:hasCalorificContentValue "22.0"^^xsd:float .
 
-<SweetPepperTopping:a92683f9> a ns1:SweetPepperTopping .
+<OliveTopping:be9df07d> a ns1:OliveTopping ;
+    ns1:hasCalorificContentValue "115.0"^^xsd:float .
 
-<ThinAndCrispyBase:63175e30> a ns1:ThinAndCrispyBase .
+<SweetPepperTopping:65fd884d> a ns1:SweetPepperTopping ;
+    ns1:hasCalorificContentValue "26.0"^^xsd:float .
 
-ns1:ArtichokeTopping ns1:hasCalorificContentValue "47.0"^^xsd:float .
+<ThinAndCrispyBase:b0fca1d2> a ns1:ThinAndCrispyBase .
 
-ns1:HotGreenPepperTopping ns1:hasCalorificContentValue "40.0"^^xsd:float .
+<Hot:3ba60921> a ns1:Hot .
 
-ns1:JalapenoPepperTopping ns1:hasCalorificContentValue "29.0"^^xsd:float .
+<PeperoniSausageTopping:e80908d1> a ns1:PeperoniSausageTopping ;
+    ns1:hasCalorificContentValue "494.0"^^xsd:float .
 
-ns1:MozzarellaTopping ns1:hasCalorificContentValue "280.0"^^xsd:float .
+<PizzaBase:b2589f4c> a ns1:PizzaBase .
 
-ns1:MushroomTopping ns1:hasCalorificContentValue "22.0"^^xsd:float .
+<MozzarellaTopping:bf036cbf> a ns1:MozzarellaTopping ;
+    ns1:hasCalorificContentValue "280.0"^^xsd:float .
 
-ns1:OliveTopping ns1:hasCalorificContentValue "115.0"^^xsd:float .
-
-ns1:PeperoniSausageTopping ns1:hasCalorificContentValue "494.0"^^xsd:float .
-
-ns1:SweetPepperTopping ns1:hasCalorificContentValue "26.0"^^xsd:float .
-
-ns1:TomatoTopping ns1:hasCalorificContentValue "18.0"^^xsd:float .
-
-<Hot:e4e5cd8e> a ns1:Hot .
-
-<PeperoniSausageTopping:f3a39bb8> a ns1:PeperoniSausageTopping .
-
-<PizzaBase:d86b5534> a ns1:PizzaBase .
-
-<MozzarellaTopping:a51ba02f> a ns1:MozzarellaTopping .
-
-<TomatoTopping:5844c5ec> a ns1:TomatoTopping .
+<TomatoTopping:ac38aa0b> a ns1:TomatoTopping ;
+    ns1:hasCalorificContentValue "18.0"^^xsd:float .
 

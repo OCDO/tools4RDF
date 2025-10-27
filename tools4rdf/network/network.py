@@ -649,7 +649,7 @@ class Network:
                 cls_term = self.attributes["class"][cls_name]
                 query.append(
                     "   { ?%s rdf:type %s . }"
-                    % (_strip_name(cls_term.variable_name), cls_term.query_name)
+                    % (_strip_name(source.variable_name), cls_term.query_name)
                 )
         elif source._enforce_type and source.node_type == "class":
             query.append(
@@ -703,7 +703,7 @@ class Network:
                     cls_term = self.attributes["class"][cls_name]
                     query.append(
                         "   { ?%s rdf:type %s . }"
-                        % (_strip_name(cls_term.variable_name), cls_term.query_name)
+                        % (_strip_name(destination.variable_name), cls_term.query_name)
                     )
 
             elif destination._enforce_type and destination.node_type == "class":
