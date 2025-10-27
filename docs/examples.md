@@ -7,7 +7,7 @@ The gallery of examples below cover different ways in which tools4rdf can be use
 :gutter: 3
 
 :::{grid-item-card}
-:link: ../examples/01_sparql_queries
+:link: ../examples/01_basic_queries
 :link-type: doc
 :class-header: bg-light
 Getting started with tools4rdf

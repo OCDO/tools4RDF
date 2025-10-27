@@ -7,7 +7,8 @@ chapters:
   - file: docs/gettingstarted.md
   - file: docs/examples.md
     sections:
-    - file: examples/01_sparql_queries
+    - file: examples/01_basic_queries
+    - file: examples/02_advanced_query_building
   - file: docs/extending.md
   - file: docs/license.md
   - file: docs/acknowledgements.md
