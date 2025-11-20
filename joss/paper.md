@@ -48,25 +48,25 @@ tools4RDF is a lightweight Python framework designed to simplify working with RD
 
 # Statement of need
 
-Knowledge graphs [@gutierrez_knowledge_2020], coupled with formal ontologies, offer a promising technical approach for implementing the FAIR Guiding Principles [@wilkinson_fair_2016] for research data management. They support semantic interoperability, especially for aggregation and description of heterogeneous data [@vogt_suggestions_2025]. Accessing and querying these graphs typically relies on SPARQL [@w3c-sparql11], the standard query language for RDF data [@w3c-sparql11]. However, despite its potential, SPARQL remains difficult to use for many domain scientists due to unfamiliar syntax, steep learning curve, and the absence of a user-friendly tool stack [@Khamparia2017]. Libraries such as RDFLib [@Krech2025] offer core functionality for RDF parsing and graph storage but require users to write SPARQL queries and manipulate low-level graph objects. Tools like Protégé [@Musen2015] and SemTK [@cuddihy_semtk_nodate] provide graphical interfaces for ontology exploration, but they focus on GUI-based interaction and lack integration with the Python ecosystem commonly used in scientific computing.
+Knowledge graphs [@gutierrez_knowledge_2020], coupled with formal ontologies, offer a promising technical approach for implementing the FAIR Guiding Principles [@wilkinson_fair_2016] for research data management. They support semantic interoperability, especially for aggregation and description of heterogeneous data [@vogt_suggestions_2025]. Accessing and querying these graphs typically relies on SPARQL [@w3c-sparql11], the standard query language for RDF data [@w3c-sparql11]. However, despite its potential, SPARQL remains difficult to use for many domain scientists due to unfamiliar syntax, steep learning curve, and the absence of a user-friendly tool stack [@Khamparia2017]. Libraries such as RDFLib [@Krech2025] offer core functionality for RDF parsing and graph storage but require users to write SPARQL queries and manipulate low-level graph objects. Tools like Protégé [@Musen2015] and [SemTK](https://github.com/ge-semtk/semtk) provide graphical interfaces for ontology exploration, but they focus on GUI-based interaction and lack integration with the Python ecosystem commonly used in scientific computing.
 
-tools4RDF fills this gap by providing a Python-native interface for ontology exploration and query construction. By ingesting one or more ontologies and converting them into navigable Python classes, allowing users to navigate class hierarchies, properties, and relationships through autocompletion. This enables users to perform predicate-based graph traversal and generate SPARQL queries programmatically, without requiring manual SPARQL scripting. The framework tools4RDF supports a code-first workflow that allows domain scientists to explore semantic data in familiar environments such as Jupyter notebooks. Query results can be parsed directly into pandas [@reback2020pandas, @mckinney-proc-scipy-2010] dataframes, facilitating integration with existing data processing pipelines. Beyond simplifying ontology interaction, this programmatic access to ontologies may also be useful for integrating semantic data into applications involving agentic AI or large language models. The tool supports the construction, maintenance, and use of complex knowledge graphs in computational research.
+tools4RDF fills this gap by providing a Python-native interface for ontology exploration and query construction. By ingesting one or more ontologies and converting them into navigable Python classes, allowing users to navigate class hierarchies, properties, and relationships through autocompletion. This enables users to perform predicate-based graph traversal and generate SPARQL queries programmatically, without requiring manual SPARQL scripting. The framework tools4RDF supports a code-first workflow that allows domain scientists to explore semantic data in familiar environments such as Jupyter notebooks. Query results can be parsed directly into [Pandas](https://doi.org/10.5281/zenodo.3509134) [@mckinney-proc-scipy-2010] dataframes, facilitating integration with existing data processing pipelines. Beyond simplifying ontology interaction, this programmatic access to ontologies may also be useful for integrating semantic data into applications involving agentic AI or large language models. The tool supports the construction, maintenance, and use of complex knowledge graphs in computational research.
 
 # Key features
 
-#### Parser for ontologies
+## Parser for ontologies
 
 tools4RDF includes a parser for ontologies that extracts classes, datatype properties, annotation properties, and hierarchical relationships such as subclasses and subproperties. It also parses and preserves domain and range definitions. The ontology is then represented as Python classes, which can be used programmatically in scripts and workflows to provide contextual knowledge.
 
 Multiple ontologies can be parsed separately and their extraction can be  combined using the `+` operator. Links between classes from different ontologies can be defined in external files or added programmatically.
 
-#### Automated creation of SPARQL queries}
+## Automated creation of SPARQL queries
 
 Once the ontology terms are parsed, tools4RDF can generate SPARQL queries automatically if the source and destination terms are specified. Autocompletion helps users find relevant terms without needing detailed knowledge of the ontology. Internally, tools4RDF realises the ontology as a graph and traverses it to determine valid paths between terms. These paths are then converted to triples, which are then used in a SPARQL query.
     
 Advanced features include: (i) restricting queries based on datatype properties, (ii) applying restrictions to queries using `<, >, <=, >=, ==` operators (iii) chaining restrictions and constructing complex queries using logical operators such as `&` and `|`, and (iv) manually specifying intermediate terms for fine-grained control. 
     
-A simple SPARQL query, and the corresponding programmatic query creation. SPARQL code for querying a `Person`, and the corresponding `familyName` from DBpedia [@Auer2007] using the [FOAF](http://xmlns.com/foaf/spec/) ontology, and showing the first ten results.
+A simple SPARQL query, and the corresponding programmatic query creation. SPARQL code for querying a `Person`, and the corresponding `familyName` from DBpedia [@Auer2007] using the [FOAF](http://xmlns.com/foaf/spec/) ontology, and showing the first ten results is as follows:
 
 ```sparql
 PREFIX foaf: <http://xmlns.com/foaf/0.1/>
@@ -96,17 +96,17 @@ An `OntologyNetwork` object is first created using a selected ontology. The `que
 
 More examples, including the demonstration of the use of comparison and logical operators are available in the [documentation](https://tools4rdf.readthedocs.io/en/latest/docs/examples.html).
 
-#### Ontology visualization
+## Ontology visualization
 
 tools4RDF also includes a simple ontology visualisation tool. It uses Graphviz [@gansner2000open] to generate quick visual representations of ontologies within Jupyter notebooks.
         
 # Current limitations
 
-#### Translation of SPARQL functionality to Python
+## Translation of SPARQL functionality to Python
 
 tools4RDF currently supports a subset of SPARQL operations designed to cover common query patterns, making it accessible to users without prior experience in semantic web technologies. Advanced query features are not yet supported. However, expert users can generate an initial query with tools4RDF and then extend or refine it manually, and execute it. We expect the user community to engage with the tool and contribute toward extending SPARQL support.
 
-#### Reasoning
+## Reasoning
 
 The queries generated by tools4RDF are based only on the information explicitly present in the input RDF-based files. No description logic reasoning is performed, so implicit relationships are not taken into account. This limitation could be addressed by combining tools4RDF with reasoning tools such as HermiT [@Glimm2014] as a preprocessing step to materialize inferences prior to query construction.
 
