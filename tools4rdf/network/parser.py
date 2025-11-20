@@ -567,6 +567,10 @@ class OntoParser:
             domain_term = self.lookup_node(obj)
             for term in domain_term:
                 domain.append(term)
+                if term in self.attributes["class"]:
+                    domain.extend(self.attributes["class"][term].subclasses)
+                    domain.extend(self.attributes["class"][term].equivalent_classes)
+                    domain.extend(self.attributes["class"][term].named_individuals)
         return domain
 
     def create_term(self, cls):
