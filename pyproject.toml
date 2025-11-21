@@ -1,0 +1,86 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tools4rdf"
+version = "0.3.6"
+description = "python tool for working with ontologies and data models"
+readme = "README.md"
+requires-python = ">=3.8"
+license = {text = "MIT"}
+authors = [
+    {name = "Abril Azocar Guzman", email = "sarath.menon@pyscal.org"},
+    {name = "Sarath Menon", email = "sarath.menon@pyscal.org"}
+]
+maintainers = [
+    {name = "Sarath Menon", email = "sarath.menon@pyscal.org"}
+]
+keywords = ["ontology", "rdf", "sparql", "semantic-web", "knowledge-graph"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering",
+]
+dependencies = [
+    "numpy",
+    "rdflib",
+    "pyyaml",
+    "graphviz",
+    "networkx",
+    "pandas",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-cov",
+]
+docs = [
+    "sphinx",
+    "sphinx-rtd-theme",
+]
+
+[project.urls]
+Homepage = "https://pyscal.org"
+Documentation = "https://pyscal.org"
+Repository = "https://github.com/ocdo/tools4rdf"
+Download = "https://github.com/ocdo/tools4rdf"
+
+[tool.setuptools]
+zip-safe = false
+include-package-data = true
+
+[tool.setuptools.packages.find]
+include = ["tools4rdf*"]
+
+[tool.setuptools.package-data]
+tools4rdf = ["data/*.owl", "data/*.rdf", "data/*.ttl"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "-v --strict-markers"
+
+[tool.coverage.run]
+source = ["tools4rdf"]
+omit = ["*/tests/*", "*/test_*.py"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+]
