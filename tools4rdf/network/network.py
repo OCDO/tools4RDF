@@ -236,18 +236,21 @@ class Network:
             complete_list = [source, *target._parents, target]
             # get path for first two terms
             path = self._get_shortest_path(complete_list[0], complete_list[1])
+            # this is always of shape 1, x so we can directly take first element
+            path = path[0]
+
             for x in range(2, len(complete_list)):
                 temp_source = complete_list[x - 1]
                 temp_dest = complete_list[x]
                 temp_path = self._get_shortest_path(temp_source, temp_dest)
-                if len(temp_path) == 1:
-                    if len(temp_path[0]) == 2:
-                        # this means that they are next to each other, so we cannot form a full path
-                        # so we need to add the last item of the previous path
-                        path[-1][-1] = temp_path[0][-1]
+                # this will also always be of shape 1, x so we can directly take first element
+                temp_path = temp_path[0]
+                # ok now we need to merge temp_path into path
+                if len(temp_path) == 2:
+                    path[-1] = temp_path[-1]
                 else:
                     path.extend(temp_path[1:])
-            paths.extend(path)
+            paths.append(path)
         else:
             paths = self._get_shortest_path(source, target, num_paths=num_paths)
         if triples:
