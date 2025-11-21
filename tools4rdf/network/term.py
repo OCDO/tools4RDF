@@ -185,6 +185,7 @@ class OntoTerm:
         self.target = target
         self._enforce_type = True
         self._add_subclass = True
+        self._old_variable_name = None
 
     @property
     def URIRef(self):
@@ -437,7 +438,18 @@ class OntoTerm:
                 "This operation can only be performed with a data property!"
             )
 
+    def _update_condition_string(
+        self,
+    ):
+        condition_string = self._condition
+        if self._old_variable_name is not None:
+            condition_string = condition_string.replace(
+                self._old_variable_name, self.variable_name
+            )
+            self._condition = condition_string
+
     def _create_condition_string(self, condition, val):
+        self._old_variable_name = self.variable_name
         return f'(?{self.variable_name}{condition}"{val}"^^xsd:{self._clean_datatype(self.range[0])})'
 
     # overloading operators
@@ -487,8 +499,9 @@ class OntoTerm:
         # print(f'lhs {self} rhs {val}')
         self._is_number(val)
         self._is_data_node()
-        self._condition = self._create_condition_string(">", val)
-        return self
+        item = copy.deepcopy(self)
+        item._condition = item._create_condition_string(">", val)
+        return item
 
     def __and__(self, term):
         self._is_term(term)
@@ -503,6 +516,7 @@ class OntoTerm:
         # and clean up the inbound term
         if item.name != term.name:
             term.refresh_condition()
+        self.refresh_condition()
         return item
 
     def and_(self, term):
@@ -521,6 +535,7 @@ class OntoTerm:
         # and clean up the inbound term
         if item.name != term.name:
             term.refresh_condition()
+        self.refresh_condition()
         return item
 
     def or_(self, term):
