@@ -185,6 +185,7 @@ class OntoTerm:
         self.target = target
         self._enforce_type = True
         self._add_subclass = True
+        self._old_variable_name = None
 
     @property
     def URIRef(self):
@@ -437,7 +438,18 @@ class OntoTerm:
                 "This operation can only be performed with a data property!"
             )
 
+    def _update_condition_string(
+        self,
+    ):
+        condition_string = self._condition
+        if self._old_variable_name is not None:
+            condition_string = condition_string.replace(
+                self._old_variable_name, self.variable_name
+            )
+            self._condition = condition_string
+
     def _create_condition_string(self, condition, val):
+        self._old_variable_name = self.variable_name
         return f'(?{self.variable_name}{condition}"{val}"^^xsd:{self._clean_datatype(self.range[0])})'
 
     # overloading operators

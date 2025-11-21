@@ -301,6 +301,9 @@ class Network:
                 modified_destinations.append(last_destination)
             else:
                 modified_destinations.append(destination)
+        # now update conditions
+        for modified_destination in modified_destinations:
+            modified_destination._update_condition_string()
         return modified_destinations
 
     def _is_already_in_destinations(self, object_property, destinations):
