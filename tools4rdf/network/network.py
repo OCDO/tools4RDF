@@ -638,10 +638,17 @@ class Network:
         namespaces_used = []
         if source._add_subclass and source.node_type == "class":
             # we have to make a type query connection by union
-            query.append(
-                "   { ?%s rdf:type %s . }"
-                % (_strip_name(source.variable_name), source.query_name)
-            )
+            # check if has any subclasses
+            if len(source.subclasses) == 0:
+                query.append(
+                    "     ?%s rdf:type %s . "
+                    % (_strip_name(source.variable_name), source.query_name)
+                )
+            else:
+                query.append(
+                    "   { ?%s rdf:type %s . }"
+                    % (_strip_name(source.variable_name), source.query_name)
+                )
             if source.name.split(":")[0] not in namespaces_used:
                 namespaces_used.append(source.name.split(":")[0])
             for cls_name in source.subclasses:
@@ -692,10 +699,23 @@ class Network:
         for destination in destinations:
             if destination._add_subclass and destination.node_type == "class":
                 # we have to make a type query connection by union
-                query.append(
-                    "   { ?%s rdf:type %s . }"
-                    % (_strip_name(destination.variable_name), destination.query_name)
-                )
+                # check if has any subclasses
+                if len(destination.subclasses) == 0:
+                    query.append(
+                        "     ?%s rdf:type %s . "
+                        % (
+                            _strip_name(destination.variable_name),
+                            destination.query_name,
+                        )
+                    )
+                else:
+                    query.append(
+                        "   { ?%s rdf:type %s . }"
+                        % (
+                            _strip_name(destination.variable_name),
+                            destination.query_name,
+                        )
+                    )
                 if destination.name.split(":")[0] not in namespaces_used:
                     namespaces_used.append(destination.name.split(":")[0])
                 for cls_name in destination.subclasses:
@@ -719,6 +739,21 @@ class Network:
                 )
                 if destination.name.split(":")[0] not in namespaces_used:
                     namespaces_used.append(destination.name.split(":")[0])
+
+            # should do the same for parents of destination, if exists
+            # stepped guys, which are parents SHOULD NOT HAVE CLASS FLEXIBILITY!
+            for parent in destination._parents:
+                if parent._enforce_type and parent.node_type == "class":
+                    query.append(
+                        "    ?%s rdf:type %s ."
+                        % (
+                            parent.variable_name,
+                            parent.query_name,
+                        )
+                    )
+                    if parent.name.split(":")[0] not in namespaces_used:
+                        namespaces_used.append(parent.name.split(":")[0])
+
         return query, namespaces_used
 
     def _add_filters(self, destinations, remote_source=None):
