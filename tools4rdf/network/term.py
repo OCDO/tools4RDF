@@ -487,8 +487,9 @@ class OntoTerm:
         # print(f'lhs {self} rhs {val}')
         self._is_number(val)
         self._is_data_node()
-        self._condition = self._create_condition_string(">", val)
-        return self
+        item = copy.deepcopy(self)
+        item._condition = item._create_condition_string(">", val)
+        return item
 
     def __and__(self, term):
         self._is_term(term)
@@ -503,6 +504,7 @@ class OntoTerm:
         # and clean up the inbound term
         if item.name != term.name:
             term.refresh_condition()
+        self.refresh_condition()
         return item
 
     def and_(self, term):
@@ -521,6 +523,7 @@ class OntoTerm:
         # and clean up the inbound term
         if item.name != term.name:
             term.refresh_condition()
+        self.refresh_condition()
         return item
 
     def or_(self, term):
