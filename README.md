@@ -1,5 +1,5 @@
 
-![logo](docs/source/_static/logo.jpg "logo")
+![logo](docs/source/_static/logo.png "logo")
 
 **tools4RDF** is a Python toolkit for working with RDF data, SPARQL queries, and semantic networks. 
 
