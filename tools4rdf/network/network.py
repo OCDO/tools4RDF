@@ -236,18 +236,21 @@ class Network:
             complete_list = [source, *target._parents, target]
             # get path for first two terms
             path = self._get_shortest_path(complete_list[0], complete_list[1])
+            # this is always of shape 1, x so we can directly take first element
+            path = path[0]
+
             for x in range(2, len(complete_list)):
                 temp_source = complete_list[x - 1]
                 temp_dest = complete_list[x]
                 temp_path = self._get_shortest_path(temp_source, temp_dest)
-                if len(temp_path) == 1:
-                    if len(temp_path[0]) == 2:
-                        # this means that they are next to each other, so we cannot form a full path
-                        # so we need to add the last item of the previous path
-                        path[-1][-1] = temp_path[0][-1]
+                # this will also always be of shape 1, x so we can directly take first element
+                temp_path = temp_path[0]
+                # ok now we need to merge temp_path into path
+                if len(temp_path) == 2:
+                    path[-1] = temp_path[-1]
                 else:
                     path.extend(temp_path[1:])
-            paths.extend(path)
+            paths.append(path)
         else:
             paths = self._get_shortest_path(source, target, num_paths=num_paths)
         if triples:
@@ -298,6 +301,9 @@ class Network:
                 modified_destinations.append(last_destination)
             else:
                 modified_destinations.append(destination)
+        # now update conditions
+        for modified_destination in modified_destinations:
+            modified_destination._update_condition_string()
         return modified_destinations
 
     def _is_already_in_destinations(self, object_property, destinations):
@@ -635,10 +641,17 @@ class Network:
         namespaces_used = []
         if source._add_subclass and source.node_type == "class":
             # we have to make a type query connection by union
-            query.append(
-                "   { ?%s rdf:type %s . }"
-                % (_strip_name(source.variable_name), source.query_name)
-            )
+            # check if has any subclasses
+            if len(source.subclasses) == 0:
+                query.append(
+                    "     ?%s rdf:type %s . "
+                    % (_strip_name(source.variable_name), source.query_name)
+                )
+            else:
+                query.append(
+                    "   { ?%s rdf:type %s . }"
+                    % (_strip_name(source.variable_name), source.query_name)
+                )
             if source.name.split(":")[0] not in namespaces_used:
                 namespaces_used.append(source.name.split(":")[0])
             for cls_name in source.subclasses:
@@ -689,10 +702,23 @@ class Network:
         for destination in destinations:
             if destination._add_subclass and destination.node_type == "class":
                 # we have to make a type query connection by union
-                query.append(
-                    "   { ?%s rdf:type %s . }"
-                    % (_strip_name(destination.variable_name), destination.query_name)
-                )
+                # check if has any subclasses
+                if len(destination.subclasses) == 0:
+                    query.append(
+                        "     ?%s rdf:type %s . "
+                        % (
+                            _strip_name(destination.variable_name),
+                            destination.query_name,
+                        )
+                    )
+                else:
+                    query.append(
+                        "   { ?%s rdf:type %s . }"
+                        % (
+                            _strip_name(destination.variable_name),
+                            destination.query_name,
+                        )
+                    )
                 if destination.name.split(":")[0] not in namespaces_used:
                     namespaces_used.append(destination.name.split(":")[0])
                 for cls_name in destination.subclasses:
@@ -716,6 +742,21 @@ class Network:
                 )
                 if destination.name.split(":")[0] not in namespaces_used:
                     namespaces_used.append(destination.name.split(":")[0])
+
+            # should do the same for parents of destination, if exists
+            # stepped guys, which are parents SHOULD NOT HAVE CLASS FLEXIBILITY!
+            for parent in destination._parents:
+                if parent._enforce_type and parent.node_type == "class":
+                    query.append(
+                        "    ?%s rdf:type %s ."
+                        % (
+                            parent.variable_name,
+                            parent.query_name,
+                        )
+                    )
+                    if parent.name.split(":")[0] not in namespaces_used:
+                        namespaces_used.append(parent.name.split(":")[0])
+
         return query, namespaces_used
 
     def _add_filters(self, destinations, remote_source=None):

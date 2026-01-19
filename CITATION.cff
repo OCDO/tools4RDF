@@ -13,10 +13,22 @@ authors:
   family-names: Azocar Guzman
   affiliation: Institute for Advanced Simulations – Materials Data Science and Informatics (IAS-9), Forschungszentrum Jülich GmbH
   orcid: 'https://orcid.org/0000-0001-7564-7990'
-#date-released: '2024-02-15'
-#doi: 10.5281/zenodo.8146527
-#url: 'https://atomrdf.pyscal.org'
+- given-names: Osamu
+  family-names: Waseda
+  affiliation: Max Planck Institute for Sustainable Materials, Düsseldorf, Germany
+  orcid: 'https://orcid.org/0000-0002-1677-4057'
+- given-names: Stefan
+  family-names: Sandfeld
+  affiliation: Institute for Advanced Simulations – Materials Data Science and Informatics (IAS-9), Forschungszentrum Jülich GmbH, Jülich, Germany
+  orcid: 'https://orcid.org/0000-0001-9560-4728'
+- given-names: Tilmann
+  family-names: Hickel
+  affiliation: Federal Institute for Materials Research and Testing (BAM), Berlin, Germany
+  orcid: 'https://orcid.org/0000-0003-0698-4891'
+#date-released: 
+#doi: 
+url: 'https://tools4rdf.readthedocs.io/en/latest/'
 license: "MIT"
-repository-code: https://github.com/codo/tools4RDF
+repository-code: https://github.com/OCDO/tools4RDF
 type: software
 version: 0.3.6

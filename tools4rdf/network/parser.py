@@ -530,9 +530,47 @@ class OntoParser:
         """
         domain = []
         for obj in self.graph.objects(cls, predicate):
+            # Check if this BNode is a union/intersection
+            if isinstance(obj, BNode):
+                union_term = self.extract_values(obj, OWL.unionOf)
+                intersection_term = self.extract_values(obj, OWL.intersectionOf)
+
+                if union_term is not None or intersection_term is not None:
+                    collection_term = (
+                        union_term if union_term is not None else intersection_term
+                    )
+                    unravel_list = self.unravel_relation(collection_term, [])
+                    items = [
+                        strip_name(
+                            item.toPython(),
+                            namespace=self._lookup_namespace(item.toPython()),
+                        )
+                        for item in unravel_list
+                    ]
+                    domain.extend(items)
+
+                    additional_terms = []
+                    for term in items:
+                        if term in self.attributes["class"]:
+                            additional_terms += self.attributes["class"][
+                                term
+                            ].subclasses
+                            additional_terms += self.attributes["class"][
+                                term
+                            ].equivalent_classes
+                            additional_terms += self.attributes["class"][
+                                term
+                            ].named_individuals
+                    domain.extend(additional_terms)
+                    continue
+
             domain_term = self.lookup_node(obj)
             for term in domain_term:
                 domain.append(term)
+                if term in self.attributes["class"]:
+                    domain.extend(self.attributes["class"][term].subclasses)
+                    domain.extend(self.attributes["class"][term].equivalent_classes)
+                    domain.extend(self.attributes["class"][term].named_individuals)
         return domain
 
     def create_term(self, cls):

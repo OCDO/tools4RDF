@@ -10,4 +10,4 @@ dependencies:
   - python-graphviz
   - networkx
   - pandas
-  - jupyter-book
+  - jupyter-book =1.0.4
