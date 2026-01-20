@@ -108,7 +108,7 @@ tools4RDF also includes a simple ontology visualisation tool. It uses Graphviz [
 
 ## Translation of SPARQL functionality to Python
 
-tools4RDF currently supports a subset of SPARQL operations designed to cover common query patterns, making it accessible to users without prior experience in semantic web technologies. Advanced query features are not yet supported. However, expert users can generate an initial query with tools4RDF and then extend or refine it manually, and execute it. We expect the user community to engage with the tool and contribute toward extending SPARQL support.
+tools4RDF currently supports a [subset of SPARQL operations designed to cover common query patterns](https://tools4rdf.readthedocs.io/en/latest/#supported-sparql-keywords), making it accessible to users without prior experience in semantic web technologies. Advanced query features are not yet supported. However, expert users can generate an initial query with tools4RDF and then extend or refine it manually, and execute it. We expect the user community to engage with the tool and contribute toward extending SPARQL support.
 
 ## Reasoning
 
