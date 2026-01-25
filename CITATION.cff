@@ -31,4 +31,4 @@ url: 'https://tools4rdf.readthedocs.io/en/latest/'
 license: "MIT"
 repository-code: https://github.com/OCDO/tools4RDF
 type: software
-version: 0.3.6
+version: 0.3.7

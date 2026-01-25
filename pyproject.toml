@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "tools4rdf"
-version = "0.3.6"
+version = "0.3.7"
 description = "python tool for working with ontologies and data models"
 readme = "README.md"
 requires-python = ">=3.8"
