@@ -1,5 +1,5 @@
 ---
-title: 'tools4RDF: A python toolkit for working with RDF data'
+title: 'tools4RDF: A Python toolkit for working with RDF data'
 tags:
   - Python
   - RDF
