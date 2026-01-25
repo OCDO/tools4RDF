@@ -1,5 +1,5 @@
 cff-version: 1.2.0
-title: tools4RDF: A Python toolkit for working with RDF data
+title: "tools4RDF: A Python toolkit for working with RDF data"
 message: >-
   If you use this software, please cite it using the
   metadata from this file. Funded by the Deutsche Forschungsgemeinschaft (DFG, German Research Foundation) 
