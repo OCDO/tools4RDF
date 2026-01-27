@@ -11,4 +11,5 @@ chapters:
     - file: examples/02_advanced_query_building
   - file: docs/extending.md
   - file: docs/license.md
+  - file: docs/citation.md
   - file: docs/acknowledgements.md
