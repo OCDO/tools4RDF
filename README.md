@@ -1,5 +1,6 @@
-
-![logo](docs/source/_static/logo.png "logo")
+[![DOI](https://joss.theoj.org/papers/10.21105/joss.09482/status.svg)](https://doi.org/10.21105/joss.09482)
+---
+<img src="docs/source/_static/logo.png" alt="logo" width="400">
 
 **tools4RDF** is a Python toolkit for working with RDF data, SPARQL queries, and semantic networks. 
 
@@ -60,6 +61,12 @@ MIT License
 ## 🤝 Contributing
 
 Issues and pull requests are welcome! Feel free to suggest new utilities or improvements.
+
+## Citation
+
+If you use tools4RDF in your work, please cite:
+
+Menon, S., Guzmán, A. A., Waseda, O., Sandfeld, S., & Hickel, T. (2026). tools4RDF: A Python toolkit for working with RDF data. Journal of Open Source Software, 11(117), 9482. https://doi.org/10.21105/joss.09482
 
 ## 📌 Acknowledgement
 This work is supported by the [NFDI-Matwerk](https://nfdi-matwerk.de/) consortia.
