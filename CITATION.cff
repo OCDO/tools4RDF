@@ -1,34 +1,50 @@
-cff-version: 1.2.0
-title: "tools4RDF: A Python toolkit for working with RDF data"
-message: >-
-  If you use this software, please cite it using the
-  metadata from this file. Funded by the Deutsche Forschungsgemeinschaft (DFG, German Research Foundation) 
-  under the National Research Data Infrastructure – NFDI 38/1 – project number 460247524
+cff-version: "1.2.0"
 authors:
-- given-names: Sarath
-  family-names: Menon
-  affiliation: Max-Planck-Institut für Eisenforschung GmbH
-  orcid: 'https://orcid.org/0000-0002-6776-1213'
-- given-names: Abril
-  family-names: Azocar Guzman
-  affiliation: Institute for Advanced Simulations – Materials Data Science and Informatics (IAS-9), Forschungszentrum Jülich GmbH
-  orcid: 'https://orcid.org/0000-0001-7564-7990'
-- given-names: Osamu
-  family-names: Waseda
-  affiliation: Max Planck Institute for Sustainable Materials, Düsseldorf, Germany
-  orcid: 'https://orcid.org/0000-0002-1677-4057'
-- given-names: Stefan
-  family-names: Sandfeld
-  affiliation: Institute for Advanced Simulations – Materials Data Science and Informatics (IAS-9), Forschungszentrum Jülich GmbH, Jülich, Germany
-  orcid: 'https://orcid.org/0000-0001-9560-4728'
-- given-names: Tilmann
-  family-names: Hickel
-  affiliation: Federal Institute for Materials Research and Testing (BAM), Berlin, Germany
-  orcid: 'https://orcid.org/0000-0003-0698-4891'
-#date-released: 
-#doi: 
-url: 'https://tools4rdf.readthedocs.io/en/latest/'
-license: "MIT"
-repository-code: https://github.com/OCDO/tools4RDF
-type: software
-version: 0.3.8
+- family-names: Menon
+  given-names: Sarath
+  orcid: "https://orcid.org/0000-0002-6776-1213"
+- family-names: Guzmán
+  given-names: Abril Azócar
+  orcid: "https://orcid.org/0000-0001-7564-7990"
+- family-names: Waseda
+  given-names: Osamu
+  orcid: "https://orcid.org/0000-0002-1677-4057"
+- family-names: Sandfeld
+  given-names: Stefan
+  orcid: "https://orcid.org/0000-0001-9560-4728"
+- family-names: Hickel
+  given-names: Tilmann
+  orcid: "https://orcid.org/0000-0003-0698-4891"
+doi: 10.5281/zenodo.18370768
+message: If you use this software, please cite our article in the
+  Journal of Open Source Software.
+preferred-citation:
+  authors:
+  - family-names: Menon
+    given-names: Sarath
+    orcid: "https://orcid.org/0000-0002-6776-1213"
+  - family-names: Guzmán
+    given-names: Abril Azócar
+    orcid: "https://orcid.org/0000-0001-7564-7990"
+  - family-names: Waseda
+    given-names: Osamu
+    orcid: "https://orcid.org/0000-0002-1677-4057"
+  - family-names: Sandfeld
+    given-names: Stefan
+    orcid: "https://orcid.org/0000-0001-9560-4728"
+  - family-names: Hickel
+    given-names: Tilmann
+    orcid: "https://orcid.org/0000-0003-0698-4891"
+  date-published: 2026-01-26
+  doi: 10.21105/joss.09482
+  issn: 2475-9066
+  issue: 117
+  journal: Journal of Open Source Software
+  publisher:
+    name: Open Journals
+  start: 9482
+  title: "tools4RDF: A Python toolkit for working with RDF data"
+  type: article
+  url: "https://joss.theoj.org/papers/10.21105/joss.09482"
+  volume: 11
+title: "tools4RDF: A Python toolkit for working with RDF data"
