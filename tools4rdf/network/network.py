@@ -12,6 +12,7 @@ Features:
 import networkx as nx
 import graphviz
 import pandas as pd
+import copy
 import itertools
 import re
 
@@ -300,15 +301,16 @@ class Network:
     @staticmethod
     def _modify_destinations(destinations):
         """look for lists within destinations to phase out the @ operator"""
+        # work on copies; the terms passed in are shared with `terms`
         modified_destinations = []
         for count, destination in enumerate(destinations):
             if isinstance(destination, (list, tuple)):
-                last_destination = destination[-1]
+                last_destination = copy.deepcopy(destination[-1])
                 for d in destination[:-1]:
                     last_destination._parents.append(d)
                 modified_destinations.append(last_destination)
             else:
-                modified_destinations.append(destination)
+                modified_destinations.append(copy.deepcopy(destination))
         # now update conditions
         for modified_destination in modified_destinations:
             modified_destination._update_condition_string()
@@ -444,7 +446,7 @@ class Network:
             destinations = self._modify_destinations(destinations)
 
         elif len(object_properties) > 0:
-            destinations = object_properties
+            destinations = list(object_properties)
 
         if destinations is None:
             destinations = []
@@ -777,8 +779,7 @@ class Network:
         This method processes a list of destination objects, extracts their filter
         conditions, and constructs a SPARQL query fragment with the appropriate
         FILTER clause. It also replaces query names with variable names in the
-        filter conditions and ensures that the destination objects are refreshed
-        after processing.
+        filter conditions.
 
         Parameters
         ----------
@@ -810,10 +811,6 @@ class Network:
         if remote_source is not None:
             query.append("  }")
         query.append("}")
-
-        # finished, clean up the terms;
-        for destination in destinations:
-            destination.refresh()
         return query
 
     def _add_limit(self, limit=None):

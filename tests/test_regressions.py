@@ -235,3 +235,33 @@ def test_hyphenated_intermediate_class():
     kg.add((EX.t, EX.x, Literal(1.0)))
     df = net.query(kg, net.terms.ex.A, [net.terms.ex.x])
     assert len(df) == 1
+
+
+def test_every_source_keeps_the_filter():
+    g = make_graph(
+        "AB",
+        [
+            (EX.x, RDF.type, OWL.DatatypeProperty),
+            (EX.x, RDFS.domain, EX.A),
+            (EX.x, RDFS.domain, EX.B),
+            (EX.x, RDFS.range, XSD.float),
+        ],
+    )
+    net = OntologyNetworkBase(OntoParser(g))
+    t = net.terms.ex
+    queries = net.create_query([t.A, t.B], [t.x > 3])
+    assert len(queries) == 2
+    assert all("FILTER" in q for q in queries)
+
+
+def test_create_query_does_not_mutate_shared_terms():
+    onto = read_ontology()
+    c = onto.terms.cmso
+    with pytest.raises(Exception):
+        # no path exists, so this raises half-way through
+        onto.create_query(
+            c.AtomicScaleSample, [[c.hasSpaceGroupSymbol, c.hasNumberOfAtoms]]
+        )
+    assert onto.terms.cmso.hasNumberOfAtoms._parents == []
+    onto.create_query(c.AtomicScaleSample, [[c.Material, c.CrystalStructure]])
+    assert onto.terms.cmso.CrystalStructure._parents == []
