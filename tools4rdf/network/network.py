@@ -254,7 +254,12 @@ class Network:
                 # this will also always be of shape 1, x so we can directly take first element
                 temp_path = temp_path[0]
                 # ok now we need to merge temp_path into path
-                if len(temp_path) == 2:
+                if temp_source.node_type == "object_property":
+                    # temp_path starts [property, range class, ...]; the path so far
+                    # already ends with the object of that property, which takes
+                    # the place of the range class
+                    path.extend(temp_path[2:])
+                elif len(temp_path) == 2:
                     path[-1] = temp_path[-1]
                 else:
                     path.extend(temp_path[1:])

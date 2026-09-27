@@ -132,3 +132,9 @@ def test_optional_does_not_mutate_shared_term(net):
     t = net.terms.ex
     t.name.optional
     assert net.terms.ex.name._optional is False
+
+
+def test_optional_last_step_of_stepped_query(net, kg):
+    t = net.terms.ex
+    df = net.query(kg, t.Sample, [t.natoms, [t.hasCell, t.volume.optional]])
+    assert samples(df) == ["s1", "s2", "s3"]
