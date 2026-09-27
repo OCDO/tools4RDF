@@ -63,10 +63,13 @@ class AttrSetter:
         key which add ons: for example `position_selected` or `position_not_selected`
         key does not exist: raise `AttributeError`
         """
-        if key in self._map_dict.keys():
+        # read _map_dict from __dict__: during copy/unpickling it is not set yet,
+        # and self._map_dict would recurse into __getattr__
+        map_dict = self.__dict__.get("_map_dict", {})
+        if key in map_dict.keys():
             if self.head is None:
                 self.head = self
-            return self._map_dict[key]
+            return map_dict[key]
 
         else:
             raise AttributeError(f"Attribute {key} not found")

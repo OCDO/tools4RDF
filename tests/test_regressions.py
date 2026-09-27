@@ -436,3 +436,11 @@ def test_punned_class_keeps_its_subclasses():
     parser = OntoParser(g)
     assert parser.attributes["class"]["ex:A"].node_type == "class"
     assert parser.attributes["class"]["ex:A"].subclasses == ["ex:B"]
+
+
+def test_terms_can_be_deep_copied():
+    import copy
+
+    onto = read_ontology()
+    terms = copy.deepcopy(onto.terms)
+    assert terms.cmso.AtomicScaleSample.name == "cmso:AtomicScaleSample"
