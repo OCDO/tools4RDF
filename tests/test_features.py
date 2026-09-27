@@ -138,3 +138,31 @@ def test_optional_last_step_of_stepped_query(net, kg):
     t = net.terms.ex
     df = net.query(kg, t.Sample, [t.natoms, [t.hasCell, t.volume.optional]])
     assert samples(df) == ["s1", "s2", "s3"]
+
+
+def test_python_values_gives_numeric_columns(net, kg):
+    t = net.terms.ex
+    df = net.query(kg, t.Sample, [t.natoms, t.volume], python_values=True)
+    assert df["natomsvalue"].dtype.kind == "i"
+    assert df["volumevalue"].dtype.kind == "f"
+    assert sorted(df["natomsvalue"]) == [4, 100]
+    assert all(isinstance(s, str) for s in df["Sample"])
+    assert list(df.index) == list(range(len(df)))
+
+
+def test_python_values_with_missing_optional_values(net, kg):
+    t = net.terms.ex
+    df = net.query(
+        kg, t.Sample, [t.natoms, t.volume.optional, t.name.optional], python_values=True
+    )
+    assert df["volumevalue"].dtype.kind == "f"
+    assert df["volumevalue"].isna().sum() == 1
+    names = dict(zip(df["Sample"], df["namevalue"]))
+    assert names[str(EX.s1)] == "fcc"
+    assert names[str(EX.s2)] is None
+
+
+def test_default_keeps_rdflib_terms(net, kg):
+    t = net.terms.ex
+    df = net.query(kg, t.Sample, [t.natoms])
+    assert all(isinstance(v, Literal) for v in df["natomsvalue"])

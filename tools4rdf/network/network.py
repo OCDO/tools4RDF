@@ -14,6 +14,7 @@ import graphviz
 import pandas as pd
 import copy
 import itertools
+import numbers
 import re
 
 from rdflib import URIRef, Literal, RDF, RDFS, OWL, XSD, Graph
@@ -26,6 +27,17 @@ from tools4rdf.network.term import OntoTerm, is_url
 def _to_variable(name):
     """Turn a term name such as 'ex:Twin-like' into a valid SPARQL variable name."""
     return re.sub(r"\W", "_", name)
+
+
+def _to_python(value):
+    """Convert an rdflib term from a result row into a plain Python value."""
+    if value is None:
+        return None
+    if isinstance(value, Literal):
+        python_value = value.toPython()
+        # ill-typed and language-tagged literals come back as Literal
+        return str(python_value) if isinstance(python_value, Literal) else python_value
+    return str(value)
 
 
 def _replace_name(name):
@@ -1018,7 +1030,14 @@ class Network:
         return created_queries
 
     def query(
-        self, kg, source, destinations=None, return_df=True, num_paths=1, limit=None
+        self,
+        kg,
+        source,
+        destinations=None,
+        return_df=True,
+        num_paths=1,
+        limit=None,
+        python_values=False,
     ):
         """
         Executes queries on a knowledge graph (KG) to retrieve data from a SPARQL query.
@@ -1038,12 +1057,17 @@ class Network:
             The number of paths to retrieve for each query.
         limit : int, optional
             The maximum number of results to return. If None, no limit is applied.
+        python_values : bool, default=False
+            If True and `return_df` is True, literals are converted to Python values
+            (int, float, str, datetime, ...) and IRIs to strings, so that numeric
+            columns get a numeric dtype. Missing optional values become NaN/None.
 
         Returns
         -------
         pandas.DataFrame or list
             If `return_df` is True, returns a pandas DataFrame containing the query results
-            (empty if nothing matches). Values are rdflib terms (URIRef, Literal).
+            (empty if nothing matches). Values are rdflib terms (URIRef, Literal),
+            unless `python_values` is True.
             If `return_df` is False, returns a list of query results.
             Returns None only if no query could be generated.
         """
@@ -1064,16 +1088,18 @@ class Network:
         )
         res = []
         for query_string in query_strings:
-            r = self._query(kg, query_string, return_df=return_df)
+            r = self._query(
+                kg, query_string, return_df=return_df, python_values=python_values
+            )
             if r is not None:
                 res.append(r)
         if len(res) == 0:
             return None
         if return_df:
-            res = pd.concat(res)
+            res = pd.concat(res, ignore_index=python_values)
         return res
 
-    def _query(self, kg, query_string, return_df=True):
+    def _query(self, kg, query_string, return_df=True, python_values=False):
         """
         Executes a SPARQL query on the given knowledge graph (KG) and optionally
         returns the result as a pandas DataFrame.
@@ -1087,6 +1113,9 @@ class Network:
         return_df : bool, optional
             If True, the query result is returned as a pandas DataFrame.
             Defaults to True.
+        python_values : bool, optional
+            If True, DataFrame cells are converted to Python values; see `query`.
+            Defaults to False.
 
         Returns
         -------
@@ -1110,7 +1139,18 @@ class Network:
                     if "SELECT DISTINCT" in line:
                         break
                 labels = [x[1:] for x in line.split()[2:]]
-                return pd.DataFrame(res, columns=labels)
+                if not python_values:
+                    return pd.DataFrame(res, columns=labels)
+                rows = [[_to_python(value) for value in row] for row in res]
+                df = pd.DataFrame(rows, columns=labels)
+                for column in df.columns:
+                    values = df[column].dropna()
+                    if len(values) > 0 and all(
+                        isinstance(v, numbers.Number) and not isinstance(v, bool)
+                        for v in values
+                    ):
+                        df[column] = pd.to_numeric(df[column])
+                return df
 
         return res
 
