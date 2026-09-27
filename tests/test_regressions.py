@@ -462,3 +462,14 @@ def test_owl_thing_is_not_its_own_subclass():
     subclasses = parser.attributes["class"]["owl:Thing"].subclasses
     assert "owl:Thing" not in subclasses
     assert "ex:A" in subclasses
+
+
+def test_visualize_graph_with_default_style():
+    from tools4rdf.visualize import visualize_graph
+
+    g = Graph()
+    g.add((EX.a, EX.p, Literal("fcc lattice")))
+    g.add((EX.a, EX.q, EX.b))
+    dot = visualize_graph(g)
+    assert "fcc lattice" in dot.source
+    assert "Fcc Lattice" not in dot.source
