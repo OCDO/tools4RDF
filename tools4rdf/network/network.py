@@ -13,11 +13,17 @@ import networkx as nx
 import graphviz
 import pandas as pd
 import itertools
+import re
 
 from rdflib import URIRef, Literal, RDF, OWL, XSD, Graph
 from tools4rdf.network.attrsetter import AttrSetter
 from tools4rdf.network.parser import parse_ontology, OntoParser
 from tools4rdf.network.term import OntoTerm, is_url
+
+
+def _to_variable(name):
+    """Turn a term name such as 'ex:Twin-like' into a valid SPARQL variable name."""
+    return re.sub(r"\W", "_", name)
 
 
 def _replace_name(name):
@@ -608,9 +614,9 @@ class Network:
                 for triple in triples:
                     namespace.extend([x.split(":")[0] for x in triple if ":" in x])
                     line_text = "    ?%s %s ?%s ." % (
-                        triple[0].replace(":", "_"),
+                        _to_variable(triple[0]),
                         triple[1],
-                        triple[2].replace(":", "_"),
+                        _to_variable(triple[2]),
                     )
                     if line_text not in query:
                         query.append(line_text)

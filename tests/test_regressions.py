@@ -214,3 +214,24 @@ def test_filter_rdfs_literal_range():
 def test_filter_without_range():
     query, rows = run_filter(None, Literal(3), 3)
     assert rows == 1
+
+
+def test_hyphenated_intermediate_class():
+    g = make_graph(
+        ["A", "Twin-like"],
+        [
+            (EX.p, RDF.type, OWL.ObjectProperty),
+            (EX.p, RDFS.domain, EX.A),
+            (EX.p, RDFS.range, EX["Twin-like"]),
+            (EX.x, RDF.type, OWL.DatatypeProperty),
+            (EX.x, RDFS.domain, EX["Twin-like"]),
+            (EX.x, RDFS.range, XSD.float),
+        ],
+    )
+    net = OntologyNetworkBase(OntoParser(g))
+    kg = Graph()
+    kg.add((EX.a, RDF.type, EX.A))
+    kg.add((EX.a, EX.p, EX.t))
+    kg.add((EX.t, EX.x, Literal(1.0)))
+    df = net.query(kg, net.terms.ex.A, [net.terms.ex.x])
+    assert len(df) == 1
