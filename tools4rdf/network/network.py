@@ -17,6 +17,7 @@ import itertools
 import re
 
 from rdflib import URIRef, Literal, RDF, RDFS, OWL, XSD, Graph
+from rdflib.plugins.stores.sparqlstore import SPARQLStore
 from tools4rdf.network.attrsetter import AttrSetter
 from tools4rdf.network.parser import parse_ontology, OntoParser
 from tools4rdf.network.term import OntoTerm, is_url
@@ -978,11 +979,12 @@ class Network:
             Returns None if no results are found.
         """
 
-        remote_source = None
         if isinstance(kg, str):
-            if is_url(kg):
-                remote_source = kg
-                kg = Graph()
+            if not is_url(kg):
+                raise ValueError(f"{kg} is not a valid SPARQL endpoint url")
+            # send the query to the endpoint itself, so that FILTER and LIMIT
+            # are evaluated remotely instead of through a local SERVICE call
+            kg = SPARQLStore(kg, method="POST_FORM", returnFormat="json")
 
         query_strings = self.create_query(
             source,
@@ -990,7 +992,6 @@ class Network:
             return_list=True,
             num_paths=num_paths,
             limit=limit,
-            remote_source=remote_source,
         )
         res = []
         for query_string in query_strings:

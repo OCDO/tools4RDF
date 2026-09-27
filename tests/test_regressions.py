@@ -390,3 +390,31 @@ def test_prefixes_are_sorted():
     query = onto.create_query(c.AtomicScaleSample, [c.hasNumberOfAtoms == 4])
     prefixes = [line for line in query.splitlines() if line.startswith("PREFIX")]
     assert prefixes == sorted(prefixes)
+
+
+def test_remote_query_is_sent_to_the_endpoint(monkeypatch):
+    from rdflib.plugins.stores.sparqlstore import SPARQLStore
+
+    sent = {}
+
+    def fake_query(self, query, *args, **kwargs):
+        sent["endpoint"] = self.query_endpoint
+        sent["query"] = query
+        return []
+
+    monkeypatch.setattr(SPARQLStore, "query", fake_query)
+    onto = read_ontology()
+    c = onto.terms.cmso
+    onto.query(
+        "https://example.org/sparql", c.AtomicScaleSample, [c.hasNumberOfAtoms], limit=5
+    )
+    assert sent["endpoint"] == "https://example.org/sparql"
+    assert "SERVICE" not in sent["query"]
+    assert sent["query"].rstrip().endswith("LIMIT 5")
+
+
+def test_query_rejects_non_url_string():
+    onto = read_ontology()
+    c = onto.terms.cmso
+    with pytest.raises(ValueError):
+        onto.query("not a url", c.AtomicScaleSample, [c.hasNumberOfAtoms])
