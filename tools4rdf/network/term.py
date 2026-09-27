@@ -457,14 +457,17 @@ class OntoTerm:
         """
         =
         """
-        # print("eq")
-        # print(f'lhs {self} rhs {val}')
+        # comparing two terms is an identity check, never a condition
+        if isinstance(val, OntoTerm):
+            return self.name == val.name
         if self.node_type == "data_property":
             item = copy.deepcopy(self)
             item._condition = item._create_condition_string("=", val)
             return item
-        else:
-            return self.name == val.name
+        return NotImplemented
+
+    def __hash__(self):
+        return hash(self.name)
 
     def __lt__(self, val):
         self._is_number(val)
@@ -481,8 +484,10 @@ class OntoTerm:
         return item
 
     def __ne__(self, val):
-        # self._is_number(val)
-        self._is_data_node()
+        if isinstance(val, OntoTerm):
+            return self.name != val.name
+        if self.node_type != "data_property":
+            return NotImplemented
         item = copy.deepcopy(self)
         item._condition = item._create_condition_string("!=", val)
         return item

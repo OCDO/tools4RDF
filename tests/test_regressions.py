@@ -162,3 +162,14 @@ def test_and_or_methods_return_combined_term():
     assert "&&" in combined._condition
     combined = (c.hasNumberOfAtoms > 1).or_(c.hasNumberOfAtoms < 10)
     assert "||" in combined._condition
+
+
+def test_terms_are_hashable_and_comparable():
+    onto = read_ontology()
+    c = onto.terms.cmso
+    assert len({c.AtomicScaleSample, c.AtomicScaleSample, c.hasNumberOfAtoms}) == 2
+    assert c.AtomicScaleSample != "cmso:AtomicScaleSample"
+    assert not (c.AtomicScaleSample == "anything")
+    # data properties compared to terms do not produce conditions
+    assert (c.hasNumberOfAtoms == c.hasNumberOfAtoms) is True
+    assert c.hasNumberOfAtoms not in [c.hasVolume]
