@@ -292,7 +292,7 @@ class Network:
         to resolve the URIs for the provided namespace prefixes.
         """
         query = []
-        ns = self.namespaces | self.extra_namespaces
+        ns = {**self.namespaces, **self.extra_namespaces}
         # filters always use xsd datatypes, even if the ontology does not bind it
         ns.setdefault("xsd", str(XSD))
         for key in namespaces:
