@@ -153,3 +153,12 @@ def test_parser_reads_labels():
     parser = OntoParser(g)
     assert parser.attributes["class"]["ex:A"].label == "class A"
     assert parser.attributes["class"]["ex:B"].label is None
+
+
+def test_and_or_methods_return_combined_term():
+    onto = read_ontology()
+    c = onto.terms.cmso
+    combined = (c.hasNumberOfAtoms > 1).and_(c.hasNumberOfAtoms < 10)
+    assert "&&" in combined._condition
+    combined = (c.hasNumberOfAtoms > 1).or_(c.hasNumberOfAtoms < 10)
+    assert "||" in combined._condition

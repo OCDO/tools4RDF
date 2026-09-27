@@ -520,7 +520,7 @@ class OntoTerm:
         return item
 
     def and_(self, term):
-        self.__and__(term)
+        return self.__and__(term)
 
     def __or__(self, term):
         self._is_term(term)
@@ -539,7 +539,7 @@ class OntoTerm:
         return item
 
     def or_(self, term):
-        self.__or__(term)
+        return self.__or__(term)
 
     def __matmul__(self, term):
         # we will phase out this operator soon
