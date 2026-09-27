@@ -27,9 +27,9 @@ import os
 import networkx as nx
 import warnings
 
-from tools4rdf.network.term import OntoTerm, strip_name
+from tools4rdf.network.term import OntoTerm, strip_name, is_url, _XSD_DATATYPES
 from tools4rdf.network.patch import patch_terms
-from rdflib import Graph, RDF, RDFS, OWL, BNode, URIRef
+from rdflib import Graph, RDF, RDFS, OWL, XSD, BNode, URIRef
 
 
 def parse_ontology(infile, format="xml"):
@@ -393,6 +393,30 @@ class OntoParser:
             comment = ""
         return comment
 
+    def get_label(self, cls):
+        """
+        Retrieve the rdfs:label of a given term from the RDF graph.
+
+        Untagged or English labels are preferred over other languages.
+
+        Parameters
+        ----------
+        cls : rdflib.term.URIRef
+            The RDF term for which the label is to be retrieved.
+
+        Returns
+        -------
+        str or None
+            The label of the term, or None if it has no label.
+        """
+        labels = list(self.graph.objects(cls, RDFS.label))
+        if len(labels) == 0:
+            return None
+        for label in labels:
+            if getattr(label, "language", None) in (None, "en"):
+                return str(label)
+        return str(labels[0])
+
     def lookup_node(self, term):
         """
         Maps a given term to its corresponding domain, range, and related hierarchies.
@@ -599,6 +623,7 @@ class OntoParser:
             uri=iri,
             namespace=self._lookup_namespace(iri),
             description=self.get_description(cls),
+            label=self.get_label(cls),
             target=cls,
         )
         return term
@@ -608,8 +633,8 @@ class OntoParser:
         Look up the namespace prefix for a given URI.
 
         This method iterates through the stored namespaces and checks if the
-        provided URI starts with any of the namespace values. If a match is found,
-        the corresponding namespace prefix is returned.
+        provided URI starts with any of the namespace values. If several match,
+        the prefix of the longest (most specific) namespace is returned.
 
         Parameters
         ----------
@@ -621,12 +646,15 @@ class OntoParser:
         str or None
             The namespace prefix if a match is found, otherwise None.
         """
+        match = None
+        match_length = -1
         for key, value in self.namespaces.items():
-            if uri.startswith(value):
-                return key
-        return None
+            if uri.startswith(value) and len(value) > match_length:
+                match = key
+                match_length = len(value)
+        return match
 
-    def unravel_relation(self, term, unravel_list=[]):
+    def unravel_relation(self, term, unravel_list=None):
         """
         Recursively unravels an RDF collection into a Python list.
 
@@ -649,6 +677,8 @@ class OntoParser:
             A Python list containing the elements of the RDF collection in the
             order they appear.
         """
+        if unravel_list is None:
+            unravel_list = []
         if term == RDF.nil:
             return unravel_list
         first_term = self.graph.value(term, RDF.first)
@@ -670,7 +700,12 @@ class OntoParser:
             for obj in self.graph.objects(cls.target, RDFS.subClassOf):
                 superclasses = self.lookup_class(obj)
                 for superclass in superclasses:
-                    self.attributes["class"][superclass].subclasses.append(cls.name)
+                    # superclasses can be nested class expressions or classes
+                    # from ontologies that are not loaded; skip those
+                    if superclass in self.attributes["class"]:
+                        self.attributes["class"][superclass].subclasses.append(
+                            cls.name
+                        )
 
     def recursively_add_subclasses(self, item_type="class"):
         """
@@ -726,6 +761,8 @@ class OntoParser:
         of "owl:Thing".
         """
         for key, cls in self.attributes["class"].items():
+            if key == "owl:Thing":
+                continue
             objects = list(self.graph.objects(cls.target, RDFS.subClassOf))
             if len(objects) == 0:
                 self.attributes["class"]["owl:Thing"].subclasses.append(cls.name)
@@ -804,16 +841,21 @@ class OntoParser:
         for cls in named_individuals:
             # find parent
             term = self.create_term(cls)
-            self.attributes["class"][term.name] = term
+            # a punned term that is also a class keeps its class entry
+            if term.name not in self.attributes["class"]:
+                term.node_type = "named_individual"
+                self.attributes["class"][term.name] = term
             parents = list(self.graph.objects(cls, RDF.type))
             for parent in parents:
                 if parent not in [OWL.NamedIndividual, OWL.Class]:
-                    self.attributes["class"][
-                        strip_name(
-                            parent.toPython(),
-                            namespace=self._lookup_namespace(parent.toPython()),
+                    parent_name = strip_name(
+                        parent.toPython(),
+                        namespace=self._lookup_namespace(parent.toPython()),
+                    )
+                    if parent_name in self.attributes["class"]:
+                        self.attributes["class"][parent_name].named_individuals.append(
+                            term.name
                         )
-                    ].named_individuals.append(term.name)
 
     def get_attributes(self):
         """
@@ -905,17 +947,18 @@ class OntoParser:
         node_type : str
             The type of the node.
         namespace : str, optional
-            The namespace of the node.
+            Not used; kept for backwards compatibility.
         dm : list, optional
-            The domain metadata of the node.
+            The domain of the node, as IRIs or prefixed names (e.g. "cmso:Material").
         rn : list, optional
-            The range metadata of the node.
+            The range of the node, as IRIs or prefixed names. For data properties,
+            XSD datatype names such as "float" or "str" are also accepted.
         data_type : str, optional
-            The data type of the node.
+            Not used; kept for backwards compatibility.
         node_id : str, optional
-            The ID of the node.
+            Not used; kept for backwards compatibility.
         delimiter : str, optional
-            The delimiter used for parsing the URI.
+            Not used; kept for backwards compatibility.
 
         Raises
         ------
@@ -932,10 +975,27 @@ class OntoParser:
         else:
             raise ValueError("Node type not found")
         for r in rn:
-            self.graph.add((URIRef(uri), RDFS.range, URIRef(r)))
+            self.graph.add((URIRef(uri), RDFS.range, self._expand(r)))
         for d in dm:
-            self.graph.add((URIRef(uri), RDFS.domain, URIRef(d)))
+            self.graph.add((URIRef(uri), RDFS.domain, self._expand(d)))
         self._data_dict = None
+
+    def _expand(self, tag):
+        """
+        Expand a prefixed name (e.g. "cmso:Material") or an XSD datatype name
+        (e.g. "float", "str") into a URIRef. IRIs are returned unchanged.
+        """
+        if is_url(tag):
+            return URIRef(tag)
+        if ":" in tag:
+            prefix, name = tag.split(":", 1)
+            if prefix in self.namespaces:
+                return URIRef(self.namespaces[prefix] + name)
+        else:
+            name = "string" if tag == "str" else tag
+            if name in _XSD_DATATYPES:
+                return XSD[name]
+        return URIRef(tag)
 
     def add_namespace(self, namespace_name, namespace_iri):
         """
@@ -948,10 +1008,9 @@ class OntoParser:
         namespace_iri : str
             The IRI of the namespace.
 
-        Raises
-        ------
-        KeyError
-            If the namespace already exists.
+        Notes
+        -----
+        If a namespace with this name already exists, it is left unchanged.
 
         """
         if namespace_name not in self.namespaces.keys():

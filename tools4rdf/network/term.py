@@ -18,11 +18,15 @@ This module is designed to facilitate the creation and manipulation of ontology 
 making it easier to work with semantic data and SPARQL queries.
 """
 
-from rdflib import URIRef
+from rdflib import URIRef, Literal, XSD
 import numbers
+import re
 import copy
 import warnings
 from urllib.parse import urlparse
+
+
+_XSD_DATATYPES = set(XSD.__annotations__)
 
 
 def is_url(string):
@@ -165,8 +169,8 @@ class OntoTerm:
         self.delimiter = delimiter
         self._description = None
         self.description = description
-        self.label = label
         self._label = None
+        self.label = label
         self.is_domain_of = []
         self.is_range_of = []
         self._condition = None
@@ -186,6 +190,7 @@ class OntoTerm:
         self._enforce_type = True
         self._add_subclass = True
         self._old_variable_name = None
+        self._qualified = False
 
     @property
     def URIRef(self):
@@ -351,7 +356,12 @@ class OntoTerm:
 
         """
         name_list = [x.name_without_prefix for x in self._parents]
-        name_list.append(self.name_without_prefix)
+        if self._qualified:
+            # used when two terms of different namespaces share a local name
+            prefix = re.sub(r"\W", "_", self.name.split(":")[0])
+            name_list.append(f"{prefix}_{self.name_without_prefix}")
+        else:
+            name_list.append(self.name_without_prefix)
         name = "_".join(name_list)
 
         if self.node_type == "data_property":
@@ -441,30 +451,46 @@ class OntoTerm:
     def _update_condition_string(
         self,
     ):
-        condition_string = self._condition
-        if self._old_variable_name is not None:
-            condition_string = condition_string.replace(
-                self._old_variable_name, self.variable_name
+        if self._condition is not None and self._old_variable_name is not None:
+            self._condition = self._condition.replace(
+                f"?{self._old_variable_name}", f"?{self.variable_name}"
             )
-            self._condition = condition_string
+            self._old_variable_name = self.variable_name
+
+    def _format_literal(self, val):
+        """
+        Serialise a value as a SPARQL literal matching the range of the term.
+
+        Values are escaped and use the canonical lexical form of the datatype.
+        If the range is missing or not an XSD datatype (e.g. rdfs:Literal),
+        the literal is left untyped (strings) or typed from the Python value.
+        """
+        datatype = self._clean_datatype(self.range[0]) if len(self.range) > 0 else None
+        if datatype in _XSD_DATATYPES:
+            lexical = str(Literal(val, datatype=XSD[datatype]))
+            return f"{Literal(lexical).n3()}^^xsd:{datatype}"
+        return Literal(val).n3()
 
     def _create_condition_string(self, condition, val):
         self._old_variable_name = self.variable_name
-        return f'(?{self.variable_name}{condition}"{val}"^^xsd:{self._clean_datatype(self.range[0])})'
+        return f"(?{self.variable_name}{condition}{self._format_literal(val)})"
 
     # overloading operators
     def __eq__(self, val):
         """
         =
         """
-        # print("eq")
-        # print(f'lhs {self} rhs {val}')
+        # comparing two terms is an identity check, never a condition
+        if isinstance(val, OntoTerm):
+            return self.name == val.name
         if self.node_type == "data_property":
             item = copy.deepcopy(self)
             item._condition = item._create_condition_string("=", val)
             return item
-        else:
-            return self.name == val.name
+        return NotImplemented
+
+    def __hash__(self):
+        return hash(self.name)
 
     def __lt__(self, val):
         self._is_number(val)
@@ -481,8 +507,10 @@ class OntoTerm:
         return item
 
     def __ne__(self, val):
-        # self._is_number(val)
-        self._is_data_node()
+        if isinstance(val, OntoTerm):
+            return self.name != val.name
+        if self.node_type != "data_property":
+            return NotImplemented
         item = copy.deepcopy(self)
         item._condition = item._create_condition_string("!=", val)
         return item
@@ -520,7 +548,7 @@ class OntoTerm:
         return item
 
     def and_(self, term):
-        self.__and__(term)
+        return self.__and__(term)
 
     def __or__(self, term):
         self._is_term(term)
@@ -539,7 +567,7 @@ class OntoTerm:
         return item
 
     def or_(self, term):
-        self.__or__(term)
+        return self.__or__(term)
 
     def __matmul__(self, term):
         # we will phase out this operator soon

@@ -12,12 +12,20 @@ Features:
 import networkx as nx
 import graphviz
 import pandas as pd
+import copy
 import itertools
+import re
 
-from rdflib import URIRef, Literal, RDF, OWL, Graph
+from rdflib import URIRef, Literal, RDF, RDFS, OWL, XSD, Graph
+from rdflib.plugins.stores.sparqlstore import SPARQLStore
 from tools4rdf.network.attrsetter import AttrSetter
 from tools4rdf.network.parser import parse_ontology, OntoParser
 from tools4rdf.network.term import OntoTerm, is_url
+
+
+def _to_variable(name):
+    """Turn a term name such as 'ex:Twin-like' into a valid SPARQL variable name."""
+    return re.sub(r"\W", "_", name)
 
 
 def _replace_name(name):
@@ -284,7 +292,9 @@ class Network:
         to resolve the URIs for the provided namespace prefixes.
         """
         query = []
-        ns = self.namespaces | self.extra_namespaces
+        ns = {**self.namespaces, **self.extra_namespaces}
+        # filters always use xsd datatypes, even if the ontology does not bind it
+        ns.setdefault("xsd", str(XSD))
         for key in namespaces:
             query.append(f"PREFIX {key}: <{ns[key]}>")
         return query
@@ -292,25 +302,29 @@ class Network:
     @staticmethod
     def _modify_destinations(destinations):
         """look for lists within destinations to phase out the @ operator"""
+        # work on copies; the terms passed in are shared with `terms`
         modified_destinations = []
         for count, destination in enumerate(destinations):
             if isinstance(destination, (list, tuple)):
-                last_destination = destination[-1]
+                last_destination = copy.deepcopy(destination[-1])
                 for d in destination[:-1]:
                     last_destination._parents.append(d)
                 modified_destinations.append(last_destination)
             else:
-                modified_destinations.append(destination)
+                modified_destinations.append(copy.deepcopy(destination))
         # now update conditions
         for modified_destination in modified_destinations:
             modified_destination._update_condition_string()
         return modified_destinations
 
     def _is_already_in_destinations(self, object_property, destinations):
-        if object_property in destinations:
-            return True
+        # compare by name; OntoTerm.__eq__ builds conditions for data properties
         for d in destinations:
-            if object_property in d._parents:
+            if isinstance(d, (list, tuple)):
+                chain = list(d)
+            else:
+                chain = [*d._parents, d]
+            if any(x.name == object_property.name for x in chain):
                 return True
         return False
 
@@ -389,6 +403,11 @@ class Network:
         for s in source:
             if s.node_type == "data_property":
                 raise ValueError("Data properties are not allowed as source nodes.")
+            if s.node_type not in ("class", "object_property"):
+                raise ValueError(
+                    f"{s.name} is a {s.node_type}; only classes and object "
+                    "properties can be used as source nodes."
+                )
 
         # separate sources into classes and object properties
         classes = [s for s in source if s.node_type == "class"]
@@ -398,12 +417,18 @@ class Network:
         # common classes in the domains
         # Do only if we have object properties
         if len(object_properties) > 0:
+            # keep the domain order so the chosen class is the same on every run
             domains = [a.domain for a in object_properties]
-            common_classes = set(domains[0])
-            for d in domains[1:]:
-                common_classes = common_classes.intersection(set(d))
+            common_names = []
+            for x in domains[0]:
+                if (
+                    x not in common_names
+                    and x in self.onto.attributes["class"]
+                    and all(x in d for d in domains[1:])
+                ):
+                    common_names.append(x)
             # now if we do not have any common classes, raise an error
-            common_classes = [self.onto.attributes["class"][x] for x in common_classes]
+            common_classes = [self.onto.attributes["class"][x] for x in common_names]
             if len(common_classes) == 0:
                 raise ValueError(
                     "No common classes found in the domains of the object properties."
@@ -427,13 +452,13 @@ class Network:
             else:
                 for object_property in object_properties:
                     if not self._is_already_in_destinations(
-                        object_property, *destinations
+                        object_property, destinations
                     ):
                         destinations.append(object_property)
             destinations = self._modify_destinations(destinations)
 
         elif len(object_properties) > 0:
-            destinations = object_properties
+            destinations = [copy.deepcopy(op) for op in object_properties]
 
         if destinations is None:
             destinations = []
@@ -509,6 +534,21 @@ class Network:
                 if parent.variable_name not in [d.variable_name for d in destinations]:
                     destinations.append(parent)
         return destinations
+
+    @staticmethod
+    def _disambiguate_variables(destinations):
+        """
+        Qualify variable names with the namespace prefix where different terms
+        (e.g. ex:value and y:value) would otherwise share a SPARQL variable.
+        """
+        by_variable = {}
+        for destination in destinations:
+            by_variable.setdefault(destination.variable_name, []).append(destination)
+        for terms in by_variable.values():
+            if len({term.name for term in terms}) > 1:
+                for term in terms:
+                    term._qualified = True
+                    term._update_condition_string()
 
     def _create_query_prefix(self, source, destinations, remote_source=None):
         """
@@ -603,9 +643,9 @@ class Network:
                 for triple in triples:
                     namespace.extend([x.split(":")[0] for x in triple if ":" in x])
                     line_text = "    ?%s %s ?%s ." % (
-                        triple[0].replace(":", "_"),
+                        _to_variable(triple[0]),
                         triple[1],
-                        triple[2].replace(":", "_"),
+                        _to_variable(triple[2]),
                     )
                     if line_text not in query:
                         query.append(line_text)
@@ -766,8 +806,7 @@ class Network:
         This method processes a list of destination objects, extracts their filter
         conditions, and constructs a SPARQL query fragment with the appropriate
         FILTER clause. It also replaces query names with variable names in the
-        filter conditions and ensures that the destination objects are refreshed
-        after processing.
+        filter conditions.
 
         Parameters
         ----------
@@ -799,10 +838,6 @@ class Network:
         if remote_source is not None:
             query.append("  }")
         query.append("}")
-
-        # finished, clean up the terms;
-        for destination in destinations:
-            destination.refresh()
         return query
 
     def _add_limit(self, limit=None):
@@ -867,6 +902,7 @@ class Network:
         destinations = self._prepare_destinations(
             destinations=destinations, source=source
         )
+        self._disambiguate_variables(destinations)
         query_header = self._create_query_prefix(
             source, destinations, remote_source=remote_source
         )
@@ -889,16 +925,20 @@ class Network:
         )
 
         query_filter = self._add_filters(destinations, remote_source=remote_source)
+        if any("xsd:" in line for line in query_filter):
+            namespaces_used.append("xsd")
 
         created_queries = []
         for query in queries:
             query_header_new = (
                 self._insert_namespaces(
-                    set(
-                        namespaces_used
-                        + namespaces
-                        + namespaces_source
-                        + namespaces_dest
+                    sorted(
+                        set(
+                            namespaces_used
+                            + namespaces
+                            + namespaces_source
+                            + namespaces_dest
+                        )
                     )
                 )
                 + query_header
@@ -939,16 +979,18 @@ class Network:
         Returns
         -------
         pandas.DataFrame or list
-            If `return_df` is True, returns a pandas DataFrame containing the query results.
+            If `return_df` is True, returns a pandas DataFrame containing the query results
+            (empty if nothing matches). Values are rdflib terms (URIRef, Literal).
             If `return_df` is False, returns a list of query results.
-            Returns None if no results are found.
+            Returns None only if no query could be generated.
         """
 
-        remote_source = None
         if isinstance(kg, str):
-            if is_url(kg):
-                remote_source = kg
-                kg = Graph()
+            if not is_url(kg):
+                raise ValueError(f"{kg} is not a valid SPARQL endpoint url")
+            # send the query to the endpoint itself, so that FILTER and LIMIT
+            # are evaluated remotely instead of through a local SERVICE call
+            kg = SPARQLStore(kg, method="POST_FORM", returnFormat="json")
 
         query_strings = self.create_query(
             source,
@@ -956,7 +998,6 @@ class Network:
             return_list=True,
             num_paths=num_paths,
             limit=limit,
-            remote_source=remote_source,
         )
         res = []
         for query_string in query_strings:
@@ -1088,46 +1129,68 @@ class OntologyNetworkBase(Network):
         """
         Add a triple as path.
 
-        Note that all attributes of the triple should already exist in the graph.
-        The ontology itself is not modified. Only the graph representation of it is.
-        The expected use is to bridge between two (or more) different ontologies.
+        The path is recorded as an extra rdfs:domain (and rdfs:range) of the
+        property in the in-memory ontology graph, so it survives rebuilding the
+        network and combining ontologies, and it also applies to subclasses.
+        The ontology file itself is not modified. The expected use is to bridge
+        between two (or more) different ontologies.
 
         Parameters
         ----------
         triple : tuple
-        A tuple representing the triple to be added. The tuple should contain three elements:
-        subject, predicate, and object.
+            A tuple (subject, predicate, object) of prefixed names or IRIs.
+            The subject must be a class and the predicate an object or data
+            property. For an object property the object must be a class; for a
+            data property it is a datatype name such as "string" or "xsd:float",
+            used only if the property has no range yet.
 
         Raises
         ------
         ValueError
-        If the subject or object of the triple is not found in the attributes of the ontology.
+            If the subject, predicate or object is not found in the ontology.
 
         """
+        graph = self.onto.graph
 
-        def to_uri(tag, namespaces):
+        def to_uri(tag):
+            if is_url(tag):
+                return URIRef(tag)
             if ":" in tag:
-                prefix, term = tag.split(":")
-                return URIRef(namespaces[prefix] + term)
-            else:
-                return Literal(tag)
+                prefix, term = tag.split(":", 1)
+                if prefix not in self.namespaces:
+                    raise ValueError(f"prefix {prefix} of {tag} is not known")
+                return URIRef(self.namespaces[prefix] + term)
+            return None
 
-        sub, pred, obj = [to_uri(t, self.namespaces) for t in triple]
+        sub_tag, pred_tag, obj_tag = triple
+        sub = to_uri(sub_tag)
+        pred = to_uri(pred_tag)
 
-        if (sub, RDF.type, OWL.Class) not in self.onto.graph:
+        if sub is None or (sub, RDF.type, OWL.Class) not in graph:
             raise ValueError(
-                f"{sub} not found in {list(self.onto.graph.subjects(RDF.type, OWL.Class))}"
+                f"{sub_tag} not found in {list(graph.subjects(RDF.type, OWL.Class))}"
             )
 
-        if (
-            isinstance(obj, URIRef)
-            and (obj, RDF.type, OWL.Class) not in self.onto.graph
-        ):
-            raise ValueError(
-                f"{obj} not found in {list(self.onto.graph.subjects(RDF.type, OWL.Class))}"
-            )
+        if pred is not None and (pred, RDF.type, OWL.ObjectProperty) in graph:
+            obj = to_uri(obj_tag)
+            if obj is None or (obj, RDF.type, OWL.Class) not in graph:
+                raise ValueError(
+                    f"{obj_tag} not found in {list(graph.subjects(RDF.type, OWL.Class))}"
+                )
+            graph.add((pred, RDFS.domain, sub))
+            graph.add((pred, RDFS.range, obj))
+        elif pred is not None and (pred, RDF.type, OWL.DatatypeProperty) in graph:
+            graph.add((pred, RDFS.domain, sub))
+            if (pred, RDFS.range, None) not in graph:
+                datatype = to_uri(obj_tag)
+                if datatype is None:
+                    name = "string" if obj_tag == "str" else obj_tag
+                    datatype = XSD[name]
+                graph.add((pred, RDFS.range, datatype))
+        else:
+            raise ValueError(f"{pred_tag} is not an object or data property")
 
-        self.onto.graph.add((sub, pred, obj))
+        self.onto._data_dict = None
         self._terms = None
         self._g = None
 

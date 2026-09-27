@@ -87,13 +87,32 @@ def parse_object(x):
     elif isinstance(x, URIRef):
         return get_string_from_URI(x)
     elif isinstance(x, Literal):
-        return str(x.title()), "Literal"
+        return str(x), "Literal"
 
 
 styledict = {
-    "BNode": {"color": "#ffe6ff", "shape": "box", "style": "filled"},
-    "URIRef": {"color": "#ffffcc", "shape": "box", "style": "filled"},
-    "Literal": {"color": "#e6ffcc", "shape": "ellipse", "style": "filled"},
+    "BNode": {
+        "color": "#ffe6ff",
+        "shape": "box",
+        "style": "filled",
+        "fontsize": "8",
+        "fontname": "Helvetica",
+    },
+    "URIRef": {
+        "color": "#ffffcc",
+        "shape": "box",
+        "style": "filled",
+        "fontsize": "8",
+        "fontname": "Helvetica",
+    },
+    "Literal": {
+        "color": "#e6ffcc",
+        "shape": "ellipse",
+        "style": "filled",
+        "fontsize": "8",
+        "fontname": "Helvetica",
+    },
+    "edgecolor": "#263238",
 }
 
 
