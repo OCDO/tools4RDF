@@ -16,7 +16,7 @@ import copy
 import itertools
 import re
 
-from rdflib import URIRef, Literal, RDF, OWL, XSD, Graph
+from rdflib import URIRef, Literal, RDF, RDFS, OWL, XSD, Graph
 from tools4rdf.network.attrsetter import AttrSetter
 from tools4rdf.network.parser import parse_ontology, OntoParser
 from tools4rdf.network.term import OntoTerm, is_url
@@ -1098,46 +1098,68 @@ class OntologyNetworkBase(Network):
         """
         Add a triple as path.
 
-        Note that all attributes of the triple should already exist in the graph.
-        The ontology itself is not modified. Only the graph representation of it is.
-        The expected use is to bridge between two (or more) different ontologies.
+        The path is recorded as an extra rdfs:domain (and rdfs:range) of the
+        property in the in-memory ontology graph, so it survives rebuilding the
+        network and combining ontologies, and it also applies to subclasses.
+        The ontology file itself is not modified. The expected use is to bridge
+        between two (or more) different ontologies.
 
         Parameters
         ----------
         triple : tuple
-        A tuple representing the triple to be added. The tuple should contain three elements:
-        subject, predicate, and object.
+            A tuple (subject, predicate, object) of prefixed names or IRIs.
+            The subject must be a class and the predicate an object or data
+            property. For an object property the object must be a class; for a
+            data property it is a datatype name such as "string" or "xsd:float",
+            used only if the property has no range yet.
 
         Raises
         ------
         ValueError
-        If the subject or object of the triple is not found in the attributes of the ontology.
+            If the subject, predicate or object is not found in the ontology.
 
         """
+        graph = self.onto.graph
 
-        def to_uri(tag, namespaces):
+        def to_uri(tag):
+            if is_url(tag):
+                return URIRef(tag)
             if ":" in tag:
-                prefix, term = tag.split(":")
-                return URIRef(namespaces[prefix] + term)
-            else:
-                return Literal(tag)
+                prefix, term = tag.split(":", 1)
+                if prefix not in self.namespaces:
+                    raise ValueError(f"prefix {prefix} of {tag} is not known")
+                return URIRef(self.namespaces[prefix] + term)
+            return None
 
-        sub, pred, obj = [to_uri(t, self.namespaces) for t in triple]
+        sub_tag, pred_tag, obj_tag = triple
+        sub = to_uri(sub_tag)
+        pred = to_uri(pred_tag)
 
-        if (sub, RDF.type, OWL.Class) not in self.onto.graph:
+        if sub is None or (sub, RDF.type, OWL.Class) not in graph:
             raise ValueError(
-                f"{sub} not found in {list(self.onto.graph.subjects(RDF.type, OWL.Class))}"
+                f"{sub_tag} not found in {list(graph.subjects(RDF.type, OWL.Class))}"
             )
 
-        if (
-            isinstance(obj, URIRef)
-            and (obj, RDF.type, OWL.Class) not in self.onto.graph
-        ):
-            raise ValueError(
-                f"{obj} not found in {list(self.onto.graph.subjects(RDF.type, OWL.Class))}"
-            )
+        if pred is not None and (pred, RDF.type, OWL.ObjectProperty) in graph:
+            obj = to_uri(obj_tag)
+            if obj is None or (obj, RDF.type, OWL.Class) not in graph:
+                raise ValueError(
+                    f"{obj_tag} not found in {list(graph.subjects(RDF.type, OWL.Class))}"
+                )
+            graph.add((pred, RDFS.domain, sub))
+            graph.add((pred, RDFS.range, obj))
+        elif pred is not None and (pred, RDF.type, OWL.DatatypeProperty) in graph:
+            graph.add((pred, RDFS.domain, sub))
+            if (pred, RDFS.range, None) not in graph:
+                datatype = to_uri(obj_tag)
+                if datatype is None:
+                    name = "string" if obj_tag == "str" else obj_tag
+                    datatype = XSD[name]
+                graph.add((pred, RDFS.range, datatype))
+        else:
+            raise ValueError(f"{pred_tag} is not an object or data property")
 
-        self.onto.graph.add((sub, pred, obj))
+        self.onto._data_dict = None
         self._terms = None
         self._g = None
 

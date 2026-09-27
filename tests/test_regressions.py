@@ -265,3 +265,49 @@ def test_create_query_does_not_mutate_shared_terms():
     assert onto.terms.cmso.hasNumberOfAtoms._parents == []
     onto.create_query(c.AtomicScaleSample, [[c.Material, c.CrystalStructure]])
     assert onto.terms.cmso.CrystalStructure._parents == []
+
+
+def test_add_path_creates_edges_for_class_and_subclasses():
+    g = make_graph(
+        "ABC",
+        [
+            (EX.C, RDFS.subClassOf, EX.A),
+            (EX.p, RDF.type, OWL.ObjectProperty),
+        ],
+    )
+    net = OntologyNetworkBase(OntoParser(g))
+    net.add_path(("ex:A", "ex:p", "ex:B"))
+    assert net.g.has_edge("ex:A", "ex:p")
+    assert net.g.has_edge("ex:C", "ex:p")
+    assert net.g.has_edge("ex:p", "ex:B")
+    assert "?A ex:p ?p ." in net.create_query(net.terms.ex.A, [net.terms.ex.p])
+
+
+def test_add_path_rdfs_label_like_atomrdf():
+    net = OntologyNetworkBase(OntoParser(make_graph("A")))
+    net.add_namespace("rdfs", "http://www.w3.org/2000/01/rdf-schema#")
+    net.add_term(
+        "http://www.w3.org/2000/01/rdf-schema#label",
+        "data_property",
+        rn=["str"],
+    )
+    net.add_path(("ex:A", "rdfs:label", "string"))
+    kg = Graph()
+    kg.add((EX.a, RDF.type, EX.A))
+    kg.add((EX.a, RDFS.label, Literal("name")))
+    df = net.query(kg, net.terms.ex.A, [net.terms.rdfs.label == "name"])
+    assert len(df) == 1
+
+
+def test_add_path_survives_combining_networks():
+    net = OntologyNetworkBase(OntoParser(make_graph("AB", [(EX.p, RDF.type, OWL.ObjectProperty)])))
+    net.add_path(("ex:A", "ex:p", "ex:B"))
+    other = OntologyNetworkBase(OntoParser(make_graph("D")))
+    combined = net + other
+    assert combined.g.has_edge("ex:A", "ex:p")
+
+
+def test_add_path_rejects_unknown_property():
+    net = OntologyNetworkBase(OntoParser(make_graph("AB")))
+    with pytest.raises(ValueError):
+        net.add_path(("ex:A", "ex:missing", "ex:B"))
