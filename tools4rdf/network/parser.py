@@ -672,7 +672,12 @@ class OntoParser:
             for obj in self.graph.objects(cls.target, RDFS.subClassOf):
                 superclasses = self.lookup_class(obj)
                 for superclass in superclasses:
-                    self.attributes["class"][superclass].subclasses.append(cls.name)
+                    # superclasses can be nested class expressions or classes
+                    # from ontologies that are not loaded; skip those
+                    if superclass in self.attributes["class"]:
+                        self.attributes["class"][superclass].subclasses.append(
+                            cls.name
+                        )
 
     def recursively_add_subclasses(self, item_type="class"):
         """
@@ -810,12 +815,14 @@ class OntoParser:
             parents = list(self.graph.objects(cls, RDF.type))
             for parent in parents:
                 if parent not in [OWL.NamedIndividual, OWL.Class]:
-                    self.attributes["class"][
-                        strip_name(
-                            parent.toPython(),
-                            namespace=self._lookup_namespace(parent.toPython()),
+                    parent_name = strip_name(
+                        parent.toPython(),
+                        namespace=self._lookup_namespace(parent.toPython()),
+                    )
+                    if parent_name in self.attributes["class"]:
+                        self.attributes["class"][parent_name].named_individuals.append(
+                            term.name
                         )
-                    ].named_individuals.append(term.name)
 
     def get_attributes(self):
         """

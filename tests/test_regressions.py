@@ -48,3 +48,45 @@ def test_unions_do_not_leak_between_parsers():
     # a second, unrelated ontology must still parse
     onto = read_ontology()
     assert "cmso:AtomicScaleSample" in onto.attributes["class"]
+
+
+def test_nested_class_expression_as_superclass():
+    g = make_graph("ABC")
+    inner = BNode()
+    inner_list = BNode()
+    Collection(g, inner_list, [EX.A, EX.B])
+    g.add((inner, RDF.type, OWL.Class))
+    g.add((inner, OWL.intersectionOf, inner_list))
+    outer = BNode()
+    outer_list = BNode()
+    Collection(g, outer_list, [inner, EX.B])
+    g.add((outer, RDF.type, OWL.Class))
+    g.add((outer, OWL.unionOf, outer_list))
+    g.add((EX.C, RDFS.subClassOf, outer))
+    parser = OntoParser(g)
+    assert "ex:C" in parser.attributes["class"]["ex:B"].subclasses
+
+
+def test_superclass_from_unloaded_ontology():
+    ext = Namespace("http://external.org/")
+    g = make_graph("AC")
+    bn = BNode()
+    lst = BNode()
+    Collection(g, lst, [EX.A, ext.Z])
+    g.add((bn, RDF.type, OWL.Class))
+    g.add((bn, OWL.unionOf, lst))
+    g.add((EX.C, RDFS.subClassOf, bn))
+    parser = OntoParser(g)
+    assert "ex:C" in parser.attributes["class"]["ex:A"].subclasses
+
+
+def test_named_individual_of_unloaded_class():
+    ext = Namespace("http://external.org/")
+    g = make_graph("A")
+    g.add((EX.ind, RDF.type, OWL.NamedIndividual))
+    g.add((EX.ind, RDF.type, ext.Z))
+    g.add((EX.ind2, RDF.type, OWL.NamedIndividual))
+    g.add((EX.ind2, RDF.type, EX.A))
+    parser = OntoParser(g)
+    assert "ex:ind" in parser.attributes["class"]
+    assert parser.attributes["class"]["ex:A"].named_individuals == ["ex:ind2"]
