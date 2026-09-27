@@ -311,3 +311,13 @@ def test_add_path_rejects_unknown_property():
     net = OntologyNetworkBase(OntoParser(make_graph("AB")))
     with pytest.raises(ValueError):
         net.add_path(("ex:A", "ex:missing", "ex:B"))
+
+
+def test_most_specific_namespace_wins():
+    g = Graph()
+    g.bind("base", Namespace("http://example.org/"))
+    g.bind("ex", EX)
+    g.add((EX.A, RDF.type, OWL.Class))
+    parser = OntoParser(g)
+    assert "ex:A" in parser.attributes["class"]
+    assert "base:A" not in parser.attributes["class"]

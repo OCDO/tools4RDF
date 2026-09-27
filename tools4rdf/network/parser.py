@@ -633,8 +633,8 @@ class OntoParser:
         Look up the namespace prefix for a given URI.
 
         This method iterates through the stored namespaces and checks if the
-        provided URI starts with any of the namespace values. If a match is found,
-        the corresponding namespace prefix is returned.
+        provided URI starts with any of the namespace values. If several match,
+        the prefix of the longest (most specific) namespace is returned.
 
         Parameters
         ----------
@@ -646,10 +646,13 @@ class OntoParser:
         str or None
             The namespace prefix if a match is found, otherwise None.
         """
+        match = None
+        match_length = -1
         for key, value in self.namespaces.items():
-            if uri.startswith(value):
-                return key
-        return None
+            if uri.startswith(value) and len(value) > match_length:
+                match = key
+                match_length = len(value)
+        return match
 
     def unravel_relation(self, term, unravel_list=None):
         """
