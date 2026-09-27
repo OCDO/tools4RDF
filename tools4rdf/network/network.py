@@ -1017,7 +1017,7 @@ class Network:
                     block = [line for line in lines if line not in body]
                     block += optional_parts[id(destination)]
                     body.append("    OPTIONAL {")
-                    body.extend("    " + line for line in block)
+                    body.extend("        " + line.strip() for line in block)
                     body.append("    }")
             query = (
                 query_header
