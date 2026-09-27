@@ -165,8 +165,8 @@ class OntoTerm:
         self.delimiter = delimiter
         self._description = None
         self.description = description
-        self.label = label
         self._label = None
+        self.label = label
         self.is_domain_of = []
         self.is_range_of = []
         self._condition = None

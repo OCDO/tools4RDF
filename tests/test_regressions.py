@@ -10,6 +10,7 @@ from rdflib.plugins.sparql import prepareQuery
 from tools4rdf.network.parser import OntoParser
 from tools4rdf.network.network import OntologyNetworkBase
 from tools4rdf.network.ontology import read_ontology
+from tools4rdf.network.term import OntoTerm
 
 EX = Namespace("http://example.org/o#")
 
@@ -134,3 +135,21 @@ def test_filter_declares_xsd_prefix():
     assert "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>" in query
     # must parse without rdflib's default namespace bindings
     prepareQuery(query, initNs={})
+
+
+def test_term_label_is_kept():
+    term = OntoTerm(uri="http://example.org/o#A", label="my label")
+    assert term.label == "my label"
+
+
+def test_parser_reads_labels():
+    g = make_graph(
+        "AB",
+        [
+            (EX.A, RDFS.label, Literal("Klasse A", lang="de")),
+            (EX.A, RDFS.label, Literal("class A", lang="en")),
+        ],
+    )
+    parser = OntoParser(g)
+    assert parser.attributes["class"]["ex:A"].label == "class A"
+    assert parser.attributes["class"]["ex:B"].label is None

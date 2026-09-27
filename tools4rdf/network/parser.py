@@ -393,6 +393,30 @@ class OntoParser:
             comment = ""
         return comment
 
+    def get_label(self, cls):
+        """
+        Retrieve the rdfs:label of a given term from the RDF graph.
+
+        Untagged or English labels are preferred over other languages.
+
+        Parameters
+        ----------
+        cls : rdflib.term.URIRef
+            The RDF term for which the label is to be retrieved.
+
+        Returns
+        -------
+        str or None
+            The label of the term, or None if it has no label.
+        """
+        labels = list(self.graph.objects(cls, RDFS.label))
+        if len(labels) == 0:
+            return None
+        for label in labels:
+            if getattr(label, "language", None) in (None, "en"):
+                return str(label)
+        return str(labels[0])
+
     def lookup_node(self, term):
         """
         Maps a given term to its corresponding domain, range, and related hierarchies.
@@ -599,6 +623,7 @@ class OntoParser:
             uri=iri,
             namespace=self._lookup_namespace(iri),
             description=self.get_description(cls),
+            label=self.get_label(cls),
             target=cls,
         )
         return term
