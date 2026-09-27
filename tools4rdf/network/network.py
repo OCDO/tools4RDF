@@ -14,7 +14,7 @@ import graphviz
 import pandas as pd
 import itertools
 
-from rdflib import URIRef, Literal, RDF, OWL, Graph
+from rdflib import URIRef, Literal, RDF, OWL, XSD, Graph
 from tools4rdf.network.attrsetter import AttrSetter
 from tools4rdf.network.parser import parse_ontology, OntoParser
 from tools4rdf.network.term import OntoTerm, is_url
@@ -285,6 +285,8 @@ class Network:
         """
         query = []
         ns = self.namespaces | self.extra_namespaces
+        # filters always use xsd datatypes, even if the ontology does not bind it
+        ns.setdefault("xsd", str(XSD))
         for key in namespaces:
             query.append(f"PREFIX {key}: <{ns[key]}>")
         return query
@@ -892,6 +894,8 @@ class Network:
         )
 
         query_filter = self._add_filters(destinations, remote_source=remote_source)
+        if any("xsd:" in line for line in query_filter):
+            namespaces_used.append("xsd")
 
         created_queries = []
         for query in queries:

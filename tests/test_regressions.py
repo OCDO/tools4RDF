@@ -5,6 +5,7 @@ Regression tests for defects found in the 2026-09 audit.
 import pytest
 from rdflib import Graph, Namespace, RDF, RDFS, OWL, XSD, BNode, Literal
 from rdflib.collection import Collection
+from rdflib.plugins.sparql import prepareQuery
 
 from tools4rdf.network.parser import OntoParser
 from tools4rdf.network.network import OntologyNetworkBase
@@ -124,3 +125,12 @@ def test_object_property_already_in_destinations():
     t = net.terms.ex
     query = net.create_query(t.p, [t.p, t.x])
     assert query.count("ex:p") == 1
+
+
+def test_filter_declares_xsd_prefix():
+    onto = read_ontology()
+    c = onto.terms.cmso
+    query = onto.create_query(c.AtomicScaleSample, [c.hasNumberOfAtoms == 4])
+    assert "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>" in query
+    # must parse without rdflib's default namespace bindings
+    prepareQuery(query, initNs={})
