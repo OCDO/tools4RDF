@@ -307,10 +307,13 @@ class Network:
         return modified_destinations
 
     def _is_already_in_destinations(self, object_property, destinations):
-        if object_property in destinations:
-            return True
+        # compare by name; OntoTerm.__eq__ builds conditions for data properties
         for d in destinations:
-            if object_property in d._parents:
+            if isinstance(d, (list, tuple)):
+                chain = list(d)
+            else:
+                chain = [*d._parents, d]
+            if any(x.name == object_property.name for x in chain):
                 return True
         return False
 
@@ -427,7 +430,7 @@ class Network:
             else:
                 for object_property in object_properties:
                     if not self._is_already_in_destinations(
-                        object_property, *destinations
+                        object_property, destinations
                     ):
                         destinations.append(object_property)
             destinations = self._modify_destinations(destinations)

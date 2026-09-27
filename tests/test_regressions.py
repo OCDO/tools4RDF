@@ -3,10 +3,11 @@ Regression tests for defects found in the 2026-09 audit.
 """
 
 import pytest
-from rdflib import Graph, Namespace, RDF, RDFS, OWL, BNode
+from rdflib import Graph, Namespace, RDF, RDFS, OWL, XSD, BNode, Literal
 from rdflib.collection import Collection
 
 from tools4rdf.network.parser import OntoParser
+from tools4rdf.network.network import OntologyNetworkBase
 from tools4rdf.network.ontology import read_ontology
 
 EX = Namespace("http://example.org/o#")
@@ -90,3 +91,36 @@ def test_named_individual_of_unloaded_class():
     parser = OntoParser(g)
     assert "ex:ind" in parser.attributes["class"]
     assert parser.attributes["class"]["ex:A"].named_individuals == ["ex:ind2"]
+
+
+def object_property_network():
+    g = make_graph(
+        "ABC",
+        [
+            (EX.p, RDF.type, OWL.ObjectProperty),
+            (EX.p, RDFS.domain, EX.A),
+            (EX.p, RDFS.range, EX.B),
+        ],
+    )
+    for d in ["x", "y"]:
+        g.add((EX[d], RDF.type, OWL.DatatypeProperty))
+        g.add((EX[d], RDFS.domain, EX.A))
+        g.add((EX[d], RDFS.range, XSD.float))
+    return OntologyNetworkBase(OntoParser(g))
+
+
+def test_object_property_source_with_several_destinations():
+    net = object_property_network()
+    t = net.terms.ex
+    query = net.create_query(t.p, [t.x, t.y])
+    assert "?A ex:p ?p ." in query
+    assert "?A ex:x ?xvalue ." in query
+    assert "?A ex:y ?yvalue ." in query
+    Graph().query(query)
+
+
+def test_object_property_already_in_destinations():
+    net = object_property_network()
+    t = net.terms.ex
+    query = net.create_query(t.p, [t.p, t.x])
+    assert query.count("ex:p") == 1
