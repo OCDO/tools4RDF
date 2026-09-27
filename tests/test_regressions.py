@@ -350,3 +350,35 @@ def test_same_local_name_in_two_namespaces():
     assert len(df) == 1
     df = net.query(kg, net.terms.ex.A, [net.terms.ex.value, net.terms.y.value > 5])
     assert len(df) == 0
+
+
+def test_object_property_sources_start_from_first_common_domain():
+    import subprocess
+    import sys
+
+    script = """
+from rdflib import Graph, Namespace, RDF, RDFS, OWL
+from tools4rdf.network.parser import OntoParser
+from tools4rdf.network.network import OntologyNetworkBase
+EX = Namespace("http://example.org/o#")
+g = Graph()
+g.bind("ex", EX)
+for c in ["Alpha", "Beta", "Gamma", "Delta"]:
+    g.add((EX[c], RDF.type, OWL.Class))
+for p in ["p", "q"]:
+    g.add((EX[p], RDF.type, OWL.ObjectProperty))
+    g.add((EX[p], RDFS.range, EX.Delta))
+    for c in ["Alpha", "Beta", "Gamma"]:
+        g.add((EX[p], RDFS.domain, EX[c]))
+net = OntologyNetworkBase(OntoParser(g))
+print([l for l in net.create_query([net.terms.ex.p, net.terms.ex.q]).splitlines() if l.startswith("SELECT")])
+"""
+    outputs = set()
+    for seed in ["1", "2", "3", "4", "5", "6"]:
+        env = {"PYTHONHASHSEED": seed, "PATH": ""}
+        out = subprocess.run(
+            [sys.executable, "-c", script], capture_output=True, text=True, env=env
+        )
+        assert out.returncode == 0, out.stderr
+        outputs.add(out.stdout.strip())
+    assert len(outputs) == 1

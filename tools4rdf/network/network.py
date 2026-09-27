@@ -411,12 +411,18 @@ class Network:
         # common classes in the domains
         # Do only if we have object properties
         if len(object_properties) > 0:
+            # keep the domain order so the chosen class is the same on every run
             domains = [a.domain for a in object_properties]
-            common_classes = set(domains[0])
-            for d in domains[1:]:
-                common_classes = common_classes.intersection(set(d))
+            common_names = []
+            for x in domains[0]:
+                if (
+                    x not in common_names
+                    and x in self.onto.attributes["class"]
+                    and all(x in d for d in domains[1:])
+                ):
+                    common_names.append(x)
             # now if we do not have any common classes, raise an error
-            common_classes = [self.onto.attributes["class"][x] for x in common_classes]
+            common_classes = [self.onto.attributes["class"][x] for x in common_names]
             if len(common_classes) == 0:
                 raise ValueError(
                     "No common classes found in the domains of the object properties."
