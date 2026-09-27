@@ -455,3 +455,10 @@ def test_add_term_expands_prefixed_names():
     assert net.attributes["data_property"]["ex:v"].range == ["float"]
     query = net.create_query(net.terms.ex.A, [net.terms.ex.v > 1])
     assert "?A ex:q ?ex_B ." in query
+
+
+def test_owl_thing_is_not_its_own_subclass():
+    parser = OntoParser(make_graph("A"))
+    subclasses = parser.attributes["class"]["owl:Thing"].subclasses
+    assert "owl:Thing" not in subclasses
+    assert "ex:A" in subclasses

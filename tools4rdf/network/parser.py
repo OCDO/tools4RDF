@@ -761,6 +761,8 @@ class OntoParser:
         of "owl:Thing".
         """
         for key, cls in self.attributes["class"].items():
+            if key == "owl:Thing":
+                continue
             objects = list(self.graph.objects(cls.target, RDFS.subClassOf))
             if len(objects) == 0:
                 self.attributes["class"]["owl:Thing"].subclasses.append(cls.name)
