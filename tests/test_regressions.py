@@ -173,3 +173,44 @@ def test_terms_are_hashable_and_comparable():
     # data properties compared to terms do not produce conditions
     assert (c.hasNumberOfAtoms == c.hasNumberOfAtoms) is True
     assert c.hasNumberOfAtoms not in [c.hasVolume]
+
+
+def data_property_network(range_):
+    triples = [
+        (EX.v, RDF.type, OWL.DatatypeProperty),
+        (EX.v, RDFS.domain, EX.A),
+    ]
+    if range_ is not None:
+        triples.append((EX.v, RDFS.range, range_))
+    return OntologyNetworkBase(OntoParser(make_graph("A", triples)))
+
+
+def run_filter(range_, stored, value):
+    net = data_property_network(range_)
+    kg = Graph()
+    kg.add((EX.i, RDF.type, EX.A))
+    kg.add((EX.i, EX.v, stored))
+    query = net.create_query(net.terms.ex.A, [net.terms.ex.v == value])
+    return query, len(kg.query(query))
+
+
+def test_filter_string_with_quotes():
+    query, rows = run_filter(XSD.string, Literal('P"1'), 'P"1')
+    assert rows == 1
+
+
+def test_filter_boolean_uses_canonical_lexical_form():
+    query, rows = run_filter(XSD.boolean, Literal(True), True)
+    assert '"true"^^xsd:boolean' in query
+    assert rows == 1
+
+
+def test_filter_rdfs_literal_range():
+    query, rows = run_filter(RDFS.Literal, Literal("x"), "x")
+    assert "xsd:Literal" not in query
+    assert rows == 1
+
+
+def test_filter_without_range():
+    query, rows = run_filter(None, Literal(3), 3)
+    assert rows == 1

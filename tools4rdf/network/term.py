@@ -18,11 +18,14 @@ This module is designed to facilitate the creation and manipulation of ontology 
 making it easier to work with semantic data and SPARQL queries.
 """
 
-from rdflib import URIRef
+from rdflib import URIRef, Literal, XSD
 import numbers
 import copy
 import warnings
 from urllib.parse import urlparse
+
+
+_XSD_DATATYPES = set(XSD.__annotations__)
 
 
 def is_url(string):
@@ -448,9 +451,23 @@ class OntoTerm:
             )
             self._condition = condition_string
 
+    def _format_literal(self, val):
+        """
+        Serialise a value as a SPARQL literal matching the range of the term.
+
+        Values are escaped and use the canonical lexical form of the datatype.
+        If the range is missing or not an XSD datatype (e.g. rdfs:Literal),
+        the literal is left untyped (strings) or typed from the Python value.
+        """
+        datatype = self._clean_datatype(self.range[0]) if len(self.range) > 0 else None
+        if datatype in _XSD_DATATYPES:
+            lexical = str(Literal(val, datatype=XSD[datatype]))
+            return f"{Literal(lexical).n3()}^^xsd:{datatype}"
+        return Literal(val).n3()
+
     def _create_condition_string(self, condition, val):
         self._old_variable_name = self.variable_name
-        return f'(?{self.variable_name}{condition}"{val}"^^xsd:{self._clean_datatype(self.range[0])})'
+        return f"(?{self.variable_name}{condition}{self._format_literal(val)})"
 
     # overloading operators
     def __eq__(self, val):
