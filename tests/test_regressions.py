@@ -418,3 +418,21 @@ def test_query_rejects_non_url_string():
     c = onto.terms.cmso
     with pytest.raises(ValueError):
         onto.query("not a url", c.AtomicScaleSample, [c.hasNumberOfAtoms])
+
+
+def test_named_individual_as_source_raises():
+    g = make_graph("A", [(EX.ind, RDF.type, OWL.NamedIndividual), (EX.ind, RDF.type, EX.A)])
+    net = OntologyNetworkBase(OntoParser(g))
+    assert net.terms.ex.ind.node_type == "named_individual"
+    with pytest.raises(ValueError):
+        net.create_query(net.terms.ex.ind)
+
+
+def test_punned_class_keeps_its_subclasses():
+    g = make_graph(
+        "AB",
+        [(EX.B, RDFS.subClassOf, EX.A), (EX.A, RDF.type, OWL.NamedIndividual)],
+    )
+    parser = OntoParser(g)
+    assert parser.attributes["class"]["ex:A"].node_type == "class"
+    assert parser.attributes["class"]["ex:A"].subclasses == ["ex:B"]

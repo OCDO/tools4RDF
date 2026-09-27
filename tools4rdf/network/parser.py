@@ -839,7 +839,10 @@ class OntoParser:
         for cls in named_individuals:
             # find parent
             term = self.create_term(cls)
-            self.attributes["class"][term.name] = term
+            # a punned term that is also a class keeps its class entry
+            if term.name not in self.attributes["class"]:
+                term.node_type = "named_individual"
+                self.attributes["class"][term.name] = term
             parents = list(self.graph.objects(cls, RDF.type))
             for parent in parents:
                 if parent not in [OWL.NamedIndividual, OWL.Class]:

@@ -403,6 +403,11 @@ class Network:
         for s in source:
             if s.node_type == "data_property":
                 raise ValueError("Data properties are not allowed as source nodes.")
+            if s.node_type not in ("class", "object_property"):
+                raise ValueError(
+                    f"{s.name} is a {s.node_type}; only classes and object "
+                    "properties can be used as source nodes."
+                )
 
         # separate sources into classes and object properties
         classes = [s for s in source if s.node_type == "class"]
