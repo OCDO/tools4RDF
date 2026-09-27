@@ -10,7 +10,7 @@ readme = "README.md"
 requires-python = ">=3.8"
 license = {text = "MIT"}
 authors = [
-    {name = "Abril Azocar Guzman", email = "sarath.menon@pyscal.org"},
+    {name = "Abril Azocar Guzman"},
     {name = "Sarath Menon", email = "sarath.menon@pyscal.org"}
 ]
 maintainers = [
