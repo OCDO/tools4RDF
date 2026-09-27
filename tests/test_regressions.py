@@ -473,3 +473,12 @@ def test_visualize_graph_with_default_style():
     dot = visualize_graph(g)
     assert "fcc lattice" in dot.source
     assert "Fcc Lattice" not in dot.source
+
+
+def test_stepped_query_through_object_property():
+    onto = read_ontology()
+    c = onto.terms.cmso
+    query = onto.create_query(c.AtomicScaleSample, [[c.hasMaterial, c.hasAltName]])
+    assert "?AtomicScaleSample cmso:hasMaterial ?hasMaterial ." in query
+    assert "?hasMaterial cmso:hasAltName ?hasMaterial_hasAltNamevalue ." in query
+    prepareQuery(query, initNs={})

@@ -14,6 +14,7 @@ import graphviz
 import pandas as pd
 import copy
 import itertools
+import numbers
 import re
 
 from rdflib import URIRef, Literal, RDF, RDFS, OWL, XSD, Graph
@@ -26,6 +27,17 @@ from tools4rdf.network.term import OntoTerm, is_url
 def _to_variable(name):
     """Turn a term name such as 'ex:Twin-like' into a valid SPARQL variable name."""
     return re.sub(r"\W", "_", name)
+
+
+def _to_python(value):
+    """Convert an rdflib term from a result row into a plain Python value."""
+    if value is None:
+        return None
+    if isinstance(value, Literal):
+        python_value = value.toPython()
+        # ill-typed and language-tagged literals come back as Literal
+        return str(python_value) if isinstance(python_value, Literal) else python_value
+    return str(value)
 
 
 def _replace_name(name):
@@ -254,7 +266,12 @@ class Network:
                 # this will also always be of shape 1, x so we can directly take first element
                 temp_path = temp_path[0]
                 # ok now we need to merge temp_path into path
-                if len(temp_path) == 2:
+                if temp_source.node_type == "object_property":
+                    # temp_path starts [property, range class, ...]; the path so far
+                    # already ends with the object of that property, which takes
+                    # the place of the range class
+                    path.extend(temp_path[2:])
+                elif len(temp_path) == 2:
                     path[-1] = temp_path[-1]
                 else:
                     path.extend(temp_path[1:])
@@ -511,8 +528,6 @@ class Network:
         ------
         ValueError
             If `destinations` is None and `source.any` is used without enforcing type.
-        ValueError
-            If more than one destination has an associated condition.
         """
         # if destinations is None, we need to check if source.any is used
         if destinations is None and not source._enforce_type:
@@ -520,18 +535,14 @@ class Network:
                 "If no destinations are provided, source.any cannot be used!."
             )
 
-        # check if more than one of them have an associated condition -> if so throw error
-        no_of_conditions = 0
-        for destination in destinations:
-            if destination._condition is not None:
-                no_of_conditions += 1
-        if no_of_conditions > 1:
-            raise ValueError("Only one condition is allowed")
-
         # iterate through the list, if they have condition parents, add them explicitely
+        # only for their paths: their conditions are already part of the combined
+        # condition, and filtering on them again would turn || into &&
         for destination in destinations:
             for parent in destination._condition_parents:
                 if parent.variable_name not in [d.variable_name for d in destinations]:
+                    parent = copy.deepcopy(parent)
+                    parent.refresh_condition()
                     destinations.append(parent)
         return destinations
 
@@ -584,10 +595,11 @@ class Network:
         # construct the select distinct command:
         # add source `variable_name`
         # iterate over destinations, add their `variable_name`
-        select_destinations = [
-            "?" + destination.variable_name for destination in destinations
-        ]
-        select_destinations = ["?" + source.variable_name] + select_destinations
+        select_destinations = []
+        for term in [source, *destinations]:
+            # the same term may appear twice, e.g. [x > 1, x < 5]
+            if "?" + term.variable_name not in select_destinations:
+                select_destinations.append("?" + term.variable_name)
         query.append(f'SELECT DISTINCT {" ".join(select_destinations)}')
         query.append("WHERE {")
         # if remote_source is provided, use it as the source
@@ -620,6 +632,32 @@ class Network:
         namespaces : list of str
             A list of namespaces extracted from the triples.
         """
+        combinations, namespaces = self._get_triples_per_destination(
+            source, destinations, num_paths=num_paths
+        )
+        queries = []
+        for combination in combinations:
+            query = []
+            for lines in combination:
+                for line_text in lines:
+                    if line_text not in query:
+                        query.append(line_text)
+            queries.append(query)
+        return queries, namespaces
+
+    def _get_triples_per_destination(self, source, destinations, num_paths=1):
+        """
+        Like `_get_triples`, but keeps the triple patterns of each destination
+        separate, so that they can be placed in OPTIONAL blocks.
+
+        Returns
+        -------
+        combinations : list of list of list of str
+            For each combination of paths, one list of triple patterns per
+            destination, in the order of `destinations`.
+        namespaces : list of str
+            A list of namespaces extracted from the triples.
+        """
         # for each source and destinations, we need to find num_paths paths
         # then these have to be combined; and each set to be made into individual queries
         complete_triples = []
@@ -640,6 +678,7 @@ class Network:
             query = []
             namespace = []
             for triples in combination:
+                lines = []
                 for triple in triples:
                     namespace.extend([x.split(":")[0] for x in triple if ":" in x])
                     line_text = "    ?%s %s ?%s ." % (
@@ -647,8 +686,9 @@ class Network:
                         triple[1],
                         _to_variable(triple[2]),
                     )
-                    if line_text not in query:
-                        query.append(line_text)
+                    if line_text not in lines:
+                        lines.append(line_text)
+                query.append(lines)
             queries.append(query)
             namespaces.extend(namespace)
 
@@ -804,9 +844,9 @@ class Network:
         Adds filter conditions to a SPARQL query based on the provided destinations.
 
         This method processes a list of destination objects, extracts their filter
-        conditions, and constructs a SPARQL query fragment with the appropriate
-        FILTER clause. It also replaces query names with variable names in the
-        filter conditions.
+        conditions, and constructs a SPARQL query fragment with one FILTER clause
+        per condition; SPARQL combines them with a logical AND. It also replaces
+        query names with variable names in the filter conditions.
 
         Parameters
         ----------
@@ -821,23 +861,30 @@ class Network:
             A list of strings representing the SPARQL query fragment, including
             the FILTER clause and a closing brace.
         """
-        filter_text = ""
-        query = []
-        for destination in destinations:
-            if destination._condition is not None:
-                filter_text = destination._condition
-                break
-
-        # replace the query_name with variable_name
-        if filter_text != "":
-            for destination in destinations:
-                filter_text = filter_text.replace(
-                    destination.query_name, destination.variable_name
-                )
-            query.append(f"FILTER {filter_text}")
+        query = self._filter_lines(destinations)
         if remote_source is not None:
             query.append("  }")
         query.append("}")
+        return query
+
+    @staticmethod
+    def _filter_lines(destinations, all_destinations=None):
+        """
+        One FILTER line per condition of `destinations`. Query names are replaced
+        by the variable names of `all_destinations` (default: `destinations`).
+        """
+        if all_destinations is None:
+            all_destinations = destinations
+        query = []
+        for destination in destinations:
+            if destination._condition is None:
+                continue
+            # replace the query_name with variable_name
+            filter_text = destination._condition
+            for other in all_destinations:
+                filter_text = filter_text.replace(other.query_name, other.variable_name)
+            if f"FILTER {filter_text}" not in query:
+                query.append(f"FILTER {filter_text}")
         return query
 
     def _add_limit(self, limit=None):
@@ -912,50 +959,85 @@ class Network:
         namespaces_used.append(source.name.split(":")[0])
         namespaces_used.append("rdf")
 
-        # get a list of queries
-        queries, namespaces = self._get_triples(
+        # get the triple patterns of each destination, for every path combination
+        combinations, namespaces = self._get_triples_per_destination(
             source, destinations, num_paths=num_paths
         )
 
+        required = [d for d in destinations if not d._optional]
         query_footer_source_types, namespaces_source = self._add_types_for_source(
             source
         )
         query_footer_dest_types, namespaces_dest = self._add_types_for_destination(
-            destinations
+            required
         )
+        query_filter = self._filter_lines(required, destinations)
 
-        query_filter = self._add_filters(destinations, remote_source=remote_source)
-        if any("xsd:" in line for line in query_filter):
+        # optional destinations keep their types and conditions inside their block
+        optional_parts = {}
+        for destination in destinations:
+            if destination._optional:
+                types, namespaces_optional = self._add_types_for_destination(
+                    [destination]
+                )
+                namespaces_dest = namespaces_dest + namespaces_optional
+                optional_parts[id(destination)] = types + self._filter_lines(
+                    [destination], destinations
+                )
+
+        all_filters = query_filter + [
+            line for part in optional_parts.values() for line in part
+        ]
+        if any("xsd:" in line for line in all_filters):
             namespaces_used.append("xsd")
 
-        created_queries = []
-        for query in queries:
-            query_header_new = (
-                self._insert_namespaces(
-                    sorted(
-                        set(
-                            namespaces_used
-                            + namespaces
-                            + namespaces_source
-                            + namespaces_dest
-                        )
-                    )
+        query_footer = []
+        if remote_source is not None:
+            query_footer.append("  }")
+        query_footer.append("}")
+
+        query_header = (
+            self._insert_namespaces(
+                sorted(
+                    set(namespaces_used + namespaces + namespaces_source + namespaces_dest)
                 )
-                + query_header
             )
+            + query_header
+        )
+
+        created_queries = []
+        for combination in combinations:
+            body = []
+            for destination, lines in zip(destinations, combination):
+                if not destination._optional:
+                    body.extend(line for line in lines if line not in body)
+            body += query_footer_source_types + query_footer_dest_types
+            for destination, lines in zip(destinations, combination):
+                if destination._optional:
+                    block = [line for line in lines if line not in body]
+                    block += optional_parts[id(destination)]
+                    body.append("    OPTIONAL {")
+                    body.extend("        " + line.strip() for line in block)
+                    body.append("    }")
             query = (
-                query_header_new
-                + query
-                + query_footer_source_types
-                + query_footer_dest_types
+                query_header
+                + body
                 + query_filter
+                + query_footer
                 + self._add_limit(limit)
             )
             created_queries.append("\n".join(query))
         return created_queries
 
     def query(
-        self, kg, source, destinations=None, return_df=True, num_paths=1, limit=None
+        self,
+        kg,
+        source,
+        destinations=None,
+        return_df=True,
+        num_paths=1,
+        limit=None,
+        python_values=False,
     ):
         """
         Executes queries on a knowledge graph (KG) to retrieve data from a SPARQL query.
@@ -975,12 +1057,17 @@ class Network:
             The number of paths to retrieve for each query.
         limit : int, optional
             The maximum number of results to return. If None, no limit is applied.
+        python_values : bool, default=False
+            If True and `return_df` is True, literals are converted to Python values
+            (int, float, str, datetime, ...) and IRIs to strings, so that numeric
+            columns get a numeric dtype. Missing optional values become NaN/None.
 
         Returns
         -------
         pandas.DataFrame or list
             If `return_df` is True, returns a pandas DataFrame containing the query results
-            (empty if nothing matches). Values are rdflib terms (URIRef, Literal).
+            (empty if nothing matches). Values are rdflib terms (URIRef, Literal),
+            unless `python_values` is True.
             If `return_df` is False, returns a list of query results.
             Returns None only if no query could be generated.
         """
@@ -1001,16 +1088,18 @@ class Network:
         )
         res = []
         for query_string in query_strings:
-            r = self._query(kg, query_string, return_df=return_df)
+            r = self._query(
+                kg, query_string, return_df=return_df, python_values=python_values
+            )
             if r is not None:
                 res.append(r)
         if len(res) == 0:
             return None
         if return_df:
-            res = pd.concat(res)
+            res = pd.concat(res, ignore_index=python_values)
         return res
 
-    def _query(self, kg, query_string, return_df=True):
+    def _query(self, kg, query_string, return_df=True, python_values=False):
         """
         Executes a SPARQL query on the given knowledge graph (KG) and optionally
         returns the result as a pandas DataFrame.
@@ -1024,6 +1113,9 @@ class Network:
         return_df : bool, optional
             If True, the query result is returned as a pandas DataFrame.
             Defaults to True.
+        python_values : bool, optional
+            If True, DataFrame cells are converted to Python values; see `query`.
+            Defaults to False.
 
         Returns
         -------
@@ -1047,7 +1139,18 @@ class Network:
                     if "SELECT DISTINCT" in line:
                         break
                 labels = [x[1:] for x in line.split()[2:]]
-                return pd.DataFrame(res, columns=labels)
+                if not python_values:
+                    return pd.DataFrame(res, columns=labels)
+                rows = [[_to_python(value) for value in row] for row in res]
+                df = pd.DataFrame(rows, columns=labels)
+                for column in df.columns:
+                    values = df[column].dropna()
+                    if len(values) > 0 and all(
+                        isinstance(v, numbers.Number) and not isinstance(v, bool)
+                        for v in values
+                    ):
+                        df[column] = pd.to_numeric(df[column])
+                return df
 
         return res
 
