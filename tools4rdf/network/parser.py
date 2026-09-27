@@ -27,9 +27,9 @@ import os
 import networkx as nx
 import warnings
 
-from tools4rdf.network.term import OntoTerm, strip_name
+from tools4rdf.network.term import OntoTerm, strip_name, is_url, _XSD_DATATYPES
 from tools4rdf.network.patch import patch_terms
-from rdflib import Graph, RDF, RDFS, OWL, BNode, URIRef
+from rdflib import Graph, RDF, RDFS, OWL, XSD, BNode, URIRef
 
 
 def parse_ontology(infile, format="xml"):
@@ -945,17 +945,18 @@ class OntoParser:
         node_type : str
             The type of the node.
         namespace : str, optional
-            The namespace of the node.
+            Not used; kept for backwards compatibility.
         dm : list, optional
-            The domain metadata of the node.
+            The domain of the node, as IRIs or prefixed names (e.g. "cmso:Material").
         rn : list, optional
-            The range metadata of the node.
+            The range of the node, as IRIs or prefixed names. For data properties,
+            XSD datatype names such as "float" or "str" are also accepted.
         data_type : str, optional
-            The data type of the node.
+            Not used; kept for backwards compatibility.
         node_id : str, optional
-            The ID of the node.
+            Not used; kept for backwards compatibility.
         delimiter : str, optional
-            The delimiter used for parsing the URI.
+            Not used; kept for backwards compatibility.
 
         Raises
         ------
@@ -972,10 +973,27 @@ class OntoParser:
         else:
             raise ValueError("Node type not found")
         for r in rn:
-            self.graph.add((URIRef(uri), RDFS.range, URIRef(r)))
+            self.graph.add((URIRef(uri), RDFS.range, self._expand(r)))
         for d in dm:
-            self.graph.add((URIRef(uri), RDFS.domain, URIRef(d)))
+            self.graph.add((URIRef(uri), RDFS.domain, self._expand(d)))
         self._data_dict = None
+
+    def _expand(self, tag):
+        """
+        Expand a prefixed name (e.g. "cmso:Material") or an XSD datatype name
+        (e.g. "float", "str") into a URIRef. IRIs are returned unchanged.
+        """
+        if is_url(tag):
+            return URIRef(tag)
+        if ":" in tag:
+            prefix, name = tag.split(":", 1)
+            if prefix in self.namespaces:
+                return URIRef(self.namespaces[prefix] + name)
+        else:
+            name = "string" if tag == "str" else tag
+            if name in _XSD_DATATYPES:
+                return XSD[name]
+        return URIRef(tag)
 
     def add_namespace(self, namespace_name, namespace_iri):
         """

@@ -444,3 +444,14 @@ def test_terms_can_be_deep_copied():
     onto = read_ontology()
     terms = copy.deepcopy(onto.terms)
     assert terms.cmso.AtomicScaleSample.name == "cmso:AtomicScaleSample"
+
+
+def test_add_term_expands_prefixed_names():
+    net = OntologyNetworkBase(OntoParser(make_graph("AB")))
+    net.add_term("http://example.org/o#q", "object_property", dm=["ex:A"], rn=["ex:B"])
+    net.add_term("http://example.org/o#v", "data_property", dm=["ex:B"], rn=["float"])
+    assert net.attributes["object_property"]["ex:q"].domain == ["ex:A"]
+    assert net.attributes["object_property"]["ex:q"].range == ["ex:B"]
+    assert net.attributes["data_property"]["ex:v"].range == ["float"]
+    query = net.create_query(net.terms.ex.A, [net.terms.ex.v > 1])
+    assert "?A ex:q ?ex_B ." in query
