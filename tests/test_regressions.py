@@ -382,3 +382,11 @@ print([l for l in net.create_query([net.terms.ex.p, net.terms.ex.q]).splitlines(
         assert out.returncode == 0, out.stderr
         outputs.add(out.stdout.strip())
     assert len(outputs) == 1
+
+
+def test_prefixes_are_sorted():
+    onto = read_ontology()
+    c = onto.terms.cmso
+    query = onto.create_query(c.AtomicScaleSample, [c.hasNumberOfAtoms == 4])
+    prefixes = [line for line in query.splitlines() if line.startswith("PREFIX")]
+    assert prefixes == sorted(prefixes)

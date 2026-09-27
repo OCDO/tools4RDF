@@ -926,11 +926,13 @@ class Network:
         for query in queries:
             query_header_new = (
                 self._insert_namespaces(
-                    set(
-                        namespaces_used
-                        + namespaces
-                        + namespaces_source
-                        + namespaces_dest
+                    sorted(
+                        set(
+                            namespaces_used
+                            + namespaces
+                            + namespaces_source
+                            + namespaces_dest
+                        )
                     )
                 )
                 + query_header
