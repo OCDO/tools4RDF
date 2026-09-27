@@ -191,6 +191,7 @@ class OntoTerm:
         self._add_subclass = True
         self._old_variable_name = None
         self._qualified = False
+        self._optional = False
 
     @property
     def URIRef(self):
@@ -411,6 +412,14 @@ class OntoTerm:
         item = copy.deepcopy(self)
         item._add_subclass = False
         item._enforce_type = True
+        return item
+
+    @property
+    def optional(self):
+        # this indicates that results without this term should be kept;
+        # its path, type and condition go into an OPTIONAL block
+        item = copy.deepcopy(self)
+        item._optional = True
         return item
 
     def toPython(self):

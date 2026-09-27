@@ -81,3 +81,54 @@ def test_and_condition_combined_with_a_separate_filter(net, kg):
     t = net.terms.ex
     df = net.query(kg, t.Sample, [(t.natoms > 1) & (t.volume > 1), t.natoms < 50])
     assert samples(df) == ["s1"]
+
+
+def test_optional_keeps_rows_without_the_value(net, kg):
+    t = net.terms.ex
+    df = net.query(kg, t.Sample, [t.natoms, t.name.optional])
+    assert samples(df) == ["s1", "s2", "s3"]
+    names = {str(s).split("#")[-1]: n for s, n in zip(df["Sample"], df["namevalue"])}
+    assert str(names["s1"]) == "fcc"
+    assert names["s2"] is None
+
+
+def test_required_destination_still_filters_rows(net, kg):
+    t = net.terms.ex
+    # s3 has no cell, so it drops out; s2 has no name but is kept
+    df = net.query(kg, t.Sample, [t.volume, t.name.optional])
+    assert samples(df) == ["s1", "s2"]
+
+
+def test_optional_path_through_another_class(net, kg):
+    t = net.terms.ex
+    query = net.create_query(t.Sample, [t.natoms, t.volume.optional])
+    optional_block = query.split("OPTIONAL {")[1].split("}")[0]
+    assert "ex:hasCell" in optional_block
+    assert "ex:volume" in optional_block
+    df = net.query(kg, t.Sample, [t.natoms, t.volume.optional])
+    assert samples(df) == ["s1", "s2", "s3"]
+
+
+def test_condition_on_optional_stays_inside_its_block(net, kg):
+    t = net.terms.ex
+    query = net.create_query(t.Sample, [t.natoms, (t.volume > 20).optional])
+    assert "FILTER" in query.split("OPTIONAL {")[1].split("}")[0]
+    df = net.query(kg, t.Sample, [t.natoms, (t.volume > 20).optional])
+    # every sample is kept; only s2 has a volume above 20
+    assert samples(df) == ["s1", "s2", "s3"]
+    volumes = [v for v in df["volumevalue"] if v is not None]
+    assert [float(v) for v in volumes] == [50.0]
+
+
+def test_optional_query_parses_without_default_prefixes(net):
+    from rdflib.plugins.sparql import prepareQuery
+
+    t = net.terms.ex
+    query = net.create_query(t.Sample, [t.natoms > 1, (t.volume > 20).optional])
+    prepareQuery(query, initNs={})
+
+
+def test_optional_does_not_mutate_shared_term(net):
+    t = net.terms.ex
+    t.name.optional
+    assert net.terms.ex.name._optional is False

@@ -615,6 +615,32 @@ class Network:
         namespaces : list of str
             A list of namespaces extracted from the triples.
         """
+        combinations, namespaces = self._get_triples_per_destination(
+            source, destinations, num_paths=num_paths
+        )
+        queries = []
+        for combination in combinations:
+            query = []
+            for lines in combination:
+                for line_text in lines:
+                    if line_text not in query:
+                        query.append(line_text)
+            queries.append(query)
+        return queries, namespaces
+
+    def _get_triples_per_destination(self, source, destinations, num_paths=1):
+        """
+        Like `_get_triples`, but keeps the triple patterns of each destination
+        separate, so that they can be placed in OPTIONAL blocks.
+
+        Returns
+        -------
+        combinations : list of list of list of str
+            For each combination of paths, one list of triple patterns per
+            destination, in the order of `destinations`.
+        namespaces : list of str
+            A list of namespaces extracted from the triples.
+        """
         # for each source and destinations, we need to find num_paths paths
         # then these have to be combined; and each set to be made into individual queries
         complete_triples = []
@@ -635,6 +661,7 @@ class Network:
             query = []
             namespace = []
             for triples in combination:
+                lines = []
                 for triple in triples:
                     namespace.extend([x.split(":")[0] for x in triple if ":" in x])
                     line_text = "    ?%s %s ?%s ." % (
@@ -642,8 +669,9 @@ class Network:
                         triple[1],
                         _to_variable(triple[2]),
                     )
-                    if line_text not in query:
-                        query.append(line_text)
+                    if line_text not in lines:
+                        lines.append(line_text)
+                query.append(lines)
             queries.append(query)
             namespaces.extend(namespace)
 
@@ -816,19 +844,30 @@ class Network:
             A list of strings representing the SPARQL query fragment, including
             the FILTER clause and a closing brace.
         """
+        query = self._filter_lines(destinations)
+        if remote_source is not None:
+            query.append("  }")
+        query.append("}")
+        return query
+
+    @staticmethod
+    def _filter_lines(destinations, all_destinations=None):
+        """
+        One FILTER line per condition of `destinations`. Query names are replaced
+        by the variable names of `all_destinations` (default: `destinations`).
+        """
+        if all_destinations is None:
+            all_destinations = destinations
         query = []
         for destination in destinations:
             if destination._condition is None:
                 continue
             # replace the query_name with variable_name
             filter_text = destination._condition
-            for other in destinations:
+            for other in all_destinations:
                 filter_text = filter_text.replace(other.query_name, other.variable_name)
             if f"FILTER {filter_text}" not in query:
                 query.append(f"FILTER {filter_text}")
-        if remote_source is not None:
-            query.append("  }")
-        query.append("}")
         return query
 
     def _add_limit(self, limit=None):
@@ -903,43 +942,71 @@ class Network:
         namespaces_used.append(source.name.split(":")[0])
         namespaces_used.append("rdf")
 
-        # get a list of queries
-        queries, namespaces = self._get_triples(
+        # get the triple patterns of each destination, for every path combination
+        combinations, namespaces = self._get_triples_per_destination(
             source, destinations, num_paths=num_paths
         )
 
+        required = [d for d in destinations if not d._optional]
         query_footer_source_types, namespaces_source = self._add_types_for_source(
             source
         )
         query_footer_dest_types, namespaces_dest = self._add_types_for_destination(
-            destinations
+            required
         )
+        query_filter = self._filter_lines(required, destinations)
 
-        query_filter = self._add_filters(destinations, remote_source=remote_source)
-        if any("xsd:" in line for line in query_filter):
+        # optional destinations keep their types and conditions inside their block
+        optional_parts = {}
+        for destination in destinations:
+            if destination._optional:
+                types, namespaces_optional = self._add_types_for_destination(
+                    [destination]
+                )
+                namespaces_dest = namespaces_dest + namespaces_optional
+                optional_parts[id(destination)] = types + self._filter_lines(
+                    [destination], destinations
+                )
+
+        all_filters = query_filter + [
+            line for part in optional_parts.values() for line in part
+        ]
+        if any("xsd:" in line for line in all_filters):
             namespaces_used.append("xsd")
 
-        created_queries = []
-        for query in queries:
-            query_header_new = (
-                self._insert_namespaces(
-                    sorted(
-                        set(
-                            namespaces_used
-                            + namespaces
-                            + namespaces_source
-                            + namespaces_dest
-                        )
-                    )
+        query_footer = []
+        if remote_source is not None:
+            query_footer.append("  }")
+        query_footer.append("}")
+
+        query_header = (
+            self._insert_namespaces(
+                sorted(
+                    set(namespaces_used + namespaces + namespaces_source + namespaces_dest)
                 )
-                + query_header
             )
+            + query_header
+        )
+
+        created_queries = []
+        for combination in combinations:
+            body = []
+            for destination, lines in zip(destinations, combination):
+                if not destination._optional:
+                    body.extend(line for line in lines if line not in body)
+            body += query_footer_source_types + query_footer_dest_types
+            for destination, lines in zip(destinations, combination):
+                if destination._optional:
+                    block = [line for line in lines if line not in body]
+                    block += optional_parts[id(destination)]
+                    body.append("    OPTIONAL {")
+                    body.extend("    " + line for line in block)
+                    body.append("    }")
             query = (
-                query_header_new
-                + query
-                + query_footer_source_types
-                + query_footer_dest_types
+                query_header
+                + body
                 + query_filter
+                + query_footer
                 + self._add_limit(limit)
             )
             created_queries.append("\n".join(query))
