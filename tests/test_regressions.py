@@ -321,3 +321,32 @@ def test_most_specific_namespace_wins():
     parser = OntoParser(g)
     assert "ex:A" in parser.attributes["class"]
     assert "base:A" not in parser.attributes["class"]
+
+
+def test_same_local_name_in_two_namespaces():
+    Y = Namespace("http://other.org/y#")
+    g = make_graph(
+        "AB",
+        [
+            (EX.hasB, RDF.type, OWL.ObjectProperty),
+            (EX.hasB, RDFS.domain, EX.A),
+            (EX.hasB, RDFS.range, EX.B),
+            (EX.value, RDFS.domain, EX.A),
+            (Y.value, RDFS.domain, EX.B),
+        ],
+    )
+    g.bind("y", Y)
+    for ns in (EX, Y):
+        g.add((ns.value, RDF.type, OWL.DatatypeProperty))
+        g.add((ns.value, RDFS.range, XSD.float))
+    net = OntologyNetworkBase(OntoParser(g))
+    kg = Graph()
+    kg.add((EX.a, RDF.type, EX.A))
+    kg.add((EX.a, EX.hasB, EX.b))
+    kg.add((EX.a, EX.value, Literal(1.0)))
+    kg.add((EX.b, Y.value, Literal(2.0)))
+    df = net.query(kg, net.terms.ex.A, [net.terms.ex.value, net.terms.y.value > 1])
+    assert list(df.columns) == ["A", "ex_valuevalue", "y_valuevalue"]
+    assert len(df) == 1
+    df = net.query(kg, net.terms.ex.A, [net.terms.ex.value, net.terms.y.value > 5])
+    assert len(df) == 0

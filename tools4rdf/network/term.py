@@ -20,6 +20,7 @@ making it easier to work with semantic data and SPARQL queries.
 
 from rdflib import URIRef, Literal, XSD
 import numbers
+import re
 import copy
 import warnings
 from urllib.parse import urlparse
@@ -189,6 +190,7 @@ class OntoTerm:
         self._enforce_type = True
         self._add_subclass = True
         self._old_variable_name = None
+        self._qualified = False
 
     @property
     def URIRef(self):
@@ -354,7 +356,12 @@ class OntoTerm:
 
         """
         name_list = [x.name_without_prefix for x in self._parents]
-        name_list.append(self.name_without_prefix)
+        if self._qualified:
+            # used when two terms of different namespaces share a local name
+            prefix = re.sub(r"\W", "_", self.name.split(":")[0])
+            name_list.append(f"{prefix}_{self.name_without_prefix}")
+        else:
+            name_list.append(self.name_without_prefix)
         name = "_".join(name_list)
 
         if self.node_type == "data_property":
@@ -444,12 +451,11 @@ class OntoTerm:
     def _update_condition_string(
         self,
     ):
-        condition_string = self._condition
-        if self._old_variable_name is not None:
-            condition_string = condition_string.replace(
-                self._old_variable_name, self.variable_name
+        if self._condition is not None and self._old_variable_name is not None:
+            self._condition = self._condition.replace(
+                f"?{self._old_variable_name}", f"?{self.variable_name}"
             )
-            self._condition = condition_string
+            self._old_variable_name = self.variable_name
 
     def _format_literal(self, val):
         """

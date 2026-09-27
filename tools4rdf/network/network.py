@@ -446,7 +446,7 @@ class Network:
             destinations = self._modify_destinations(destinations)
 
         elif len(object_properties) > 0:
-            destinations = list(object_properties)
+            destinations = [copy.deepcopy(op) for op in object_properties]
 
         if destinations is None:
             destinations = []
@@ -522,6 +522,21 @@ class Network:
                 if parent.variable_name not in [d.variable_name for d in destinations]:
                     destinations.append(parent)
         return destinations
+
+    @staticmethod
+    def _disambiguate_variables(destinations):
+        """
+        Qualify variable names with the namespace prefix where different terms
+        (e.g. ex:value and y:value) would otherwise share a SPARQL variable.
+        """
+        by_variable = {}
+        for destination in destinations:
+            by_variable.setdefault(destination.variable_name, []).append(destination)
+        for terms in by_variable.values():
+            if len({term.name for term in terms}) > 1:
+                for term in terms:
+                    term._qualified = True
+                    term._update_condition_string()
 
     def _create_query_prefix(self, source, destinations, remote_source=None):
         """
@@ -875,6 +890,7 @@ class Network:
         destinations = self._prepare_destinations(
             destinations=destinations, source=source
         )
+        self._disambiguate_variables(destinations)
         query_header = self._create_query_prefix(
             source, destinations, remote_source=remote_source
         )
