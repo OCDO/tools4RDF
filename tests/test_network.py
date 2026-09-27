@@ -229,16 +229,14 @@ def test_prepare_destinations_source_any_error(network_fixture):
         network_fixture._prepare_destinations(None, source)
 
 
-def test_prepare_destinations_multiple_conditions_error(network_fixture):
+def test_prepare_destinations_multiple_conditions(network_fixture):
     source = network_fixture.terms.ex.Pizza
-    dest1 = network_fixture.terms.ex.Pizza
-    dest2 = network_fixture.terms.ex.Pizza
+    dest1 = network_fixture.terms.ex.Pizza.any
+    dest2 = network_fixture.terms.ex.Food.any
     dest1._condition = "condition1"
     dest2._condition = "condition2"
-    with pytest.raises(ValueError):
-        network_fixture._prepare_destinations([dest1, dest2], source)
-    dest1._condition = None
-    dest2._condition = None
+    result = network_fixture._prepare_destinations([dest1, dest2], source)
+    assert len(result) == 2
 
 
 def test_create_query_prefix(network_fixture):

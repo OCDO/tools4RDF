@@ -511,8 +511,6 @@ class Network:
         ------
         ValueError
             If `destinations` is None and `source.any` is used without enforcing type.
-        ValueError
-            If more than one destination has an associated condition.
         """
         # if destinations is None, we need to check if source.any is used
         if destinations is None and not source._enforce_type:
@@ -520,18 +518,14 @@ class Network:
                 "If no destinations are provided, source.any cannot be used!."
             )
 
-        # check if more than one of them have an associated condition -> if so throw error
-        no_of_conditions = 0
-        for destination in destinations:
-            if destination._condition is not None:
-                no_of_conditions += 1
-        if no_of_conditions > 1:
-            raise ValueError("Only one condition is allowed")
-
         # iterate through the list, if they have condition parents, add them explicitely
+        # only for their paths: their conditions are already part of the combined
+        # condition, and filtering on them again would turn || into &&
         for destination in destinations:
             for parent in destination._condition_parents:
                 if parent.variable_name not in [d.variable_name for d in destinations]:
+                    parent = copy.deepcopy(parent)
+                    parent.refresh_condition()
                     destinations.append(parent)
         return destinations
 
@@ -584,10 +578,11 @@ class Network:
         # construct the select distinct command:
         # add source `variable_name`
         # iterate over destinations, add their `variable_name`
-        select_destinations = [
-            "?" + destination.variable_name for destination in destinations
-        ]
-        select_destinations = ["?" + source.variable_name] + select_destinations
+        select_destinations = []
+        for term in [source, *destinations]:
+            # the same term may appear twice, e.g. [x > 1, x < 5]
+            if "?" + term.variable_name not in select_destinations:
+                select_destinations.append("?" + term.variable_name)
         query.append(f'SELECT DISTINCT {" ".join(select_destinations)}')
         query.append("WHERE {")
         # if remote_source is provided, use it as the source
@@ -804,9 +799,9 @@ class Network:
         Adds filter conditions to a SPARQL query based on the provided destinations.
 
         This method processes a list of destination objects, extracts their filter
-        conditions, and constructs a SPARQL query fragment with the appropriate
-        FILTER clause. It also replaces query names with variable names in the
-        filter conditions.
+        conditions, and constructs a SPARQL query fragment with one FILTER clause
+        per condition; SPARQL combines them with a logical AND. It also replaces
+        query names with variable names in the filter conditions.
 
         Parameters
         ----------
@@ -821,20 +816,16 @@ class Network:
             A list of strings representing the SPARQL query fragment, including
             the FILTER clause and a closing brace.
         """
-        filter_text = ""
         query = []
         for destination in destinations:
-            if destination._condition is not None:
-                filter_text = destination._condition
-                break
-
-        # replace the query_name with variable_name
-        if filter_text != "":
-            for destination in destinations:
-                filter_text = filter_text.replace(
-                    destination.query_name, destination.variable_name
-                )
-            query.append(f"FILTER {filter_text}")
+            if destination._condition is None:
+                continue
+            # replace the query_name with variable_name
+            filter_text = destination._condition
+            for other in destinations:
+                filter_text = filter_text.replace(other.query_name, other.variable_name)
+            if f"FILTER {filter_text}" not in query:
+                query.append(f"FILTER {filter_text}")
         if remote_source is not None:
             query.append("  }")
         query.append("}")
