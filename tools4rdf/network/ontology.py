@@ -11,8 +11,7 @@ def read_ontology():
     combo: OntologyNetwork, Combined ontology network.
     """
     # read in ontologies
-    file_location = os.path.dirname(__file__).split("/")
-    file_location = "/".join(file_location[:-1])
+    file_location = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
     cmso = OntologyNetwork(os.path.join(file_location, "data/cmso.owl"))
     # return
