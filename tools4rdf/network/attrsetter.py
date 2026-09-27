@@ -6,7 +6,6 @@ tab-completion for dynamically added attributes.
 
 import yaml
 import os
-import numpy as np
 
 doc_fields = ["doc", "url"]
 

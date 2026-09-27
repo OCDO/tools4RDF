@@ -30,7 +30,6 @@ classifiers = [
     "Topic :: Scientific/Engineering",
 ]
 dependencies = [
-    "numpy",
     "rdflib",
     "pyyaml",
     "graphviz",
