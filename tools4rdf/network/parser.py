@@ -626,7 +626,7 @@ class OntoParser:
                 return key
         return None
 
-    def unravel_relation(self, term, unravel_list=[]):
+    def unravel_relation(self, term, unravel_list=None):
         """
         Recursively unravels an RDF collection into a Python list.
 
@@ -649,6 +649,8 @@ class OntoParser:
             A Python list containing the elements of the RDF collection in the
             order they appear.
         """
+        if unravel_list is None:
+            unravel_list = []
         if term == RDF.nil:
             return unravel_list
         first_term = self.graph.value(term, RDF.first)
