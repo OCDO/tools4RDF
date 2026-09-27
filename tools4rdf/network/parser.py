@@ -1008,10 +1008,9 @@ class OntoParser:
         namespace_iri : str
             The IRI of the namespace.
 
-        Raises
-        ------
-        KeyError
-            If the namespace already exists.
+        Notes
+        -----
+        If a namespace with this name already exists, it is left unchanged.
 
         """
         if namespace_name not in self.namespaces.keys():

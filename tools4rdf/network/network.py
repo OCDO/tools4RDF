@@ -979,9 +979,10 @@ class Network:
         Returns
         -------
         pandas.DataFrame or list
-            If `return_df` is True, returns a pandas DataFrame containing the query results.
+            If `return_df` is True, returns a pandas DataFrame containing the query results
+            (empty if nothing matches). Values are rdflib terms (URIRef, Literal).
             If `return_df` is False, returns a list of query results.
-            Returns None if no results are found.
+            Returns None only if no query could be generated.
         """
 
         if isinstance(kg, str):
